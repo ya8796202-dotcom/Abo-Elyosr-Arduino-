@@ -14,7 +14,7 @@
     @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
     pre{background:#0b1e10;color:#d6ffd6;padding:12px;border-radius:8px;overflow:auto}
     textarea{width:100%;height:150px;margin-top:10px;background:#0f1f12;color:#b8fcb8;border-radius:8px;padding:10px}
-    .out{background:#0b1e10;color:#d6ffd6;padding:10px;border-radius:8px;min-height:80px;margin-top:10px}
+    .out{background:#0b1e10;color:#d6ffd6;padding:10px;border-radius:8px;min-height:80px;margin-top:10px;white-space:pre-wrap}
     .btn{background:#25D366;color:#fff;border:none;padding:10px 14px;border-radius:8px;cursor:pointer;margin-top:10px}
   </style>
 </head>
@@ -36,12 +36,12 @@
     <div class="stage" onclick="openLesson('project')">⚠️ مشروع إنذار</div>
   </div>
 
-  <!-- قالب درس -->
+  <!-- واجهة الدرس المشتركة -->
   <div id="lesson" class="lesson">
     <h2 id="lesson-title"></h2>
     <p id="lesson-desc"></p>
     <pre id="lesson-code"></pre>
-    <textarea id="lesson-editor"></textarea>
+    <textarea id="lesson-editor" spellcheck="false"></textarea>
     <button class="btn" onclick="runCode()">تشغيل (محاكاة)</button>
     <div id="lesson-out" class="out"></div>
     <button class="btn" onclick="closeLesson()">رجوع للخريطة</button>
@@ -139,21 +139,7 @@ function openLesson(key){
   document.getElementById("lesson-desc").textContent=l.desc;
   document.getElementById("lesson-code").textContent=l.code;
   document.getElementById("lesson-editor").value=l.code;
-  document.getElementById("lesson").classList.add("active");
-}
-function closeLesson(){
-  document.getElementById("lesson").classList.remove("active");
-}
-function runCode(){
-  const code=document.getElementById("lesson-editor").value;
-  let out="";
-  if(code.includes("Serial
-function openLesson(key){
-  const l=lessons[key];
-  document.getElementById("lesson-title").textContent=l.title;
-  document.getElementById("lesson-desc").textContent=l.desc;
-  document.getElementById("lesson-code").textContent=l.code;
-  document.getElementById("lesson-editor").value=l.code;
+  document.getElementById("lesson-out").textContent="";
   document.getElementById("lesson").classList.add("active");
   window.scrollTo({top:0,behavior:"smooth"});
 }
@@ -161,3 +147,23 @@ function openLesson(key){
 function closeLesson(){
   document.getElementById("lesson").classList.remove("active");
 }
+
+function runCode(){
+  const code=document.getElementById("lesson-editor").value;
+  let out=[];
+  if(code.includes("Serial.begin")) out.push("محاكاة: تهيئة Serial");
+  if(code.includes("Serial.println")) out.push("محاكاة: طباعة على Serial");
+  if(code.includes("pinMode")) out.push("محاكاة: ضبط اتجاه البن");
+  if(code.includes("digitalWrite(HIGH)")) out.push("محاكاة: رفع خرج البن (HIGH)");
+  if(code.includes("digitalWrite(LOW)")) out.push("محاكاة: خفض خرج البن (LOW)");
+  if(code.includes("analogRead")) out.push("محاكاة: قراءة تناظرية");
+  if(code.includes("pulseIn")) out.push("محاكاة: قياس نبضة (حساس مسافة)");
+  if(code.includes("lcd.begin")) out.push("محاكاة: تهيئة LCD");
+  if(code.includes("lcd.print")) out.push("محاكاة: طباعة على LCD");
+  if(out.length===0) out=["لا يوجد إخراج — أضف Serial.println أو إجراءات مثل digitalWrite"];
+  document.getElementById("lesson-out").textContent=out.join("\n");
+}
+</script>
+</body>
+</html>
+
