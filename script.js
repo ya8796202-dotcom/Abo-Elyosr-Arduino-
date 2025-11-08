@@ -176,3 +176,82 @@ document.addEventListener('DOMContentLoaded', ()=>{
     updateProgress();
   }
 });
+const chatWindow = document.getElementById('chatWindow');
+const nextBtn = document.getElementById('nextBtn');
+const codeBlock = document.getElementById('codeBlock');
+
+// سيناريو الدروس (حوار + كود)
+const lessons = [
+  { speaker: 'teacher', text: 'أهلاً! أول درس هو تشغيل لمبة LED.' },
+  { speaker: 'student', text: 'يعني إزاي نشغلها ونطفيها؟' },
+  { speaker: 'teacher', text: 'هنستخدم الدالتين setup و loop.' },
+  { speaker: 'teacher', text: 'الكود هيكون كده:' , code: 
+`const int LED = 13;
+
+void setup() {
+  pinMode(LED, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(LED, HIGH);
+  delay(1000);
+  digitalWrite(LED, LOW);
+  delay(1000);
+}` },
+  { speaker: 'student', text: 'تمام! كده فهمت إن setup مرة واحدة و loop بتتكرر.' },
+  { speaker: 'teacher', text: 'الدرس التاني: الطباعة على المنفذ التسلسلي.' , code:
+`void setup() {
+  Serial.begin(9600);
+  Serial.println("مرحبا!");
+}
+
+void loop() {
+  Serial.println("الكود شغال...");
+  delay(1000);
+}` },
+  { speaker: 'student', text: 'حلو، كده أقدر أطبع أي رسالة وأشوفها على الكمبيوتر.' },
+  { speaker: 'teacher', text: 'الدرس التالت: زر Button للتحكم في LED.' , code:
+`const int LED = 13;
+const int BUTTON = 2;
+
+void setup() {
+  pinMode(LED, OUTPUT);
+  pinMode(BUTTON, INPUT);
+}
+
+void loop() {
+  int state = digitalRead(BUTTON);
+  if(state == HIGH) {
+    digitalWrite(LED, HIGH);
+  } else {
+    digitalWrite(LED, LOW);
+  }
+}` },
+  { speaker: 'student', text: 'تمام، كده أقدر أتحكم في اللمبة بزر.' },
+  { speaker: 'teacher', text: 'وهكذا نكمل باقي الدروس: الحساسات، LCD، مشروع إنذار.' }
+];
+
+let step = 0;
+
+function showNext() {
+  if(step >= lessons.length) {
+    nextBtn.disabled = true;
+    return;
+  }
+  const msg = lessons[step];
+  const div = document.createElement('div');
+  div.className = `msg ${msg.speaker}`;
+  div.textContent = msg.text;
+  chatWindow.appendChild(div);
+
+  if(msg.code) {
+    codeBlock.textContent = msg.code;
+  }
+
+  step++;
+}
+
+nextBtn.addEventListener('click', showNext);
+
+// بدء أول رسالة
+showNext();
