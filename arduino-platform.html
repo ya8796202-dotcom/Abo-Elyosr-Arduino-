@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>Arduino Platform</title>
+  <style>
+    body{margin:0;font-family:'Cairo',sans-serif;background:linear-gradient(135deg,#a8e063,#56ab2f);color:#222;direction:rtl}
+    header,footer{background:#2e7d32;color:#fff;text-align:center;padding:20px}
+    .card{background:#ffffffee;margin:20px;padding:20px;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,.1)}
+    .nav-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+    .nav-grid a{display:block;background:#e8f5e9;padding:14px;border-radius:12px;text-decoration:none;color:#0c3;font-weight:bold}
+    .chat-window{min-height:200px;display:flex;flex-direction:column;gap:10px}
+    .msg{padding:10px 14px;border-radius:12px;max-width:70%}
+    .msg.teacher{background:#e8f5e9;align-self:flex-start}
+    .msg.student{background:#e3f2fd;align-self:flex-end}
+    pre{background:#0b1e10;color:#d6ffd6;padding:12px;border-radius:8px;overflow:auto}
+    textarea{width:100%;height:150px;margin-top:10px;background:#0f1f12;color:#b8fcb8;border-radius:8px;padding:10px}
+    .out{background:#0b1e10;color:#d6ffd6;padding:10px;border-radius:8px;min-height:80px;margin-top:10px}
+    .btn{background:#25D366;color:#fff;border:none;padding:10px 14px;border-radius:8px;cursor:pointer;margin-top:10px}
+  </style>
+</head>
+<body>
+<header>
+  <h1>منصة تعليم الأردوينو</h1>
+  <p>تعلم خطوة بخطوة من خلال الدردشة والكود</p>
+</header>
+
+<main>
+  <section class="card">
+    <h2>الدروس</h2>
+    <div class="nav-grid">
+      <a href="#intro">مقدمة</a>
+      <a href="#blink">تشغيل LED</a>
+      <a href="#serial">المنفذ التسلسلي</a>
+      <a href="#button">زر التحكم</a>
+    </div>
+  </section>
+
+  <!-- درس مقدمة -->
+  <section id="intro" class="card">
+    <h2>مقدمة الأردوينو</h2>
+    <div id="chatWindow-intro" class="chat-window"></div>
+    <button class="btn" onclick="nextMsg('intro')">الرسالة التالية ➡️</button>
+    <pre id="codeBlock-intro"></pre>
+    <textarea id="codeArea-intro"></textarea>
+    <button class="btn" onclick="runCode('intro')">تشغيل (محاكاة)</button>
+    <div id="serialOut-intro" class="out"></div>
+  </section>
+
+  <!-- درس Blink -->
+  <section id="blink" class="card">
+    <h2>تشغيل LED</h2>
+    <div id="chatWindow-blink" class="chat-window"></div>
+    <button class="btn" onclick="nextMsg('blink')">الرسالة التالية ➡️</button>
+    <pre id="codeBlock-blink"></pre>
+    <textarea id="codeArea-blink"></textarea>
+    <button class="btn" onclick="runCode('blink')">تشغيل (محاكاة)</button>
+    <div id="serialOut-blink" class="out"></div>
+  </section>
+
+  <!-- درس Serial -->
+  <section id="serial" class="card">
+    <h2>المنفذ التسلسلي</h2>
+    <div id="chatWindow-serial" class="chat-window"></div>
+    <button class="btn" onclick="nextMsg('serial')">الرسالة التالية ➡️</button>
+    <pre id="codeBlock-serial"></pre>
+    <textarea id="codeArea-serial"></textarea>
+    <button class="btn" onclick="runCode('serial')">تشغيل (محاكاة)</button>
+    <div id="serialOut-serial" class="out"></div>
+  </section>
+
+  <!-- درس Button -->
+  <section id="button" class="card">
+    <h2>زر التحكم</h2>
+    <div id="chatWindow-button" class="chat-window"></div>
+    <button class="btn" onclick="nextMsg('button')">الرسالة التالية ➡️</button>
+    <pre id="codeBlock-button"></pre>
+    <textarea id="codeArea-button"></textarea>
+    <button class="btn" onclick="runCode('button')">تشغيل (محاكاة)</button>
+    <div id="serialOut-button" class="out"></div>
+  </section>
+</main>
+
+<footer><p>© 2025 ياسر</p></footer>
+
+<script>
+const lessons = {
+  intro: [
+    {speaker:'teacher',text:'مرحبا! الأردوينو لوحة تنفذ أوامرنا.'},
+    {speaker:'student',text:'إيه أهم الدوال؟'},
+    {speaker:'teacher',text:'setup() مرة واحدة و loop() تتكرر.'},
+    {speaker:'teacher',text:'الكود:', code:`void setup(){ Serial.begin(9600); Serial.println("أهلاً!"); }
+void loop(){ Serial.println("اللووب شغال"); delay(1000); }`}
+  ],
+  blink: [
+    {speaker:'teacher',text:'هدفنا تشغيل وإطفاء LED.'},
+    {speaker:'student',text:'إزاي نحدد البن؟'},
+    {speaker:'teacher',text:'pinMode(pin, OUTPUT).'},
+    {speaker:'teacher',text:'الكود:', code:`const int LED=13;
+void setup(){ pinMode(LED, OUTPUT); }
+void loop(){ digitalWrite(LED,HIGH); delay(1000); digitalWrite(LED,LOW); delay(1000); }`}
+  ],
+  serial: [
+    {speaker:'teacher',text:'نطبع رسائل عبر Serial.'},
+    {speaker:'student',text:'إزاي؟'},
+    {speaker:'teacher',text:'Serial.begin ثم Serial.println.'},
+    {speaker:'teacher',text:'الكود:', code:`void setup(){ Serial.begin(9600); Serial.println("مرحبا!"); }
+void loop(){ Serial.println("الكود شغال..."); delay(1000); }`}
+  ],
+  button: [
+    {speaker:'teacher',text:'نقرأ زر ونشغّل LED.'},
+    {speaker:'student',text:'نقرأ الحالة إزاي؟'},
+    {speaker:'teacher',text:'digitalRead(pin).'},
+    {speaker:'teacher',text:'الكود:', code:`const int LED=13; const int BUTTON=2;
+void setup(){ pinMode(LED, OUTPUT); pinMode(BUTTON, INPUT); }
+void loop(){ int s=digitalRead(BUTTON); if(s==HIGH) digitalWrite(LED,HIGH); else digitalWrite(LED,LOW); }`}
+  ]
+};
+
+const stepIndex = {intro:0, blink:0, serial:0, button:0};
+
+function nextMsg(lesson){
+  const seq=lessons[lesson];
+  if(stepIndex[lesson]>=seq.length) return;
+  const m=seq[stepIndex[lesson]++];
+  const div=document.createElement('div');
+  div.className=`msg ${m.speaker}`;
+  div.textContent=m.text;
+  document.getElementById(`chatWindow-${lesson}`).appendChild(div);
+  if(m.code){
+    document.getElementById(`codeBlock-${lesson}`).textContent=m.code;
+    document.getElementById(`codeArea-${lesson}`).value=m.code;
+  }
+}
+
+function runCode(lesson){
+  const code=document.getElementById(`codeArea-${lesson}`).value;
+  let out='';
+  if(code.includes('Serial.println')) out='محاكاة: تم تنفيذ Serial.println';
+  else if(code.includes('digitalWrite')) out='محاكاة: تم تنفيذ digitalWrite';
+  else out='لا يوجد إخراج';
+  document.getElementById(`serialOut-${lesson}`).textContent=out;
+}
+</script>
+</body>
+</html>
