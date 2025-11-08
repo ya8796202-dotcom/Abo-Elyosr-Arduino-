@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>رحلة الأردوينو</title>
+  <style>
+    body{margin:0;font-family:'Cairo',sans-serif;background:linear-gradient(135deg,#56ab2f,#a8e063);color:#222;direction:rtl}
+    header,footer{background:#2e7d32;color:#fff;text-align:center;padding:20px}
+    .map{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:20px}
+    .stage{background:#fff;padding:20px;border-radius:12px;box-shadow:0 6px 16px rgba(0,0,0,.1);cursor:pointer;transition:.3s}
+    .stage:hover{transform:scale(1.05);background:#e8f5e9}
+    .lesson{display:none;margin:20px;padding:20px;background:#ffffffee;border-radius:12px;box-shadow:0 6px 16px rgba(0,0,0,.1)}
+    .lesson.active{display:block;animation:fadeIn .6s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+    pre{background:#0b1e10;color:#d6ffd6;padding:12px;border-radius:8px;overflow:auto}
+    textarea{width:100%;height:150px;margin-top:10px;background:#0f1f12;color:#b8fcb8;border-radius:8px;padding:10px}
+    .out{background:#0b1e10;color:#d6ffd6;padding:10px;border-radius:8px;min-height:80px;margin-top:10px}
+    .btn{background:#25D366;color:#fff;border:none;padding:10px 14px;border-radius:8px;cursor:pointer;margin-top:10px}
+  </style>
+</head>
+<body>
+<header>
+  <h1>🚀 رحلة الأردوينو</h1>
+  <p>كل درس = مهمة جديدة في رحلتك</p>
+</header>
+
+<main>
+  <div class="map">
+    <div class="stage" onclick="openLesson('intro')">📘 مقدمة</div>
+    <div class="stage" onclick="openLesson('blink')">💡 تشغيل LED</div>
+    <div class="stage" onclick="openLesson('serial')">🖥️ المنفذ التسلسلي</div>
+    <div class="stage" onclick="openLesson('button')">🔘 زر التحكم</div>
+    <div class="stage" onclick="openLesson('ultrasonic')">📡 حساس مسافة</div>
+    <div class="stage" onclick="openLesson('lm35')">🌡️ حساس حرارة</div>
+    <div class="stage" onclick="openLesson('lcd')">📺 شاشة LCD</div>
+    <div class="stage" onclick="openLesson('project')">⚠️ مشروع إنذار</div>
+  </div>
+
+  <!-- قالب درس -->
+  <div id="lesson" class="lesson">
+    <h2 id="lesson-title"></h2>
+    <p id="lesson-desc"></p>
+    <pre id="lesson-code"></pre>
+    <textarea id="lesson-editor"></textarea>
+    <button class="btn" onclick="runCode()">تشغيل (محاكاة)</button>
+    <div id="lesson-out" class="out"></div>
+    <button class="btn" onclick="closeLesson()">رجوع للخريطة</button>
+  </div>
+</main>
+
+<footer><p>© 2025 ياسر — منصة رحلة الأردوينو</p></footer>
+
+<script>
+const lessons = {
+  intro:{
+    title:"مقدمة الأردوينو",
+    desc:"تعرف على الدالتين الأساسيتين setup و loop.",
+    code:`void setup(){ Serial.begin(9600); Serial.println("أهلاً!"); }
+void loop(){ Serial.println("اللووب شغال"); delay(1000); }`
+  },
+  blink:{
+    title:"تشغيل LED",
+    desc:"أول تجربة كلاسيكية: تشغيل وإطفاء لمبة LED.",
+    code:`const int LED=13;
+void setup(){ pinMode(LED, OUTPUT); }
+void loop(){ digitalWrite(LED,HIGH); delay(1000); digitalWrite(LED,LOW); delay(1000); }`
+  },
+  serial:{
+    title:"المنفذ التسلسلي",
+    desc:"اطبع رسائل على الكمبيوتر باستخدام Serial.",
+    code:`void setup(){ Serial.begin(9600); Serial.println("مرحبا!"); }
+void loop(){ Serial.println("الكود شغال..."); delay(1000); }`
+  },
+  button:{
+    title:"زر التحكم",
+    desc:"اقرأ حالة زر للتحكم في LED.",
+    code:`const int LED=13; const int BUTTON=2;
+void setup(){ pinMode(LED, OUTPUT); pinMode(BUTTON, INPUT); }
+void loop(){ int s=digitalRead(BUTTON); if(s==HIGH) digitalWrite(LED,HIGH); else digitalWrite(LED,LOW); }`
+  },
+  ultrasonic:{
+    title:"حساس مسافة",
+    desc:"استخدم HC-SR04 لقياس المسافة.",
+    code:`const int TRIG=9, ECHO=10;
+void setup(){ Serial.begin(9600); pinMode(TRIG,OUTPUT); pinMode(ECHO,INPUT); }
+void loop(){
+  digitalWrite(TRIG,LOW); delayMicroseconds(2);
+  digitalWrite(TRIG,HIGH); delayMicroseconds(10);
+  digitalWrite(TRIG,LOW);
+  long d=pulseIn(ECHO,HIGH);
+  int dist=d*0.034/2;
+  Serial.println(dist);
+  delay(500);
+}`
+  },
+  lm35:{
+    title:"حساس حرارة LM35",
+    desc:"اقرأ درجة الحرارة من LM35.",
+    code:`const int SENSOR=A0;
+void setup(){ Serial.begin(9600); }
+void loop(){
+  int v=analogRead(SENSOR);
+  float voltage=v*(5.0/1023.0);
+  float tempC=voltage*100.0;
+  Serial.println(tempC);
+  delay(1000);
+}`
+  },
+  lcd:{
+    title:"شاشة LCD",
+    desc:"اعرض نصوص على شاشة LCD 16x2.",
+    code:`#include <LiquidCrystal.h>
+LiquidCrystal lcd(12,11,5,4,3,2);
+void setup(){ lcd.begin(16,2); lcd.print("مرحبا ياسر!"); }
+void loop(){ /* اعرض بيانات هنا */ }`
+  },
+  project:{
+    title:"مشروع إنذار",
+    desc:"دمج حساس المسافة مع LED للتنبيه.",
+    code:`const int TRIG=9, ECHO=10, LED=13;
+void setup(){ Serial.begin(9600); pinMode(TRIG,OUTPUT); pinMode(ECHO,INPUT); pinMode(LED,OUTPUT); }
+void loop(){
+  digitalWrite(TRIG,LOW); delayMicroseconds(2);
+  digitalWrite(TRIG,HIGH); delayMicroseconds(10);
+  digitalWrite(TRIG,LOW);
+  long d=pulseIn(ECHO,HIGH);
+  int dist=d*0.034/2;
+  Serial.println(dist);
+  if(dist<20){ digitalWrite(LED,HIGH); Serial.println("⚠️ خطر! قريب"); }
+  else{ digitalWrite(LED,LOW); }
+  delay(500);
+}`
+  }
+};
+
+function openLesson(key){
+  const l=lessons[key];
+  document.getElementById("lesson-title").textContent=l.title;
+  document.getElementById("lesson-desc").textContent=l.desc;
+  document.getElementById("lesson-code").textContent=l.code;
+  document.getElementById("lesson-editor").value=l.code;
+  document.getElementById("lesson").classList.add("active");
+}
+function closeLesson(){
+  document.getElementById("lesson").classList.remove("active");
+}
+function runCode(){
+  const code=document.getElementById("lesson-editor").value;
+  let out="";
+  if(code.includes("Serial
