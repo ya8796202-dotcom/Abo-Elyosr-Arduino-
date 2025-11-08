@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head><meta charset="UTF-8"><title>تشغيل LED</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="style.css"></head>
+<body>
+<header><h1>تشغيل LED (Blink)</h1><p>أول مشروع كلاسيكي</p></header>
+<main>
+  <section class="card"><h2>الدردشة التعليمية</h2><div id="chatWindow" class="chat-window"></div><div class="controls"><button id="nextBtn" class="btn">الرسالة التالية ➡️</button><a href="index.html" class="btn" style="background:#1b5e20">رجوع</a></div></section>
+  <section class="card"><h2>الكود المتعلَّم</h2><pre id="codeBlock" class="code incoming"></pre></section>
+  <section class="card"><h2>جرّب بنفسك</h2><div class="editor-wrap"><textarea id="codeArea" class="editor"></textarea><div class="controls"><button id="runBtn" class="btn">تشغيل (محاكاة)</button></div><div class="out-wrap" style="display:grid;gap:8px"><div><h3>Serial</h3><div id="serialOut" class="out incoming"></div></div><div><h3>Pins</h3><div id="pinsOut" class="out incoming"></div></div><div><h3>LCD</h3><div id="lcdOut" class="out incoming"></div></div></div></div></section>
+</main><footer><p>© 2025 ياسر</p></footer>
+<script type="module">
+import { initLesson } from './lesson.js';
+const code = `const int LED=13;
+void setup(){ pinMode(LED, OUTPUT); }
+void loop(){ digitalWrite(LED, HIGH); delay(1000); digitalWrite(LED, LOW); delay(1000); }`;
+const sequence = [
+  {speaker:'teacher',text:'هدفنا تشغيل وإطفاء LED على البن 13.'},
+  {speaker:'student',text:'إزاي نحدد البن كمخرج؟'},
+  {speaker:'teacher',text:'باستخدام pinMode(pin, OUTPUT).'},
+  {speaker:'teacher',text:'وهذا الكود الكامل:', code}
+];
+initLesson(sequence);
+</script>
+</body>
+</html>
