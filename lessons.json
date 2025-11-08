@@ -1,0 +1,50 @@
+{
+  "lessons": [
+    {
+      "id": "intro",
+      "title": "مقدمة الأردوينو",
+      "steps": [
+        {
+          "type": "bot",
+          "text": "أهلاً! جاهز نولّع الأردوينو؟ أولاً هنتعرف على الفكرة الأساسية: لوحة صغيرة بتنفيذ أوامرنا."
+        },
+        {
+          "type": "quiz",
+          "text": "إيه وظيفة الدالة setup() في أردوينو؟",
+          "options": [
+            { "text": "بتشتغل مرة واحدة في بداية البرنامج", "correct": true },
+            { "text": "بتتكرر طول الوقت", "correct": false },
+            { "text": "بتتصل بالانترنت", "correct": false }
+          ],
+          "correctMsg": "تمام! setup() بتتنفذ مرة واحدة.",
+          "wrongMsg": "قريبة! صحّح إجابتك: setup() بتتنفذ مرة واحدة."
+        },
+        {
+          "type": "bot",
+          "text": "دلوقتي جرّب تكتب كود يطبع رسالة في المنفذ التسلسلي باستخدام Serial.println."
+        }
+      ],
+      "starterCode": "void setup(){\n  Serial.begin(9600);\n  Serial.println(\"مرحبا من ياسر!\");\n}\nvoid loop(){\n  // كرّر الطباعة أو أضف منطقك هنا\n}\n"
+    },
+    {
+      "id": "led",
+      "title": "تشغيل LED",
+      "steps": [
+        { "type": "bot", "text": "هدفنا: تشغيل وإطفاء LED على البن 13." },
+        {
+          "type": "quiz",
+          "text": "أي أمر يضبط وضع البن 13 كمخرج؟",
+          "options": [
+            { "text": "pinMode(13, OUTPUT);", "correct": true },
+            { "text": "digitalRead(13);", "correct": false },
+            { "text": "analogWrite(13, 255);", "correct": false }
+          ],
+          "correctMsg": "ممتاز! pinMode يحدد وضع البن.",
+          "wrongMsg": "مش مضبوط. جرّب تختار pinMode(13, OUTPUT);"
+        },
+        { "type": "bot", "text": "اكتب كود كامل يشغّل LED لمدة ثانية ويطفئه ثانية." }
+      ],
+      "starterCode": "const int LED=13;\nvoid setup(){\n  pinMode(LED, OUTPUT);\n}\nvoid loop(){\n  digitalWrite(LED, HIGH);\n  delay(1000);\n  digitalWrite(LED, LOW);\n  delay(1000);\n}\n"
+    }
+  ]
+}
