@@ -33,6 +33,10 @@
       <a href="#blink">تشغيل LED</a>
       <a href="#serial">المنفذ التسلسلي</a>
       <a href="#button">زر التحكم</a>
+      <a href="#ultrasonic">حساس مسافة</a>
+      <a href="#lm35">حساس حرارة</a>
+      <a href="#lcd">شاشة LCD</a>
+      <a href="#project">مشروع إنذار</a>
     </div>
   </section>
 
@@ -80,21 +84,64 @@
     <div id="serialOut-button" class="out"></div>
   </section>
 </main>
+<!-- درس Ultrasonic -->
+<section id="ultrasonic" class="card">
+  <h2>حساس مسافة HC-SR04</h2>
+  <div id="chatWindow-ultrasonic" class="chat-window"></div>
+  <button class="btn" onclick="nextMsg('ultrasonic')">الرسالة التالية ➡️</button>
+  <pre id="codeBlock-ultrasonic"></pre>
+  <textarea id="codeArea-ultrasonic"></textarea>
+  <button class="btn" onclick="runCode('ultrasonic')">تشغيل (محاكاة)</button>
+  <div id="serialOut-ultrasonic" class="out"></div>
+</section>
+
+<!-- درس LM35 -->
+<section id="lm35" class="card">
+  <h2>حساس حرارة LM35</h2>
+  <div id="chatWindow-lm35" class="chat-window"></div>
+  <button class="btn" onclick="nextMsg('lm35')">الرسالة التالية ➡️</button>
+  <pre id="codeBlock-lm35"></pre>
+  <textarea id="codeArea-lm35"></textarea>
+  <button class="btn" onclick="runCode('lm35')">تشغيل (محاكاة)</button>
+  <div id="serialOut-lm35" class="out"></div>
+</section>
+
+<!-- درس LCD -->
+<section id="lcd" class="card">
+  <h2>شاشة LCD</h2>
+  <div id="chatWindow-lcd" class="chat-window"></div>
+  <button class="btn" onclick="nextMsg('lcd')">الرسالة التالية ➡️</button>
+  <pre id="codeBlock-lcd"></pre>
+  <textarea id="codeArea-lcd"></textarea>
+  <button class="btn" onclick="runCode('lcd')">تشغيل (محاكاة)</button>
+  <div id="serialOut-lcd" class="out"></div>
+</section>
+
+<!-- درس المشروع -->
+<section id="project" class="card">
+  <h2>مشروع إنذار متكامل</h2>
+  <div id="chatWindow-project" class="chat-window"></div>
+  <button class="btn" onclick="nextMsg('project')">الرسالة التالية ➡️</button>
+  <pre id="codeBlock-project"></pre>
+  <textarea id="codeArea-project"></textarea>
+  <button class="btn" onclick="runCode('project')">تشغيل (محاكاة)</button>
+  <div id="serialOut-project" class="out"></div>
+</section>
 
 <footer><p>© 2025 ياسر</p></footer>
 
 <script>
 const lessons = {
   intro: [
-    {speaker:'teacher',text:' مرحبا! الأردوينو لوحة تنفذ أوامرنا كما نقول لها.'},
-    {speaker:'student',text:'إيه أهم الدوال يا مهندس ياسر؟'},
+    {speaker:'teacher',text:'مرحبا! الأردوينو لوحة تنفذ أوامرنا.'},
+    {speaker:'student',text:'إيه أهم الدوال؟'},
     {speaker:'teacher',text:'setup() مرة واحدة و loop() تتكرر.'},
     {speaker:'teacher',text:'الكود:', code:`void setup(){ Serial.begin(9600); Serial.println("أهلاً!"); }
 void loop(){ Serial.println("اللووب شغال"); delay(1000); }`}
   ],
   blink: [
     {speaker:'teacher',text:'هدفنا تشغيل وإطفاء LED.'},
-    {speaker:'student',text:'إزاي نحدد البن؟ يا مهندس ياسر'},
+    {speaker:'student',text:'إزاي نحدد البن؟'},
     {speaker:'teacher',text:'pinMode(pin, OUTPUT).'},
     {speaker:'teacher',text:'الكود:', code:`const int LED=13;
 void setup(){ pinMode(LED, OUTPUT); }
@@ -114,10 +161,68 @@ void loop(){ Serial.println("الكود شغال..."); delay(1000); }`}
     {speaker:'teacher',text:'الكود:', code:`const int LED=13; const int BUTTON=2;
 void setup(){ pinMode(LED, OUTPUT); pinMode(BUTTON, INPUT); }
 void loop(){ int s=digitalRead(BUTTON); if(s==HIGH) digitalWrite(LED,HIGH); else digitalWrite(LED,LOW); }`}
+  ],
+  ultrasonic: [
+    {speaker:'teacher',text:'حساس المسافة يقيس الزمن بين إرسال واستقبال الموجة.'},
+    {speaker:'student',text:'إزاي نحسب المسافة؟'},
+    {speaker:'teacher',text:'distance = duration*0.034/2'},
+    {speaker:'teacher',text:'الكود:', code:`const int TRIG=9, ECHO=10;
+void setup(){ Serial.begin(9600); pinMode(TRIG,OUTPUT); pinMode(ECHO,INPUT); }
+void loop(){
+  digitalWrite(TRIG,LOW); delayMicroseconds(2);
+  digitalWrite(TRIG,HIGH); delayMicroseconds(10);
+  digitalWrite(TRIG,LOW);
+  long d=pulseIn(ECHO,HIGH);
+  int dist=d*0.034/2;
+  Serial.println(dist);
+  delay(500);
+}`}
+  ],
+  lm35: [
+    {speaker:'teacher',text:'حساس LM35 يعطي 10mV لكل درجة.'},
+    {speaker:'student',text:'إزاي نطلع درجة الحرارة؟'},
+    {speaker:'teacher',text:'voltage=v*(5/1023) ثم tempC=voltage*100'},
+    {speaker:'teacher',text:'الكود:', code:`const int SENSOR=A0;
+void setup(){ Serial.begin(9600); }
+void loop(){
+  int v=analogRead(SENSOR);
+  float voltage=v*(5.0/1023.0);
+  float tempC=voltage*100.0;
+  Serial.println(tempC);
+  delay(1000);
+}`}
+  ],
+  lcd: [
+    {speaker:'teacher',text:'نوصّل شاشة LCD 16x2.'},
+    {speaker:'student',text:'إزاي أطبع نص؟'},
+    {speaker:'teacher',text:'lcd.print("نص") بعد lcd.begin(16,2).'},
+    {speaker:'teacher',text:'الكود:', code:`#include <LiquidCrystal.h>
+LiquidCrystal lcd(12,11,5,4,3,2);
+void setup(){ lcd.begin(16,2); lcd.print("مرحبا ياسر!"); }
+void loop(){ /* اعرض بيانات هنا */ }`}
+  ],
+  project: [
+    {speaker:'teacher',text:'مشروع إنذار: لو المسافة أقل من 20 سم نشغّل LED.'},
+    {speaker:'student',text:'ونطبع تحذير على Serial.'},
+    {speaker:'teacher',text:'الكود:', code:`const int TRIG=9, ECHO=10, LED=13;
+void setup(){ Serial.begin(9600); pinMode(TRIG,OUTPUT); pinMode(ECHO,INPUT); pinMode(LED,OUTPUT); }
+void loop(){
+  digitalWrite(TRIG,LOW); delayMicroseconds(2);
+  digitalWrite(TRIG,HIGH); delayMicroseconds(10);
+  digitalWrite(TRIG,LOW);
+  long d=pulseIn(ECHO,HIGH);
+  int dist=d*0.034/2;
+  Serial.println(dist);
+  if(dist<20){ digitalWrite(LED,HIGH); Serial.println("⚠️ خطر! قريب"); }
+  else{ digitalWrite(LED,LOW); }
+  delay(500);
+}`}
   ]
 };
 
+
 const stepIndex = {intro:0, blink:0, serial:0, button:0};
+
 
 function nextMsg(lesson){
   const seq=lessons[lesson];
