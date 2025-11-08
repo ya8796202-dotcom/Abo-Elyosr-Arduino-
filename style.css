@@ -61,3 +61,61 @@ body{
 /* Simple entrance animation */
 .in-view{animation:pop .6s ease both}
 @keyframes pop{from{opacity:0; transform:translateY(20px)} to{opacity:1; transform:none}}
+body {
+  margin: 0;
+  font-family: 'Cairo', sans-serif;
+  background: linear-gradient(135deg,#a8e063,#56ab2f);
+  color: #222;
+  direction: rtl;
+}
+
+header, footer {
+  text-align: center;
+  background: #2e7d32;
+  color: #fff;
+  padding: 20px;
+}
+
+.card {
+  background: #ffffffee;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 800px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.chat-window {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.msg {
+  padding: 10px 14px;
+  border-radius: 12px;
+  max-width: 70%;
+  line-height: 1.5;
+}
+
+.msg.teacher { background: #e8f5e9; align-self: flex-start; }
+.msg.student { background: #e3f2fd; align-self: flex-end; }
+
+.btn {
+  background: #25D366;
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+pre {
+  background: #0b1e10;
+  color: #d6ffd6;
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+}
