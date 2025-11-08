@@ -23,3 +23,52 @@ initLesson(sequence);
 </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تشغيل LED</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>تشغيل LED (Blink)</h1>
+</header>
+<main>
+  <section class="card">
+    <h2>الدردشة التعليمية</h2>
+    <div id="chatWindow" class="chat-window"></div>
+    <button id="nextBtn" class="btn">الرسالة التالية ➡️</button>
+  </section>
+
+  <section class="card">
+    <h2>الكود المتعلَّم</h2>
+    <pre id="codeBlock" class="code"></pre>
+  </section>
+
+  <section class="card">
+    <h2>جرّب بنفسك</h2>
+    <textarea id="codeArea" class="editor"></textarea>
+    <button id="runBtn" class="btn">تشغيل (محاكاة)</button>
+    <div id="serialOut" class="out"></div>
+  </section>
+</main>
+
+<script type="module">
+  import { initLesson } from './lesson.js';
+
+  const code = `const int LED=13;
+void setup(){ pinMode(LED, OUTPUT); }
+void loop(){ digitalWrite(LED,HIGH); delay(1000); digitalWrite(LED,LOW); delay(1000); }`;
+
+  const sequence = [
+    {speaker:'teacher',text:'هدفنا تشغيل وإطفاء LED على البن 13.'},
+    {speaker:'student',text:'إزاي نحدد البن كمخرج؟'},
+    {speaker:'teacher',text:'باستخدام pinMode(pin, OUTPUT).'},
+    {speaker:'teacher',text:'الكود الكامل:', code}
+  ];
+
+  initLesson(sequence);
+</script>
+</body>
+</html>
