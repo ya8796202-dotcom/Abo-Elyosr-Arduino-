@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head><meta charset="UTF-8"><title>حساس حرارة LM35</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="style.css"></head>
+<body>
+<header><h1>حساس حرارة LM35</h1><p>قراءة التناظري والتحويل لدرجة</p></header>
+<main>
+  <section class="card"><h2>الدردشة التعليمية</h2><div id="chatWindow" class="chat-window"></div><div class="controls"><button id="nextBtn" class="btn">الرسالة التالية ➡️</button><a href="index.html" class="btn" style="background:#1b5e20">رجوع</a></div></section>
+  <section class="card"><h2>الكود المتعلَّم</h2><pre id="codeBlock" class="code incoming"></pre></section>
+  <section class="card"><h2>جرّب بنفسك</h2><div class="editor-wrap"><textarea id="codeArea" class="editor"></textarea><div class="controls"><button id="runBtn" class="btn">تشغيل (محاكاة)</button></div><div class="out-wrap" style="display:grid;gap:8px"><div><h3>Serial</h3><div id="serialOut" class="out incoming"></div></div><div><h3>Pins</h3><div id="pinsOut" class="out incoming"></div></div><div><h3>LCD</h3><div id="lcdOut" class="out incoming"></div></div></div></div></section>
+</main><footer><p>© 2025 ياسر</p></footer>
+<script type="module">
+import { initLesson } from './lesson.js';
+const code = `const int SENSOR=A0;
+void setup(){ Serial.begin(9600); }
+void loop(){
+  int v=analogRead(SENSOR);
+  float voltage=v*(5.0/1023.0);
+  float tempC=voltage*100.0;
+  Serial.println(tempC);
+  delay(1000);
+}`;
+const sequence = [
+  {speaker:'teacher',text:'LM35 يعطي 10mV لكل درجة مئوية.'},
+  {speaker:'student',text:'نحوّل القراءة لدرجة ازاي؟'},
+  {speaker:'teacher',text:'voltage=v*(5/1023) ثم tempC=voltage*100.'},
+  {speaker:'teacher',text:'الكود الكامل:', code}
+];
+initLesson(sequence);
+</script>
+</body>
+</html>
