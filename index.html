@@ -2,88 +2,35 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>تعليم أردوينو بالدردشة</title>
+  <title>مدرسة الأردوينو — دروس كاملة</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="anim.css">
 </head>
 <body>
-<header class="app-header in-view">
-  <h1>مدرسة الأردوينو — أسلوب الدردشة</h1>
-  <p>اتعلم خطوة بخطوة مع مرشد ذكي ومحاكاة منفذ تسلسلي.</p>
+<header>
+  <h1>مدرسة الأردوينو — تعلم بالدردشة</h1>
+  <p>اختر درس وتابع الحوار بين المعلم والطالب، ثم جرّب الكود في المحرر.</p>
 </header>
-
-<main class="container">
-  <section class="chat card">
-    <div id="chatWindow" class="chat-window"></div>
-    <div class="chat-input">
-      <input id="userInput" type="text" placeholder="اكتب ردك هنا..." />
-      <button id="sendBtn" class="btn">إرسال</button>
+<main>
+  <section class="card">
+    <h2>ابدأ التعلم</h2>
+    <div class="nav-grid">
+      <a href="lesson-intro.html">مقدمة الأردوينو</a>
+      <a href="lesson-blink.html">تشغيل LED (Blink)</a>
+      <a href="lesson-serial.html">المنفذ التسلسلي (Serial)</a>
+      <a href="lesson-button.html">زر التحكم في LED</a>
+      <a href="lesson-ultrasonic.html">حساس مسافة HC-SR04</a>
+      <a href="lesson-lm35.html">حساس حرارة LM35</a>
+      <a href="lesson-lcd.html">شاشة LCD</a>
+      <a href="lesson-project.html">مشروع إنذار متكامل</a>
     </div>
-  </section>
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <title>تعلم الأردوينو بالدردشة</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header>
-    <h1>📚 دردشة تعليم الأردوينو</h1>
-    <p>اتعلم من خلال محادثة بين المعلم والطالب</p>
-  </header>
-
-  <main>
-    <section class="chat card">
-      <div id="chatWindow" class="chat-window"></div>
-      <button id="nextBtn" class="btn">الرسالة التالية ➡️</button>
-    </section>
-
-    <section class="code card">
-      <h2>الكود الحالي</h2>
-      <pre id="codeBlock"></pre>
-    </section>
-  </main>
-
-  <footer>
-    <p>© 2025 ياسر — موقع تعليمي تفاعلي</p>
-  </footer>
-
-  <script src="script.js"></script>
-</body>
-</html>
-
-  <section class="editor card">
-    <div class="editor-header">
-      <h2>محرر الكود</h2>
-      <div class="editor-actions">
-        <button id="loadStarter" class="btn">تحميل كود البداية</button>
-        <button id="saveCode" class="btn">حفظ الكود</button>
-        <button id="runCode" class="btn accent">تشغيل (محاكاة)</button>
-      </div>
-    </div>
-    <textarea id="codeArea" spellcheck="false"></textarea>
-    <div class="serial">
-      <h3>المنفذ التسلسلي (محاكاة)</h3>
-      <pre id="serialOut"></pre>
-    </div>
-  </section>
-
-  <section class="progress card">
-    <h2>تقدّمك</h2>
-    <div class="progress-bar">
-      <div id="progressFill" class="progress-fill" style="width:0%"></div>
-    </div>
-    <p id="progressText">0% مكتمل</p>
   </section>
 </main>
-
-<footer class="app-footer in-view">
-  <p>© 2025 — ياسر. نسخة MVP تعليمية للدردشة والأردوينو.</p>
+<footer>
+  <p>© 2025 ياسر — نسخة تعليمية كاملة</p>
 </footer>
-
-<script src="script.js"></script>
 </body>
 </html>
+
 
