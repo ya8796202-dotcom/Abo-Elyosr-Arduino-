@@ -148,3 +148,16 @@ function runCode(){
   const code=document.getElementById("lesson-editor").value;
   let out="";
   if(code.includes("Serial
+function openLesson(key){
+  const l=lessons[key];
+  document.getElementById("lesson-title").textContent=l.title;
+  document.getElementById("lesson-desc").textContent=l.desc;
+  document.getElementById("lesson-code").textContent=l.code;
+  document.getElementById("lesson-editor").value=l.code;
+  document.getElementById("lesson").classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function closeLesson(){
+  document.getElementById("lesson").classList.remove("active");
+}
