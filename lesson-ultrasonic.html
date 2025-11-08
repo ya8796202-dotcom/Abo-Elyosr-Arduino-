@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head><meta charset="UTF-8"><title>حساس مسافة HC-SR04</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="style.css"></head>
+<body>
+<header><h1>حساس مسافة HC-SR04</h1><p>قياس المسافة بالسونيك</p></header>
+<main>
+  <section class="card"><h2>الدردشة التعليمية</h2><div id="chatWindow" class="chat-window"></div><div class="controls"><button id="nextBtn" class="btn">الرسالة التالية ➡️</button><a href="index.html" class="btn" style="background:#1b5e20">رجوع</a></div></section>
+  <section class="card"><h2>الكود المتعلَّم</h2><pre id="codeBlock" class="code incoming"></pre></section>
+  <section class="card"><h2>جرّب بنفسك</h2><div class="editor-wrap"><textarea id="codeArea" class="editor"></textarea><div class="controls"><button id="runBtn" class="btn">تشغيل (محاكاة)</button></div><div class="out-wrap" style="display:grid;gap:8px"><div><h3>Serial</h3><div id="serialOut" class="out incoming"></div></div><div><h3>Pins</h3><div id="pinsOut" class="out incoming"></div></div><div><h3>LCD</h3><div id="lcdOut" class="out incoming"></div></div></div></div></section>
+</main><footer><p>© 2025 ياسر</p></footer>
+<script type="module">
+import { initLesson } from './lesson.js';
+const code = `const int TRIG=9, ECHO=10;
+void setup(){ Serial.begin(9600); pinMode(TRIG, OUTPUT); pinMode(ECHO, INPUT); }
+void loop(){
+  digitalWrite(TRIG, LOW); delayMicroseconds(2);
+  digitalWrite(TRIG, HIGH); delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+  long duration=pulseIn(ECHO,HIGH);
+  int distance=duration*0.034/2;
+  Serial.println(distance);
+  delay(500);
+}`;
+const sequence = [
+  {speaker:'teacher',text:'نرسل نبضة من TRIG ونقيس زمن العودة على ECHO.'},
+  {speaker:'student',text:'نحسب المسافة ازاي؟'},
+  {speaker:'teacher',text:'distance = duration*0.034/2 بالسنتمتر.'},
+  {speaker:'teacher',text:'الكود الكامل هنا:', code}
+];
+initLesson(sequence);
+</script>
+</body>
+</html>
