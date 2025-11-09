@@ -17,23 +17,43 @@
   <main>
     <h2>📚 قائمة الدروس</h2>
     <div class="lessons">
-      <button onclick="window.location.href='lesson1.html'">الدرس 1: مقدمة عن الأردوينو</button>
-      <button onclick="window.location.href='lesson2.html'">الدرس 2: تشغيل LED</button>
-      <button onclick="window.location.href='lesson3.html'">الدرس 3: المقاومة والمكثف</button>
-      <button onclick="window.location.href='lesson4.html'">الدرس 4: المحركات</button>
-      <button onclick="window.location.href='lesson5.html'">الدرس 5: المستشعرات</button>
-      <button onclick="window.location.href='lesson6.html'">الدرس 6: الشاشة LCD</button>
-      <button onclick="window.location.href='lesson7.html'">الدرس 7: الأزرار</button>
-      <button onclick="window.location.href='lesson8.html'">الدرس 8: المؤقتات</button>
-      <button onclick="window.location.href='lesson9.html'">الدرس 9: الاتصال التسلسلي</button>
-      <button onclick="window.location.href='lesson10.html'">الدرس 10: المشروع النهائي</button>
+      <button onclick="navigateWithEffect('lesson1.html')">الدرس 1: مقدمة عن الأردوينو</button>
+      <button onclick="navigateWithEffect('lesson2.html')">الدرس 2: تشغيل LED</button>
+      <button onclick="navigateWithEffect('lesson3.html')">الدرس 3: المقاومة والمكثف</button>
+      <button onclick="navigateWithEffect('lesson4.html')">الدرس 4: المحركات</button>
+      <button onclick="navigateWithEffect('lesson5.html')">الدرس 5: المستشعرات</button>
+      <button onclick="navigateWithEffect('lesson6.html')">الدرس 6: الشاشة LCD</button>
+      <button onclick="navigateWithEffect('lesson7.html')">الدرس 7: الأزرار</button>
+      <button onclick="navigateWithEffect('lesson8.html')">الدرس 8: المؤقتات</button>
+      <button onclick="navigateWithEffect('lesson9.html')">الدرس 9: الاتصال التسلسلي</button>
+      <button onclick="navigateWithEffect('lesson10.html')">الدرس 10: المشروع النهائي</button>
     </div>
 
     <br>
-    <button class="sim-btn" onclick="window.location.href='simulator.html'">
+    <button class="sim-btn" onclick="navigateWithEffect('simulator.html')">
       🚀 اذهب إلى المحاكي
     </button>
   </main>
+
+  <!-- ملف الصوت -->
+  <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+
+  <script>
+    // تشغيل الصوت
+    function playClickSound() {
+      const sound = document.getElementById("clickSound");
+      sound.currentTime = 0; 
+      sound.play();
+    }
+
+    // حركة خروج + انتقال للصفحة الجديدة
+    function navigateWithEffect(url) {
+      playClickSound(); // تشغيل الصوت
+      document.body.classList.add("page-exit"); // إضافة كلاس الخروج
+      setTimeout(() => {
+        window.location.href = url;
+      }, 800); // نفس مدة الأنيميشن
+    }
+  </script>
 </body>
 </html>
-
