@@ -218,16 +218,16 @@ button.simulator:hover {
 }
 
 
-
 .yasser-logo {
-  background: linear-gradient(to left, #22c55e, #0ea5e9);
-  color: #fff;
-  padding: 12px;
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
-  border-radius: 10px;
-  margin-bottom: 25px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  letter-spacing: 1px;
+  background: linear-gradient(to right, #22c55e, #0ea5e9); /* خلفية متدرجة أخضر وأزرق */
+  color: #fff;                     /* لون النص أبيض */
+  padding: 15px;                   /* مسافة داخلية */
+  text-align: center;              /* النص في المنتصف */
+  font-size: 22px;                 /* حجم الخط */
+  font-weight: bold;               /* خط عريض */
+  border-radius: 12px;             /* زوايا دائرية */
+  margin-bottom: 25px;             /* مسافة تحت الشعار */
+  box-shadow: 0 0 12px rgba(0,0,0,0.3); /* ظل خفيف */
+  letter-spacing: 1px;             /* مسافة بين الحروف */
 }
+
