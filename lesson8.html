@@ -1,61 +1,61 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>📘 الدرس 8: المؤقتات (شرح موسّع)</title>
+  <title>تعلم برمجة الأردوينو - الدرس X</title>
+  <meta name="description" content="منصة تعليمية مجانية لتعلم برمجة الأردوينو خطوة بخطوة مع أمثلة عملية ومشاريع جاهزة.">
+  <meta name="keywords" content="Arduino, تعلم الأردوينو, برمجة الأردوينو, مشاريع إلكترونية, تعليم البرمجة">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>📘 الدرس 8: المؤقتات (شرح موسّع)</h1>
-    <nav>
-      <a href="index.html" onclick="navigateWithEffect('index.html'); return false;">الرجوع للقائمة</a>
-      <a href="simulator.html" onclick="navigateWithEffect('simulator.html'); return false;">⚙️ المحاكي</a>
-    </nav>
-  </header>
 
-  <main>
-    <section>
-      <h2>مفهوم المؤقتات</h2>
-      <p>
-        المؤقتات هي نبض القلب الزمني للكود: بتنظم المهام الدورية، التأخير غير الحاجب، وقياس الزمن.
-        الاعتماد على أسلوب غير حاجب (Non-blocking) يحسّن التوازي والمنطق التفاعلي.
-      </p>
-    </section>
+  <!-- عنوان الدرس -->
+  <h1>📘 الدرس X: عنوان الدرس هنا</h1>
+  <p>شرح مبسط لمحتوى الدرس...</p>
 
-    <section>
-      <h2>استراتيجيات الزمن</h2>
-      <ul>
-        <li><strong>تكرار دوري:</strong> تنفيذ مهمة كل فترة ثابتة (وميض، قراءة حساس، تحديث LCD).</li>
-        <li><strong>قياس مدة:</strong> حساب زمن حدث أو سرعة دوران.</li>
-        <li><strong>تسلسل زمني:</strong> مهام متتابعة بجدولة مرنة بدل الانتظار الطويل.</li>
-      </ul>
-      <p>
-        الهدف: تتجنّب التأخير الحاجب، وتستخدم جدولة ذكية للحفاظ على استجابة المشروع.
-      </p>
-    </section>
+  <!-- شريط التقدم -->
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
 
-    <section>
-      <h2>أمثلة تطبيقية</h2>
-      <ul>
-        <li><strong>وميض LED:</strong> تشغيل/إطفاء كل 500ms بدون تعطيل قراءة الأزرار.</li>
-        <li><strong>قراءات المستشعر:</strong> تحديث كل ثانية وعرض المتوسط على LCD.</li>
-        <li><strong>التحكم في محرك:</strong> إرسال نبضات أو PWM بنمط زمني محدد.</li>
-      </ul>
-    </section>
+  <!-- أزرار التنقل -->
+  <div class="nav-buttons">
+    <button onclick="navigateWithEffect('lessonX-1.html')">⬅️ السابق</button>
+    <button onclick="navigateWithEffect('lessonX+1.html')">➡️ التالي</button>
+  </div>
 
-    <section>
-      <h2>الخلاصة</h2>
-      <p>
-        المؤقتات بتخلي المشروع سلس وذكي زمنيًا. في الدرس 9 هنربط كل ده بالكمبيوتر عبر الاتصال التسلسلي.
-      </p>
-    </section>
-  </main>
+  <!-- زرار المحاكي -->
+  <button onclick="navigateWithEffect('simulator.html')">⚙️ المحاكي</button>
 
-  <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+  <!-- سكربتات في آخر الملف -->
   <script>
-    function playClickSound(){const s=document.getElementById("clickSound");s.currentTime=0;s.play();}
-    function navigateWithEffect(url){playClickSound();document.body.classList.add("page-exit");setTimeout(()=>{window.location.href=url;},800);}
+    // شريط التقدم
+    const lessonNumber = X; // غيّر رقم الدرس هنا
+    const totalLessons = 20;
+    const progress = (lessonNumber / totalLessons) * 100;
+    document.getElementById("progressBar").style.width = progress + "%";
+
+    // التنقل مع تأثير
+    function playClickSound() {
+      const sound = document.getElementById("clickSound");
+      if(sound) {
+        sound.currentTime = 0;
+        sound.play();
+      }
+    }
+
+    function navigateWithEffect(url) {
+      playClickSound();
+      document.body.classList.add("page-exit");
+      setTimeout(() => {
+        window.location.href = url;
+      }, 800);
+    }
   </script>
+
+  <!-- صوت الضغط -->
+  <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+
 </body>
 </html>
