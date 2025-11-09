@@ -127,3 +127,11 @@ main p {
   font-weight: bold;     /* يخلي الخط سميك وواضح */
   color: #000;           /* لون الخط أسود */
 }
+
+.progress {background:#ddd; border-radius:10px; overflow:hidden;}
+.progress-bar {background:#4caf50; color:#fff; padding:5px;}
+
+.fade-in {opacity:0; transform:translateY(20px); transition:1s;}
+.fade-in.visible {opacity:1; transform:translateY(0);}
+
+.dark-mode {background:#222; color:#fff;}
