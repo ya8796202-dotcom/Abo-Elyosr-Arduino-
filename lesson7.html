@@ -1,59 +1,61 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>📘 الدرس 7: الأزرار (شرح موسّع)</title>
+  <title>تعلم برمجة الأردوينو - الدرس X</title>
+  <meta name="description" content="منصة تعليمية مجانية لتعلم برمجة الأردوينو خطوة بخطوة مع أمثلة عملية ومشاريع جاهزة.">
+  <meta name="keywords" content="Arduino, تعلم الأردوينو, برمجة الأردوينو, مشاريع إلكترونية, تعليم البرمجة">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>📘 الدرس 7: الأزرار (شرح موسّع)</h1>
-    <nav>
-      <a href="index.html" onclick="navigateWithEffect('index.html'); return false;">الرجوع للقائمة</a>
-      <a href="simulator.html" onclick="navigateWithEffect('simulator.html'); return false;">⚙️ المحاكي</a>
-    </nav>
-  </header>
 
-  <main>
-    <section>
-      <h2>الأزرار كمدخلات رقمية</h2>
-      <p>
-        الزر يغيّر الحالة بين High/Low. لضمان قراءة صحيحة، نستخدم مقاومة سحب لأعلى/لأسفل لتثبيت الحالة لما الزر مش مضغوط.
-      </p>
-    </section>
+  <!-- عنوان الدرس -->
+  <h1>📘 الدرس X: عنوان الدرس هنا</h1>
+  <p>شرح مبسط لمحتوى الدرس...</p>
 
-    <section>
-      <h2>Debounce ومعالجة الارتداد</h2>
-      <p>
-        الضغط الحقيقي يسبب ارتدادات سريعة في الإشارة. المعالجة تكون عبر تأخير صغير أو متوسط متحرك أو مكتبات جاهزة، لمنع تعدد القراءة.
-      </p>
-      <ul>
-        <li><strong>Debounce زمني:</strong> تجاهل تغييرات خلال 10–50ms بعد أول تغيير.</li>
-        <li><strong>فلترة RC:</strong> مقاومة + مكثف لتنعيم الحدود.</li>
-      </ul>
-    </section>
+  <!-- شريط التقدم -->
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
 
-    <section>
-      <h2>تصميم واجهات تفاعلية</h2>
-      <ul>
-        <li><strong>زر واحد متعدد الوظائف:</strong> ضغط قصير/طويل لتفعيل أوضاع مختلفة.</li>
-        <li><strong>أزرار تنقل:</strong> Next/Prev لاستعراض صفحات LCD.</li>
-        <li><strong>قائمة إعدادات:</strong> تعديل العتبات والقيم مباشرة من المستخدم.</li>
-      </ul>
-    </section>
+  <!-- أزرار التنقل -->
+  <div class="nav-buttons">
+    <button onclick="navigateWithEffect('lessonX-1.html')">⬅️ السابق</button>
+    <button onclick="navigateWithEffect('lessonX+1.html')">➡️ التالي</button>
+  </div>
 
-    <section>
-      <h2>الخلاصة</h2>
-      <p>
-        الأزرار تربط المستخدم بالمشروع. في الدرس 8 سننظم الزمن باستخدام المؤقتات بكفاءة.
-      </p>
-    </section>
-  </main>
+  <!-- زرار المحاكي -->
+  <button onclick="navigateWithEffect('simulator.html')">⚙️ المحاكي</button>
 
-  <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+  <!-- سكربتات في آخر الملف -->
   <script>
-    function playClickSound(){const s=document.getElementById("clickSound");s.currentTime=0;s.play();}
-    function navigateWithEffect(url){playClickSound();document.body.classList.add("page-exit");setTimeout(()=>{window.location.href=url;},800);}
+    // شريط التقدم
+    const lessonNumber = X; // غيّر رقم الدرس هنا
+    const totalLessons = 20;
+    const progress = (lessonNumber / totalLessons) * 100;
+    document.getElementById("progressBar").style.width = progress + "%";
+
+    // التنقل مع تأثير
+    function playClickSound() {
+      const sound = document.getElementById("clickSound");
+      if(sound) {
+        sound.currentTime = 0;
+        sound.play();
+      }
+    }
+
+    function navigateWithEffect(url) {
+      playClickSound();
+      document.body.classList.add("page-exit");
+      setTimeout(() => {
+        window.location.href = url;
+      }, 800);
+    }
   </script>
+
+  <!-- صوت الضغط -->
+  <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+
 </body>
 </html>
