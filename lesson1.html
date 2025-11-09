@@ -17,8 +17,34 @@
   <main>
     <section>
       <h2>ما هو الأردوينو؟</h2>
-      <p>الأردوينو لوحة إلكترونية مفتوحة المصدر تُستخدم لتصميم المشاريع التفاعلية...</p>
+      <p>
+        الأردوينو هو منصة مفتوحة المصدر لتطوير المشاريع الإلكترونية، 
+        بتسهل على المبتدئين والمحترفين برمجة المتحكمات الدقيقة وتجربة أفكارهم بسرعة.  
+        في الدرس ده هنتعرف على مكونات الأردوينو الأساسية، طريقة التوصيل، 
+        وأول تجربة عملية لتشغيل لمبة LED.
+      </p>
     </section>
   </main>
+
+  <!-- ملف الصوت -->
+  <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+
+  <script>
+    // تشغيل الصوت
+    function playClickSound() {
+      const sound = document.getElementById("clickSound");
+      sound.currentTime = 0; 
+      sound.play();
+    }
+
+    // حركة خروج + انتقال للصفحة الجديدة
+    function navigateWithEffect(url) {
+      playClickSound(); // تشغيل الصوت
+      document.body.classList.add("page-exit"); // إضافة كلاس الخروج
+      setTimeout(() => {
+        window.location.href = url;
+      }, 800); // نفس مدة الأنيميشن
+    }
+  </script>
 </body>
 </html>
