@@ -68,3 +68,15 @@
   </script>
 </body>
 </html>
+<!-- شريط التقدم -->
+<div class="progress-container">
+  <div class="progress-bar" id="progressBar"></div>
+</div>
+
+<script>
+  // غيّر رقم الدرس هنا فقط
+  const lessonNumber = 1; // مثال: الدرس الخامس
+  const totalLessons = 20;
+  const progress = (lessonNumber / totalLessons) * 100;
+  document.getElementById("progressBar").style.width = progress + "%";
+</script>
