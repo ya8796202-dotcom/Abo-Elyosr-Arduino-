@@ -135,8 +135,3 @@ main p {
 .fade-in.visible {opacity:1; transform:translateY(0);}
 
 .dark-mode {background:#222; color:#fff;}
-
-body {
-  background: linear-gradient(135deg, #f0f4ff, #d9e4ff);
-}
-
