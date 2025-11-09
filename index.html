@@ -34,7 +34,21 @@
       🚀 اذهب إلى المحاكي
     </button>
   </main>
+<section>
+      <h2>📂 مكتبة الأكواد</h2>
+      <div class="buttons-grid">
+        <button class="pulse-button" onclick="navigateWithEffect('codes.html')">💻 الدخول لمكتبة الأكواد</button>
+      </div>
+    </section>
+  </main>
 
+  <!-- ملف الصوت -->
+  <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+
+  <script>
+    function playClickSound() {
+      const sound = document.getElementById("clickSound");
+      sound.currentTime = 0;
   <!-- ملف الصوت -->
   <audio id="clickSound" src="click.mp3" preload="auto"></audio>
 
