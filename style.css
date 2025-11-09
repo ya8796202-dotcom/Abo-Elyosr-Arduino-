@@ -166,3 +166,53 @@ body {
 .nav-buttons button:active {
   transform: scale(0.95);
 }
+
+
+
+
+
+/* شريط التقدم */
+.progress-container {
+  width: 100%;
+  background: #ddd;
+  height: 10px;
+  border-radius: 5px;
+  margin: 20px 0;
+}
+.progress-bar {
+  height: 10px;
+  background: #4caf50;
+  width: 0%;
+  border-radius: 5px;
+  transition: width 0.5s ease;
+}
+
+/* أزرار التنقل */
+.nav-buttons {
+  text-align: center;
+  margin-top: 20px;
+}
+.nav-buttons button,
+button {
+  background: #2196f3;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease;
+}
+.nav-buttons button:hover,
+button:hover {
+  background: #1976d2;
+}
+
+/* زر المحاكي */
+button.simulator {
+  background: #ff9800;
+}
+button.simulator:hover {
+  background: #e68900;
+}
