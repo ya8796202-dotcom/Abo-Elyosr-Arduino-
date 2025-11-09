@@ -1,61 +1,22 @@
 <!DOCTYPE html>
 <html lang="ar">
-<head>
-  <meta charset="UTF-8">
-  <title>تعلم برمجة الأردوينو - الدرس X</title>
-  <meta name="description" content="منصة تعليمية مجانية لتعلم برمجة الأردوينو خطوة بخطوة مع أمثلة عملية ومشاريع جاهزة.">
-  <meta name="keywords" content="Arduino, تعلم الأردوينو, برمجة الأردوينو, مشاريع إلكترونية, تعليم البرمجة">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-</head>
+<head><meta charset="UTF-8"><title>الدرس 8</title></head>
 <body>
+  <h1>📘 الدرس 8: الشاشات (LCD)</h1>
+  <p>هنتعلم إزاي نوصل شاشة LCD ونعرض عليها نصوص.</p>
 
-  <!-- عنوان الدرس -->
-  <h1>📘 الدرس X: عنوان الدرس هنا</h1>
-  <p>شرح مبسط لمحتوى الدرس...</p>
-
-  <!-- شريط التقدم -->
-  <div class="progress-container">
-    <div class="progress-bar" id="progressBar"></div>
-  </div>
-
-  <!-- أزرار التنقل -->
+  <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
   <div class="nav-buttons">
-    <button onclick="navigateWithEffect('lessonX-1.html')">⬅️ السابق</button>
-    <button onclick="navigateWithEffect('lessonX+1.html')">➡️ التالي</button>
+    <button onclick="navigateWithEffect('lesson7.html')">⬅️ السابق</button>
+    <button onclick="navigateWithEffect('lesson9.html')">➡️ التالي</button>
+    <button onclick="navigateWithEffect('index.html')">🏠 الرئيسية</button>
   </div>
-
-  <!-- زرار المحاكي -->
   <button onclick="navigateWithEffect('simulator.html')">⚙️ المحاكي</button>
 
-  <!-- سكربتات في آخر الملف -->
   <script>
-    // شريط التقدم
-    const lessonNumber = X; // غيّر رقم الدرس هنا
-    const totalLessons = 20;
-    const progress = (lessonNumber / totalLessons) * 100;
-    document.getElementById("progressBar").style.width = progress + "%";
-
-    // التنقل مع تأثير
-    function playClickSound() {
-      const sound = document.getElementById("clickSound");
-      if(sound) {
-        sound.currentTime = 0;
-        sound.play();
-      }
-    }
-
-    function navigateWithEffect(url) {
-      playClickSound();
-      document.body.classList.add("page-exit");
-      setTimeout(() => {
-        window.location.href = url;
-      }, 800);
-    }
+    const lessonNumber = 8, totalLessons = 10;
+    document.getElementById("progressBar").style.width = (lessonNumber/totalLessons*100)+"%";
+    function navigateWithEffect(url){ window.location.href = url; }
   </script>
-
-  <!-- صوت الضغط -->
-  <audio id="clickSound" src="click.mp3" preload="auto"></audio>
-
 </body>
 </html>
