@@ -1,68 +1,61 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>📘 الدرس 6: الشاشة LCD (شرح موسّع)</title>
+  <title>تعلم برمجة الأردوينو - الدرس X</title>
+  <meta name="description" content="منصة تعليمية مجانية لتعلم برمجة الأردوينو خطوة بخطوة مع أمثلة عملية ومشاريع جاهزة.">
+  <meta name="keywords" content="Arduino, تعلم الأردوينو, برمجة الأردوينو, مشاريع إلكترونية, تعليم البرمجة">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>📘 الدرس 6: الشاشة LCD (شرح موسّع)</h1>
-    <nav>
-      <a href="index.html" onclick="navigateWithEffect('index.html'); return false;">الرجوع للقائمة</a>
-      <a href="simulator.html" onclick="navigateWithEffect('simulator.html'); return false;">⚙️ المحاكي</a>
-    </nav>
-  </header>
 
-  <main>
-    <section>
-      <h2>لماذا LCD؟</h2>
-      <p>
-        شاشة LCD 16x2 بتعرض سطرين، كل سطر 16 خانة. ممتازة لعرض القراءات، الرسائل، والقوائم بدون الحاجة للكمبيوتر.
-      </p>
-    </section>
+  <!-- عنوان الدرس -->
+  <h1>📘 الدرس X: عنوان الدرس هنا</h1>
+  <p>شرح مبسط لمحتوى الدرس...</p>
 
-    <section>
-      <h2>التوصيل والواجهات</h2>
-      <ul>
-        <li><strong>واجهة موازيّة:</strong> أسلاك كثيرة (RS, E, D4–D7).</li>
-        <li><strong>I2C:</strong> محوّل I2C يقلل الأسلاك إلى 4 فقط (VCC, GND, SDA, SCL).</li>
-      </ul>
-      <p>
-        اضبط العنوان I2C (مثل 0x27 أو 0x3F) حسب الوحدة، وتأكد من المقاوم المتغير (Potentiometer) للتباين.
-      </p>
-    </section>
+  <!-- شريط التقدم -->
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
 
-    <section>
-      <h2>أفضل الممارسات</h2>
-      <ul>
-        <li><strong>رسائل قصيرة وواضحة:</strong> لتجنب تقطيع النص.</li>
-        <li><strong>تنسيق الأرقام:</strong> عرض وحدات (°C, %RH) وموازنة عدد الخانات.</li>
-        <li><strong>تحديث ذكي:</strong> حدّث فقط عند تغير القيمة لتقليل الوميض.</li>
-      </ul>
-    </section>
+  <!-- أزرار التنقل -->
+  <div class="nav-buttons">
+    <button onclick="navigateWithEffect('lessonX-1.html')">⬅️ السابق</button>
+    <button onclick="navigateWithEffect('lessonX+1.html')">➡️ التالي</button>
+  </div>
 
-    <section>
-      <h2>أفكار عرض</h2>
-      <ul>
-        <li><strong>شاشة حالة:</strong> سطر للحالة العامة وسطر لآخر حدث.</li>
-        <li><strong>قائمة بسيطة:</strong> تنقل بالأزرار بين صفحات البيانات.</li>
-        <li><strong>شريط تقدّم:</strong> محاكاة Progress باستخدام أحرف مخصصة (Custom Characters).</li>
-      </ul>
-    </section>
+  <!-- زرار المحاكي -->
+  <button onclick="navigateWithEffect('simulator.html')">⚙️ المحاكي</button>
 
-    <section>
-      <h2>الخلاصة</h2>
-      <p>
-        LCD بتدي واجهة بصرية سريعة للمستخدم. في الدرس 7 هنضيف الأزرار للتفاعل والتحكم.
-      </p>
-    </section>
-  </main>
-
-  <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+  <!-- سكربتات في آخر الملف -->
   <script>
-    function playClickSound(){const s=document.getElementById("clickSound");s.currentTime=0;s.play();}
-    function navigateWithEffect(url){playClickSound();document.body.classList.add("page-exit");setTimeout(()=>{window.location.href=url;},800);}
+    // شريط التقدم
+    const lessonNumber = X; // غيّر رقم الدرس هنا
+    const totalLessons = 20;
+    const progress = (lessonNumber / totalLessons) * 100;
+    document.getElementById("progressBar").style.width = progress + "%";
+
+    // التنقل مع تأثير
+    function playClickSound() {
+      const sound = document.getElementById("clickSound");
+      if(sound) {
+        sound.currentTime = 0;
+        sound.play();
+      }
+    }
+
+    function navigateWithEffect(url) {
+      playClickSound();
+      document.body.classList.add("page-exit");
+      setTimeout(() => {
+        window.location.href = url;
+      }, 800);
+    }
   </script>
+
+  <!-- صوت الضغط -->
+  <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+
 </body>
 </html>
