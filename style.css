@@ -135,3 +135,34 @@ body {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
+
+
+
+/* أزرار التنقل بين الدروس */
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin: 30px 0;
+}
+
+.nav-buttons button {
+  padding: 12px 20px;
+  background: linear-gradient(90deg, #2196f3, #4caf50);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.nav-buttons button:hover {
+  background: linear-gradient(90deg, #1976d2, #388e3c);
+  transform: scale(1.05);
+}
+
+.nav-buttons button:active {
+  transform: scale(0.95);
+}
