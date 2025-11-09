@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>⚙️ محاكاة الأردوينو</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>⚙️ محاكاة الأردوينو</h1>
+    <nav>
+      <a href="index.html">📘 الدروس النظرية</a>
+      <a href="simulator.html">التجارب والمحاكاة</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="simulator">
+      <h2>لوحة الأردوينو</h2>
+      <p>هنا ممكن تعرض صورة أو رسمة للوحة الأردوينو مع المحركات والمستشعرات.</p>
+      <!-- لاحقًا ممكن ندمج مكتبات محاكاة زي Tinkercad أو JS Arduino -->
+    </section>
+
+    <section id="editor">
+      <h2>محرر الأكواد</h2>
+      <textarea id="code" placeholder="اكتب كود الأردوينو هنا..." rows="10" cols="60"></textarea>
+      <br>
+      <button onclick="runCode()">تشغيل الكود</button>
+      <pre id="output"></pre>
+    </section>
+  </main>
+
+  <script>
+    function runCode() {
+      const code = document.getElementById('code').value;
+      document.getElementById('output').textContent = "🔧 الكود اللي كتبته:\n" + code;
+      // هنا ممكن نضيف محاكاة فعلية لاحقًا
+    }
+  </script>
+</body>
+</html>
+
