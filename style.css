@@ -120,3 +120,10 @@ body {
   from { opacity: 1; transform: translateY(0); }
   to { opacity: 0; transform: translateY(-30px); }
 }
+
+main p {
+  font-size: 22px;       /* حجم الخط أكبر */
+  line-height: 1.8;      /* مسافة بين السطور أوضح */
+  font-weight: bold;     /* يخلي الخط سميك وواضح */
+  color: #000;           /* لون الخط أسود */
+}
