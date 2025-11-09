@@ -1,68 +1,61 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>📘 الدرس 9: الاتصال التسلسلي (شرح موسّع)</title>
+  <title>تعلم برمجة الأردوينو - الدرس X</title>
+  <meta name="description" content="منصة تعليمية مجانية لتعلم برمجة الأردوينو خطوة بخطوة مع أمثلة عملية ومشاريع جاهزة.">
+  <meta name="keywords" content="Arduino, تعلم الأردوينو, برمجة الأردوينو, مشاريع إلكترونية, تعليم البرمجة">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>📘 الدرس 9: الاتصال التسلسلي (شرح موسّع)</h1>
-    <nav>
-      <a href="index.html" onclick="navigateWithEffect('index.html'); return false;">الرجوع للقائمة</a>
-      <a href="simulator.html" onclick="navigateWithEffect('simulator.html'); return false;">⚙️ المحاكي</a>
-    </nav>
-  </header>
 
-  <main>
-    <section>
-      <h2>ما هو الاتصال التسلسلي؟</h2>
-      <p>
-        هو قناة التواصل بين الأردوينو والكمبيوتر أو وحدات أخرى (بلوتوث/USB-UART).
-        نعرض بيانات، نستقبل أوامر، ونسجّل الأحداث لتحليلها.
-      </p>
-    </section>
+  <!-- عنوان الدرس -->
+  <h1>📘 الدرس X: عنوان الدرس هنا</h1>
+  <p>شرح مبسط لمحتوى الدرس...</p>
 
-    <section>
-      <h2>السيناريوهات الشائعة</h2>
-      <ul>
-        <li><strong>مراقبة:</strong> عرض قراءات الحساسات في المونيتور التسلسلي.</li>
-        <li><strong>تحكم:</strong> إرسال أوامر لتغيير وضع التشغيل أو ضبط العتبات.</li>
-        <li><strong>تكامل:</strong> ربط مع تطبيقات سطح المكتب/الويب لواجهة مستخدم متقدمة.</li>
-      </ul>
-    </section>
+  <!-- شريط التقدم -->
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
 
-    <section>
-      <h2>الاعتبارات العملية</h2>
-      <ul>
-        <li><strong>تنسيق البيانات:</strong> استخدم تنسيق واضح (CSV/JSON بسيط) لتسهيل التحليل.</li>
-        <li><strong>معدلات البود:</strong> اختَر سرعة مناسبة (مثل 9600/115200) حسب حجم البيانات.</li>
-        <li><strong>معالجة الأخطاء:</strong> تحقق من صحة الرسائل ومنع التعارض مع مهام الزمن الحساسة.</li>
-      </ul>
-    </section>
+  <!-- أزرار التنقل -->
+  <div class="nav-buttons">
+    <button onclick="navigateWithEffect('lessonX-1.html')">⬅️ السابق</button>
+    <button onclick="navigateWithEffect('lessonX+1.html')">➡️ التالي</button>
+  </div>
 
-    <section>
-      <h2>أفكار تطبيقية</h2>
-      <ul>
-        <li><strong>لوحة تحكم:</strong> أزرار على الكمبيوتر ترسل أوامر لروبوت يتحرك.</li>
-        <li><strong>سجل بيانات:</strong> تخزين القراءات على الكمبيوتر لتحليلها لاحقًا.</li>
-        <li><strong>مزامنة:</strong> إرسال حالات المشروع لعرضها في واجهة رسومية مباشرة.</li>
-      </ul>
-    </section>
+  <!-- زرار المحاكي -->
+  <button onclick="navigateWithEffect('simulator.html')">⚙️ المحاكي</button>
 
-    <section>
-      <h2>الخلاصة</h2>
-      <p>
-        الاتصال التسلسلي هو جسرك للعالم الخارجي. في الدرس 10 هنطبّق كل شيء في مشروع نهائي متكامل.
-      </p>
-    </section>
-  </main>
-
-  <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+  <!-- سكربتات في آخر الملف -->
   <script>
-    function playClickSound(){const s=document.getElementById("clickSound");s.currentTime=0;s.play();}
-    function navigateWithEffect(url){playClickSound();document.body.classList.add("page-exit");setTimeout(()=>{window.location.href=url;},800);}
+    // شريط التقدم
+    const lessonNumber = X; // غيّر رقم الدرس هنا
+    const totalLessons = 20;
+    const progress = (lessonNumber / totalLessons) * 100;
+    document.getElementById("progressBar").style.width = progress + "%";
+
+    // التنقل مع تأثير
+    function playClickSound() {
+      const sound = document.getElementById("clickSound");
+      if(sound) {
+        sound.currentTime = 0;
+        sound.play();
+      }
+    }
+
+    function navigateWithEffect(url) {
+      playClickSound();
+      document.body.classList.add("page-exit");
+      setTimeout(() => {
+        window.location.href = url;
+      }, 800);
+    }
   </script>
+
+  <!-- صوت الضغط -->
+  <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+
 </body>
 </html>
-
