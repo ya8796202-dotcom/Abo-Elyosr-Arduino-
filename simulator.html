@@ -17,8 +17,13 @@
   <main>
     <section id="simulator">
       <h2>لوحة الأردوينو</h2>
-      <p>https://wokwi.com/projects/328451800839488084.</p>
-      <!-- لاحقًا ممكن ندمج مكتبات محاكاة زي Tinkercad أو JS Arduino -->
+      <!-- هنا المحاكي -->
+      <iframe src="https://wokwi.com/projects/new/arduino-uno" 
+              width="800" height="600" frameborder="0"></iframe>
+      <br>
+      <button onclick="window.open('https://wokwi.com/projects/new/arduino-uno','_blank')">
+        🚀 افتح المحاكي في صفحة جديدة
+      </button>
     </section>
 
     <section id="editor">
@@ -34,12 +39,7 @@
     function runCode() {
       const code = document.getElementById('code').value;
       document.getElementById('output').textContent = "🔧 الكود اللي كتبته:\n" + code;
-      <iframe src="https://wokwi.com/projects/new/arduino-uno" 
-        width="800" height="600" 
-        frameborder="0"></iframe>
-
     }
   </script>
 </body>
 </html>
-
