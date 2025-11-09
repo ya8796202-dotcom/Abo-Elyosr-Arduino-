@@ -112,3 +112,26 @@ body {
   from { transform: translateY(30px); }
   to { transform: translateY(0); }
 }
+
+.progress {background:#ddd; border-radius:10px; overflow:hidden;}
+.progress-bar {background:#4caf50; color:#fff; padding:5px;}
+
+.fade-in {opacity:0; transform:translateY(20px); transition:1s;}
+.fade-in.visible {opacity:1; transform:translateY(0);}
+
+.dark-mode {background:#222; color:#fff;}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(270deg, #ffeb3b, #4caf50, #2196f3, #f44336, #9c27b0);
+  background-size: 1000% 1000%;
+  animation: gradientMove 20s ease infinite;
+}
+
+/* حركة التدرج */
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
