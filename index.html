@@ -46,3 +46,20 @@
   }
 </script>
 
+<audio id="clickSound" src="click.mp3" preload="auto"></audio>
+
+<script>
+  function playClickSound() {
+    const sound = document.getElementById("clickSound");
+    sound.currentTime = 0; // يبدأ من الأول كل مرة
+    sound.play();
+  }
+
+  function navigateWithEffect(url) {
+    playClickSound(); // تشغيل الصوت
+    document.body.classList.add("page-exit");
+    setTimeout(() => {
+      window.location.href = url;
+    }, 800); // نفس مدة الأنيميشن
+  }
+</script>
