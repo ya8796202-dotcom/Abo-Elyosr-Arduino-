@@ -216,3 +216,16 @@ button.simulator {
 button.simulator:hover {
   background: #e68900;
 }
+
+
+
+.logo-bar {
+  background: #1f2937;
+  color: #a3e635;
+  padding: 10px;
+  text-align: center;
+  font-size: 18px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+}
