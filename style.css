@@ -111,7 +111,6 @@ body {
   from { transform: translateY(30px); }
   to { transform: translateY(0); }
 }
-/* حركة خروج الصفحة */
 .page-exit {
   animation: pageFadeOut 0.8s ease forwards;
 }
