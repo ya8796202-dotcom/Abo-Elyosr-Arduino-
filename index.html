@@ -2,69 +2,68 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>📘 الدروس النظرية</title>
+  <title>📘 الصفحة الرئيسية - دروس الأردوينو</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <h1>📘 موقع تعليم الأردوينو</h1>
+    <h1>📘 الصفحة الرئيسية - دروس الأردوينو</h1>
     <nav>
-      <a href="index.html">الدروس النظرية</a>
-      <a href="simulator.html">⚙️ التجارب والمحاكاة</a>
+      <a href="simulator.html">⚙️ المحاكي</a>
     </nav>
   </header>
 
   <main>
-    <h2>📚 قائمة الدروس</h2>
-    <div class="lessons">
-      <button onclick="navigateWithEffect('lesson1.html')">الدرس 1: مقدمة عن الأردوينو</button>
-      <button onclick="navigateWithEffect('lesson2.html')">الدرس 2: تشغيل LED</button>
-      <button onclick="navigateWithEffect('lesson3.html')">الدرس 3: المقاومة والمكثف</button>
-      <button onclick="navigateWithEffect('lesson4.html')">الدرس 4: المحركات</button>
-      <button onclick="navigateWithEffect('lesson5.html')">الدرس 5: المستشعرات</button>
-      <button onclick="navigateWithEffect('lesson6.html')">الدرس 6: الشاشة LCD</button>
-      <button onclick="navigateWithEffect('lesson7.html')">الدرس 7: الأزرار</button>
-      <button onclick="navigateWithEffect('lesson8.html')">الدرس 8: المؤقتات</button>
-      <button onclick="navigateWithEffect('lesson9.html')">الدرس 9: الاتصال التسلسلي</button>
-      <button onclick="navigateWithEffect('lesson10.html')">الدرس 10: المشروع النهائي</button>
-    </div>
+    <section>
+      <h2>المستوى الأساسي</h2>
+      <ul>
+        <li><a href="lesson1.html">📘 الدرس 1: مقدمة عن الأردوينو</a></li>
+        <li><a href="lesson2.html">📘 الدرس 2: تشغيل لمبة LED</a></li>
+        <li><a href="lesson3.html">📘 الدرس 3: المقاومة والمكثف</a></li>
+        <li><a href="lesson4.html">📘 الدرس 4: المحركات</a></li>
+        <li><a href="lesson5.html">📘 الدرس 5: المستشعرات</a></li>
+        <li><a href="lesson6.html">📘 الدرس 6: الشاشة LCD</a></li>
+        <li><a href="lesson7.html">📘 الدرس 7: الأزرار</a></li>
+        <li><a href="lesson8.html">📘 الدرس 8: المؤقتات</a></li>
+        <li><a href="lesson9.html">📘 الدرس 9: الاتصال التسلسلي</a></li>
+        <li><a href="lesson10.html">📘 الدرس 10: المشروع النهائي</a></li>
+      </ul>
+    </section>
 
-    <br>
-    <button class="sim-btn" onclick="navigateWithEffect('simulator.html')">
-      🚀 اذهب إلى المحاكي
-    </button>
+    <section>
+      <h2>المستوى المتقدم</h2>
+      <ul>
+        <li><a href="lesson11.html">📘 الدرس 11: التحكم في الإضاءة باستخدام PWM</a></li>
+        <li><a href="lesson12.html">📘 الدرس 12: الحساسات التناظرية المتقدمة</a></li>
+        <li><a href="lesson13.html">📘 الدرس 13: الاتصال اللاسلكي Bluetooth</a></li>
+        <li><a href="lesson14.html">📘 الدرس 14: الاتصال عبر Wi-Fi</a></li>
+        <li><a href="lesson15.html">📘 الدرس 15: تخزين البيانات على بطاقة SD</a></li>
+        <li><a href="lesson16.html">📘 الدرس 16: التحكم عن بعد عبر الريموت IR</a></li>
+        <li><a href="lesson17.html">📘 الدرس 17: بناء نظام إنذار</a></li>
+        <li><a href="lesson18.html">📘 الدرس 18: مشروع ساعة رقمية</a></li>
+        <li><a href="lesson19.html">📘 الدرس 19: مشروع التحكم في درجة الحرارة</a></li>
+        <li><a href="lesson20.html">📘 الدرس 20: مشروع إنترنت الأشياء (IoT)</a></li>
+      </ul>
+    </section>
   </main>
 
   <!-- ملف الصوت -->
   <audio id="clickSound" src="click.mp3" preload="auto"></audio>
 
   <script>
-    // تشغيل الصوت
     function playClickSound() {
       const sound = document.getElementById("clickSound");
-      sound.currentTime = 0; 
+      sound.currentTime = 0;
       sound.play();
     }
 
-    // حركة خروج + انتقال للصفحة الجديدة
     function navigateWithEffect(url) {
-      playClickSound(); // تشغيل الصوت
-      document.body.classList.add("page-exit"); // إضافة كلاس الخروج
+      playClickSound();
+      document.body.classList.add("page-exit");
       setTimeout(() => {
         window.location.href = url;
-      }, 800); // نفس مدة الأنيميشن
+      }, 800);
     }
   </script>
 </body>
 </html>
-
-<div class="progress">
-  <div class="progress-bar" style="width:30%">3/10 دروس مكتملة</div>
-</div>
-
-<div class="nav-lessons">
-  <button onclick="navigateWithEffect('lesson1.html')">⬅️ السابق</button>
-  <button onclick="navigateWithEffect('lesson3.html')">➡️ التالي</button>
-</div>
-
-<button onclick="document.body.classList.toggle('dark-mode')">🌙 تبديل الوضع</button>
