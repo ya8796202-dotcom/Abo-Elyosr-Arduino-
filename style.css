@@ -95,3 +95,20 @@ main {
   background: #d35400;
   transform: scale(1.1);
 }
+
+/* حركة دخول الصفحة */
+body {
+  animation: pageFade 1s ease, pageSlide 1s ease;
+}
+
+/* تأثير التلاشي */
+@keyframes pageFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* تأثير الانزلاق */
+@keyframes pageSlide {
+  from { transform: translateY(30px); }
+  to { transform: translateY(0); }
+}
