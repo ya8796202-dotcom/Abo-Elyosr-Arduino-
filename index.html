@@ -36,3 +36,13 @@
   </main>
 </body>
 </html>
+<script>
+  // نضيف تأثير خروج قبل الانتقال
+  function navigateWithEffect(url) {
+    document.body.classList.add("page-exit");
+    setTimeout(() => {
+      window.location.href = url;
+    }, 800); // نفس مدة الأنيميشن
+  }
+</script>
+
