@@ -15,47 +15,33 @@
   <p>شرح مبسط لمحتوى الدرس...</p>
 
   <!-- شريط التقدم -->
-  <div class="progress-container">
-    <div class="progress-bar" id="progressBar"></div>
+  <div class="progress-container" style="width:100%;background:#ddd;height:10px;border-radius:5px;">
+    <div class="progress-bar" id="progressBar" style="height:10px;background:#4caf50;width:0%;border-radius:5px;"></div>
   </div>
 
   <!-- أزرار التنقل -->
-  <div class="nav-buttons">
-    <button onclick="navigateWithEffect('lessonX-1.html')">⬅️ السابق</button>
-    <button onclick="navigateWithEffect('lessonX+1.html')">➡️ التالي</button>
+  <div class="nav-buttons" style="margin-top:20px;">
+    <button onclick="navigateWithEffect('lesson2-1.html')">⬅️ السابق</button>
+    <button onclick="navigateWithEffect('lesson2+1.html')">➡️ التالي</button>
+    <button onclick="navigateWithEffect('index.html')">🏠 الرئيسية</button>
   </div>
 
   <!-- زرار المحاكي -->
-  <button onclick="navigateWithEffect('simulator.html')">⚙️ المحاكي</button>
+  <button style="margin-top:20px;" onclick="navigateWithEffect('simulator.html')">⚙️ المحاكي</button>
 
   <!-- سكربتات في آخر الملف -->
   <script>
     // شريط التقدم
-    const lessonNumber = X; // غيّر رقم الدرس هنا
+    const lessonNumber = 2; // غيّر رقم الدرس هنا
     const totalLessons = 20;
     const progress = (lessonNumber / totalLessons) * 100;
     document.getElementById("progressBar").style.width = progress + "%";
 
     // التنقل مع تأثير
-    function playClickSound() {
-      const sound = document.getElementById("clickSound");
-      if(sound) {
-        sound.currentTime = 0;
-        sound.play();
-      }
-    }
-
     function navigateWithEffect(url) {
-      playClickSound();
-      document.body.classList.add("page-exit");
-      setTimeout(() => {
-        window.location.href = url;
-      }, 800);
+      window.location.href = url;
     }
   </script>
-
-  <!-- صوت الضغط -->
-  <audio id="clickSound" src="click.mp3" preload="auto"></audio>
 
 </body>
 </html>
