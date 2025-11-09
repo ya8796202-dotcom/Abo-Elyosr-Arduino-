@@ -102,3 +102,43 @@ body {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
+/* أزرار الناف بار */
+nav button {
+  padding: 10px 16px;
+  background: #ffcc00;
+  color: #222;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.3s ease;
+}
+nav button:hover { background: #ffdb4d; }
+nav button:active { transform: scale(0.98); }
+
+/* شبكة الأزرار */
+.buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.buttons-grid button {
+  padding: 12px 16px;
+  background: #2196f3;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.08s ease;
+}
+
+.buttons-grid button:hover { background: #1976d2; }
+.buttons-grid button:active { transform: scale(0.98); }
+
+/* حركة الخروج */
+.page-exit { animation: fadeOut 0.8s forwards; }
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
