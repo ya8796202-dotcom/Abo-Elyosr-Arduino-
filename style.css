@@ -231,3 +231,23 @@ button.simulator:hover {
   letter-spacing: 1px;             /* مسافة بين الحروف */
 }
 
+
+
+/* داخل ملف style.css */
+.platform-header {
+  display: flex;
+  align-items: center;
+  background-color: #1e1e1e; /* لون الهيدر */
+  padding: 10px 20px;
+}
+
+.platform-logo {
+  height: 50px; /* حجم الشعار */
+  margin-right: 15px;
+}
+
+.platform-title {
+  color: #fff;
+  font-size: 22px;
+  font-weight: bold;
+}
