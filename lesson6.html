@@ -3,182 +3,431 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>معرض صور أردوينو</title>
+  <title>معرض صور أردوينو — تفاعلي وأنيق</title>
+  <meta name="description" content="معرض صور فوتوغرافية لأنواع أردوينو مع إمكانية إضافة صور من جهازك، حفظ محلي، بحث، وفلاتر، وتأثيرات متحركة." />
   <style>
-    body{margin:0;font-family:system-ui,"Noto Naskh Arabic",sans-serif;background:#0b1224;color:#e6eef8;padding:20px}
-    header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
-    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,#1d4ed8,#06b6d4)}
-    h1{margin:0;font-size:22px}
-    p{margin:4px 0 0;color:#93c5fd;font-size:14px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
-    .card{background:#071428;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
-    .card img{width:100%;height:auto;display:block}
-    .card h3{margin:10px;font-size:16px;color:#a5b4fc}
-    .card p{margin:0 10px 10px;font-size:13px;color:#cbd5e1}
-  </style>
-</head>
-<body>
-  <header>
-    <div class="logo"></div>
-    <div>
-      <h1>معرض صور فوتوغرافية لأردوينو</h1>
-      <p>صور من موقع Arduino الرسمي وويكيبيديا</p>
-    </div>
-  </header>
+    :root{
+      --bg:#07102a; --panel:#071428; --card:#0b1224; --glass:rgba(255,255,255,0.03);
+      --accent:#1d4ed8; --accent2:#06b6d4; --muted:#93c5fd; --text:#e6eef8;
+      --radius:14px; --shadow:0 12px 30px rgba(2,6,23,.6);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:system-ui,"Noto Naskh Arabic",Tahoma,Arial; background:linear-gradient(180deg,#041026,#07102a);
+      color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; padding:20px;
+    }
 
-  <main class="grid">
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/3/38/Arduino_Uno_-_R3.jpg" alt="Arduino Uno R3" />
-      <h3>Arduino Uno R3</h3>
-      <p>اللوحة الأكثر شيوعًا للمبتدئين.</p>
-    </div>
+    header{display:flex;gap:12px;align-items:center;max-width:1200px;margin:0 auto 18px}
+    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 8px 30px rgba(29,78,216,.12)}
+    h1{margin:0;font-size:20px}
+    p.lead{margin:4px 0 0;color:var(--muted);font-size:13px}
 
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Arduino_Nano_v3.0.jpg" alt="Arduino Nano" />
-      <h3>Arduino Nano</h3>
-      <p>لوحة صغيرة مناسبة للمشاريع المدمجة.</p>
-    </div>
+    .container{max-width:1200px;margin:18px auto;display:grid;grid-template-columns:1fr;gap:14px;padding:0 8px}
 
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Arduino_Mega_2560.jpg" alt="Arduino Mega 2560" />
-      <h3>Arduino Mega 2560</h3>
-      <p>لوحة بعدد كبير من المداخل والمخارج.</p>
-    </div>
+    .panel{background:linear-gradient(180deg,#071428,#061026);border-radius:16px;padding:14px;border:1px solid var(--glass);box-shadow:var(--shadow)}
+    .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+    .search{flex:1;display:flex;gap:8px;align-items:center}
+    .input, .select, .btn{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.04);background:#071428;color:var(--text)}
+    .input{flex:1}
+    .select{width:160px}
+    .btn{cursor:pointer;background:linear-gradient(90deg,var(--accent),var(--accent2));border:none;color:#022;font-weight:800}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.06);color:var(--text);font-weight:700}
+    .small{font-size:13px;color:var(--muted)}
 
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/Arduino_Leonardo.jpg" alt="Arduino Leonardo" />
-      <h3>Arduino Leonardo</h3>
-      <p>يدعم محاكاة لوحة إدخال (HID).</p>
-    </div>
-
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/2/28/Arduino_Due.jpg" alt="Arduino Due" />
-      <h3>Arduino Due</h3>
-      <p>لوحة بمعالج ARM 32‑bit.</p>
-    </div>
-
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Arduino_Pro_Mini.jpg" alt="Arduino Pro Mini" />
-      <h3>Arduino Pro Mini</h3>
-      <p>لوحة صغيرة وخفيفة للمشاريع المدمجة.</p>
-    </div>
-
-    <div class="card">
-      <img src="https://store.arduino.cc/cdn/shop/products/ABX00012_01.front_1024x1024.jpg" alt="Arduino MKR Zero" />
-      <h3>Arduino MKR Zero</h3>
-      <p>جزء من سلسلة MKR المخصصة للـ IoT.</p>
-    </div>
-
-    <div class="card">
-      <img src="https://store.arduino.cc/cdn/shop/products/ABX00033_01.front_1024x1024.jpg" alt="Arduino Nano Every" />
-      <h3>Arduino Nano Every</h3>
-      <p>نسخة محسّنة من Nano.</p>
-    </div>
-
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/3/3d/NodeMCU_DEVKIT_v1.0.jpg" alt="ESP8266 NodeMCU" />
-      <h3>ESP8266 NodeMCU</h3>
-      <p>وحدة Wi‑Fi شائعة لمشاريع IoT.</p>
-    </div>
-
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/9/92/ESP32-DevKitC.jpg" alt="ESP32 DevKitC" />
-      <h3>ESP32 DevKitC</h3>
-      <p>وحدة قوية مع Wi‑Fi وBluetooth.</p>
-    </div>
-  </main>
-</body>
-</html>
-
-
-<!doctype html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>معرض صور أردوينو</title>
-  <style>
-    body{margin:0;font-family:system-ui,"Noto Naskh Arabic",sans-serif;background:#0b1224;color:#e6eef8;padding:20px}
-    header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
-    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,#1d4ed8,#06b6d4)}
-    h1{margin:0;font-size:22px}
-    p{margin:4px 0 0;color:#93c5fd;font-size:14px}
+    /* gallery grid */
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
-    .card{background:#071428;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
-    .card img{width:100%;height:auto;display:block}
-    .card h3{margin:10px;font-size:16px;color:#a5b4fc}
-    .card p{margin:0 10px 10px;font-size:13px;color:#cbd5e1}
-    .controls{margin-bottom:20px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    input,button{padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.08)}
-    input{background:#071428;color:#e6eef8}
-    button{cursor:pointer;background:linear-gradient(90deg,#1d4ed8,#06b6d4);color:#022;font-weight:700;border:none}
-    button.ghost{background:transparent;color:#e6eef8;border:1px solid rgba(255,255,255,.08)}
+    .card{background:linear-gradient(180deg,#071428,#061026);border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.03);transition:transform .28s ease, box-shadow .28s ease}
+    .card:hover{transform:translateY(-8px) scale(1.01);box-shadow:0 20px 40px rgba(2,6,23,.7)}
+    .thumb{position:relative;overflow:hidden;background:#000;height:180px;display:flex;align-items:center;justify-content:center}
+    .thumb img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.9,.2,1);transform-origin:center}
+    .card:hover .thumb img{transform:scale(1.08) rotate(.5deg)}
+    .meta{padding:12px;display:flex;flex-direction:column;gap:8px}
+    .meta h3{margin:0;font-size:15px;color:#a5b4fc}
+    .meta p{margin:0;color:var(--muted);font-size:13px}
+    .tags{display:flex;gap:8px;flex-wrap:wrap}
+    .tag{background:rgba(255,255,255,.03);padding:6px 8px;border-radius:999px;font-size:12px;color:#cfe8ff}
+
+    .card .actions{display:flex;gap:8px;padding:12px;border-top:1px solid rgba(255,255,255,.02);align-items:center}
+    .actions .btn{padding:8px 10px;font-size:13px}
+    .actions .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.04)}
+
+    /* upload area */
+    .uploader{display:flex;gap:10px;align-items:center;padding:12px;border-radius:12px;border:1px dashed rgba(255,255,255,.04);background:linear-gradient(180deg,rgba(255,255,255,.01),transparent)}
+    .uploader.dragover{border-color:rgba(29,78,216,.9);box-shadow:0 8px 30px rgba(29,78,216,.06)}
+    .file-preview{display:flex;gap:10px;align-items:center}
+    .file-preview img{width:64px;height:48px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,.04)}
+
+    /* lightbox */
+    .lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(0,0,0,.6),rgba(0,0,0,.85));z-index:120}
+    .lightbox.open{display:flex}
+    .lightbox .panel{max-width:1100px;width:92%;border-radius:12px;overflow:hidden;background:#000;border:1px solid rgba(255,255,255,.04)}
+    .lightbox img{width:100%;height:auto;display:block}
+    .lightbox .caption{padding:12px;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+
+    /* subtle animations */
+    @keyframes fadeInUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+    .card{animation:fadeInUp .36s ease both}
+
+    /* responsive */
+    @media (max-width:720px){
+      .thumb{height:160px}
+      .controls{flex-direction:column;align-items:stretch}
+      .select{width:100%}
+    }
   </style>
 </head>
 <body>
   <header>
-    <div class="logo"></div>
+    <div class="logo" aria-hidden="true"></div>
     <div>
-      <h1>معرض صور أردوينو</h1>
-      <p>صور فوتوغرافية من مصادر موثوقة + إمكانية إضافة صور من جهازك</p>
+      <h1>معرض صور أردوينو — تفاعلي</h1>
+      <p class="lead">صور فوتوغرافية لأنواع أردوينو مع إضافة صور من جهازك، حفظ محلي، بحث، وفلاتر مع ستايل أنيق</p>
     </div>
   </header>
 
-  <div class="controls">
-    <input type="file" id="fileInput" accept="image/*" />
-    <input type="text" id="titleInput" placeholder="عنوان الصورة" />
-    <button id="addBtn">أضف الصورة</button>
+  <main class="container">
+    <section class="panel" aria-labelledby="controlsTitle">
+      <div id="controlsTitle" class="small" style="margin-bottom:8px">أدوات المعرض</div>
+
+      <div class="controls" role="region" aria-label="أدوات">
+        <div class="search">
+          <input id="search" class="input" placeholder="ابحث بعنوان أو وسم (مثال: Uno, ESP32, NeoPixel)..." />
+          <select id="filterLevel" class="select" aria-label="فلتر المستوى">
+            <option value="">كل المستويات</option>
+            <option value="beginner">مبتدئ</option>
+            <option value="intermediate">متوسط</option>
+            <option value="advanced">متقدم</option>
+          </select>
+        </div>
+
+        <div style="display:flex;gap:8px">
+          <button id="resetDefaults" class="btn ghost">إعادة الصور الافتراضية</button>
+          <button id="clearLocal" class="btn ghost">مسح الصور المضافة</button>
+        </div>
+      </div>
+
+      <div class="uploader" id="uploader" aria-label="منطقة رفع الصور">
+        <div style="flex:1">
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="fileInput" type="file" accept="image/*" style="display:none" />
+            <button id="chooseBtn" class="btn ghost">اختر صورة</button>
+            <input id="urlInput" class="input" placeholder="أو ألصق رابط صورة (URL)" />
+            <input id="titleInput" class="input" placeholder="عنوان الصورة (اختياري)" style="width:220px" />
+            <select id="levelInput" class="select" style="width:140px">
+              <option value="">مستوى</option><option value="beginner">مبتدئ</option><option value="intermediate">متوسط</option><option value="advanced">متقدم</option>
+            </select>
+            <button id="addBtn" class="btn">أضف</button>
+          </div>
+          <div class="small" style="margin-top:8px;color:var(--muted)">يمكنك السحب والإفلات هنا أيضاً. الصور المضافة تحفظ محليًا في المتصفح.</div>
+        </div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div id="gallery" class="grid" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox" role="dialog" aria-hidden="true">
+    <div class="panel">
+      <img id="lightboxImg" alt="عرض الصورة" />
+      <div class="caption">
+        <div id="lightboxTitle" style="font-weight:700;color:#dbeafe"></div>
+        <div style="display:flex;gap:8px">
+          <button id="downloadBtn" class="btn ghost">تحميل</button>
+          <button id="closeLightbox" class="btn ghost">إغلاق</button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <main class="grid" id="gallery">
-    <!-- صور افتراضية -->
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/3/38/Arduino_Uno_-_R3.jpg" alt="Arduino Uno R3" />
-      <h3>Arduino Uno R3</h3>
-      <p>اللوحة الأكثر شيوعًا للمبتدئين.</p>
-    </div>
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Arduino_Nano_v3.0.jpg" alt="Arduino Nano" />
-      <h3>Arduino Nano</h3>
-      <p>لوحة صغيرة مناسبة للمشاريع المدمجة.</p>
-    </div>
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Arduino_Mega_2560.jpg" alt="Arduino Mega 2560" />
-      <h3>Arduino Mega 2560</h3>
-      <p>لوحة بعدد كبير من المداخل والمخارج.</p>
-    </div>
-  </main>
-
   <script>
-    const fileInput = document.getElementById('fileInput');
-    const titleInput = document.getElementById('titleInput');
-    const addBtn = document.getElementById('addBtn');
-    const gallery = document.getElementById('gallery');
+    /************************************************************************
+     * Arduino Photo Gallery (single HTML file)
+     * - صور افتراضية من ويكيبيديا ومتجر Arduino
+     * - إضافة صور عبر ملف أو رابط
+     * - حفظ الصور المضافة في localStorage (Base64 أو URL)
+     * - بحث، فلتر حسب مستوى، lightbox، تأثيرات أنيقة
+     ************************************************************************/
 
-    addBtn.addEventListener('click', ()=>{
-      const file = fileInput.files[0];
-      if(!file){ alert('اختر صورة أولاً'); return; }
+    const STORAGE_KEY = 'arduino_gallery_v3';
+    const DEFAULTS_KEY = 'arduino_gallery_defaults_v3';
+
+    // صور افتراضية (روابط موثوقة)
+    const defaultItems = [
+      { id:'uno', title:'Arduino Uno R3', src:'https://upload.wikimedia.org/wikipedia/commons/3/38/Arduino_Uno_-_R3.jpg', level:'beginner', tags:['uno','arduino'] },
+      { id:'nano', title:'Arduino Nano', src:'https://upload.wikimedia.org/wikipedia/commons/6/6e/Arduino_Nano_v3.0.jpg', level:'beginner', tags:['nano','arduino'] },
+      { id:'mega', title:'Arduino Mega 2560', src:'https://upload.wikimedia.org/wikipedia/commons/3/3f/Arduino_Mega_2560.jpg', level:'advanced', tags:['mega','arduino'] },
+      { id:'leonardo', title:'Arduino Leonardo', src:'https://upload.wikimedia.org/wikipedia/commons/4/4d/Arduino_Leonardo.jpg', level:'intermediate', tags:['leonardo','arduino'] },
+      { id:'due', title:'Arduino Due', src:'https://upload.wikimedia.org/wikipedia/commons/2/28/Arduino_Due.jpg', level:'advanced', tags:['due','arduino'] },
+      { id:'promini', title:'Arduino Pro Mini', src:'https://upload.wikimedia.org/wikipedia/commons/0/0c/Arduino_Pro_Mini.jpg', level:'intermediate', tags:['promini','arduino'] },
+      { id:'mkrzero', title:'Arduino MKR Zero', src:'https://store.arduino.cc/cdn/shop/products/ABX00012_01.front_1024x1024.jpg', level:'intermediate', tags:['mkr','iot'] },
+      { id:'nanoevery', title:'Arduino Nano Every', src:'https://store.arduino.cc/cdn/shop/products/ABX00033_01.front_1024x1024.jpg', level:'intermediate', tags:['nanoevery'] },
+      { id:'esp8266', title:'ESP8266 NodeMCU', src:'https://upload.wikimedia.org/wikipedia/commons/3/3d/NodeMCU_DEVKIT_v1.0.jpg', level:'intermediate', tags:['esp8266','wifi'] },
+      { id:'esp32', title:'ESP32 DevKitC', src:'https://upload.wikimedia.org/wikipedia/commons/9/92/ESP32-DevKitC.jpg', level:'intermediate', tags:['esp32','wifi','ble'] },
+      { id:'rp2040', title:'Arduino Nano RP2040', src:'https://upload.wikimedia.org/wikipedia/commons/6/6b/Arduino_Nano_RP2040_Connect.jpg', level:'advanced', tags:['rp2040','nano'] },
+      { id:'micro', title:'Arduino Micro', src:'https://upload.wikimedia.org/wikipedia/commons/1/1b/Arduino_Micro.jpg', level:'intermediate', tags:['micro','hid'] }
+    ];
+
+    // Save defaults once (so reset works)
+    if(!localStorage.getItem(DEFAULTS_KEY)) localStorage.setItem(DEFAULTS_KEY, JSON.stringify(defaultItems));
+
+    // load gallery (defaults + user items)
+    function loadGallery(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) {
+          // initialize with defaults
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultItems));
+          return defaultItems.slice();
+        }
+        return JSON.parse(raw);
+      }catch(e){
+        console.error('loadGallery error', e);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultItems));
+        return defaultItems.slice();
+      }
+    }
+
+    function saveGallery(items){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    let items = loadGallery();
+
+    // DOM
+    const galleryEl = document.getElementById('gallery');
+    const searchEl = document.getElementById('search');
+    const filterLevelEl = document.getElementById('filterLevel');
+    const fileInput = document.getElementById('fileInput');
+    const chooseBtn = document.getElementById('chooseBtn');
+    const urlInput = document.getElementById('urlInput');
+    const titleInput = document.getElementById('titleInput');
+    const levelInput = document.getElementById('levelInput');
+    const addBtn = document.getElementById('addBtn');
+    const uploader = document.getElementById('uploader');
+    const resetDefaultsBtn = document.getElementById('resetDefaults');
+    const clearLocalBtn = document.getElementById('clearLocal');
+
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxTitle = document.getElementById('lightboxTitle');
+    const closeLightbox = document.getElementById('closeLightbox');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    // helpers
+    function uid(){ return 'id_' + Math.random().toString(36).slice(2,9); }
+    function escapeHtml(s){ return String(s || '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch])); }
+
+    // render gallery
+    function render(){
+      galleryEl.innerHTML = '';
+      const q = (searchEl.value || '').trim().toLowerCase();
+      const level = filterLevelEl.value;
+      const filtered = items.filter(it => {
+        const text = (it.title + ' ' + (it.tags||[]).join(' ')).toLowerCase();
+        const matchesQ = !q || text.includes(q);
+        const matchesLevel = !level || it.level === level;
+        return matchesQ && matchesLevel;
+      });
+
+      if(filtered.length === 0){
+        galleryEl.innerHTML = `<div style="grid-column:1/-1;padding:28px;text-align:center;color:var(--muted);border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.01),transparent)">لا توجد صور مطابقة</div>`;
+        return;
+      }
+
+      filtered.forEach(it => {
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="thumb" data-id="${escapeHtml(it.id)}" role="button" tabindex="0" aria-label="عرض ${escapeHtml(it.title)}">
+            <img loading="lazy" src="${escapeHtml(it.src)}" alt="${escapeHtml(it.title)}" onerror="this.dataset.err=1;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22240%22 height=%22140%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23071428%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%2393c5fd%22 font-size=%2212%22 font-family=%22Arial%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22>فشل تحميل الصورة</text></svg>'" />
+          </div>
+          <div class="meta">
+            <h3>${escapeHtml(it.title)}</h3>
+            <p class="small">${escapeHtml(it.level || '')} ${it.tags && it.tags.length ? ' • ' + it.tags.join(', ') : ''}</p>
+            <div class="tags">${(it.tags||[]).slice(0,4).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
+          </div>
+          <div class="actions">
+            <button class="btn ghost" data-action="view" data-id="${escapeHtml(it.id)}">عرض</button>
+            <button class="btn ghost" data-action="copy" data-id="${escapeHtml(it.id)}">نسخ الرابط</button>
+            <button class="btn ghost" data-action="del" data-id="${escapeHtml(it.id)}">حذف</button>
+          </div>
+        `;
+        galleryEl.appendChild(card);
+      });
+    }
+
+    // open lightbox
+    function openLightbox(item){
+      lightboxImg.src = item.src;
+      lightboxTitle.textContent = item.title || '';
+      downloadBtn.onclick = ()=> {
+        // download via anchor
+        const a = document.createElement('a');
+        a.href = item.src;
+        a.download = (item.title || 'image') + '.jpg';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      };
+      lightbox.classList.add('open');
+      lightbox.setAttribute('aria-hidden','false');
+    }
+
+    // events
+    galleryEl.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button[data-action]');
+      if(btn){
+        const id = btn.dataset.id;
+        const action = btn.dataset.action;
+        const item = items.find(x=>x.id === id);
+        if(!item) return;
+        if(action === 'view') openLightbox(item);
+        else if(action === 'copy'){
+          navigator.clipboard.writeText(item.src).then(()=> {
+            btn.textContent = 'تم النسخ ✅';
+            setTimeout(()=> btn.textContent = 'نسخ الرابط', 1200);
+          }).catch(()=> alert('فشل النسخ'));
+        } else if(action === 'del'){
+          if(!confirm('حذف هذه الصورة من المعرض؟')) return;
+          items = items.filter(x=>x.id !== id);
+          saveGallery(items);
+          render();
+        }
+      } else {
+        // click on thumb to view
+        const thumb = e.target.closest('.thumb');
+        if(thumb){
+          const id = thumb.dataset.id;
+          const item = items.find(x=>x.id === id);
+          if(item) openLightbox(item);
+        }
+      }
+    });
+
+    // keyboard accessibility for thumbs
+    galleryEl.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter'){
+        const thumb = e.target.closest('.thumb');
+        if(thumb){
+          const id = thumb.dataset.id;
+          const item = items.find(x=>x.id === id);
+          if(item) openLightbox(item);
+        }
+      }
+    });
+
+    closeLightbox.addEventListener('click', ()=> {
+      lightbox.classList.remove('open');
+      lightbox.setAttribute('aria-hidden','true');
+      lightboxImg.src = '';
+    });
+    lightbox.addEventListener('click', (e)=> { if(e.target === lightbox) closeLightbox.click(); });
+
+    // search & filter
+    searchEl.addEventListener('input', render);
+    filterLevelEl.addEventListener('change', render);
+
+    // choose file
+    chooseBtn.addEventListener('click', ()=> fileInput.click());
+    fileInput.addEventListener('change', ()=> {
+      const f = fileInput.files[0];
+      if(!f) return;
+      previewAndAddFile(f);
+    });
+
+    // drag & drop
+    ['dragenter','dragover'].forEach(ev => {
+      uploader.addEventListener(ev, (e)=> { e.preventDefault(); uploader.classList.add('dragover'); });
+    });
+    ['dragleave','drop'].forEach(ev => {
+      uploader.addEventListener(ev, (e)=> { e.preventDefault(); uploader.classList.remove('dragover'); });
+    });
+    uploader.addEventListener('drop', (e)=> {
+      const f = e.dataTransfer.files && e.dataTransfer.files[0];
+      if(f) previewAndAddFile(f);
+    });
+
+    // add via URL or file
+    addBtn.addEventListener('click', async ()=>{
+      const url = urlInput.value.trim();
+      const title = titleInput.value.trim() || 'صورة مضافة';
+      const level = levelInput.value || '';
+      if(url){
+        // add URL directly
+        const id = uid();
+        items.unshift({ id, title, src: url, level, tags: extractTags(title) });
+        saveGallery(items);
+        urlInput.value = ''; titleInput.value = ''; levelInput.value = '';
+        render();
+        return;
+      }
+      // if file selected
+      const f = fileInput.files[0];
+      if(f){
+        previewAndAddFile(f);
+        return;
+      }
+      alert('اختر ملفًا أو ألصق رابط صورة ثم اضغط أضف');
+    });
+
+    // preview file and add (convert to DataURL)
+    function previewAndAddFile(file){
+      if(!file.type.startsWith('image/')){ alert('الملف ليس صورة'); return; }
       const reader = new FileReader();
       reader.onload = function(e){
-        const card = document.createElement('div');
-        card.className = 'card';
-        const img = document.createElement('img');
-        img.src = e.target.result;
-        img.alt = titleInput.value || 'صورة مضافة';
-        const h3 = document.createElement('h3');
-        h3.textContent = titleInput.value || 'صورة مضافة';
-        const p = document.createElement('p');
-        p.textContent = 'صورة من المستخدم';
-        card.appendChild(img);
-        card.appendChild(h3);
-        card.appendChild(p);
-        gallery.prepend(card);
-        // reset
-        fileInput.value = '';
-        titleInput.value = '';
+        const src = e.target.result;
+        const title = titleInput.value.trim() || file.name || 'صورة مضافة';
+        const level = levelInput.value || '';
+        const id = uid();
+        items.unshift({ id, title, src, level, tags: extractTags(title), user:true });
+        saveGallery(items);
+        // reset inputs
+        fileInput.value = ''; urlInput.value = ''; titleInput.value = ''; levelInput.value = '';
+        render();
       };
       reader.readAsDataURL(file);
+    }
+
+    // extract tags from title (simple)
+    function extractTags(title){
+      return title.split(/[\s,._-]+/).slice(0,6).map(s=>s.toLowerCase()).filter(Boolean);
+    }
+
+    // reset to defaults
+    resetDefaultsBtn.addEventListener('click', ()=> {
+      if(!confirm('إعادة الصور إلى المجموعة الافتراضية (سيُحذف كل الصور المضافة)؟')) return;
+      const defaults = JSON.parse(localStorage.getItem(DEFAULTS_KEY) || '[]');
+      items = defaults.slice();
+      saveGallery(items);
+      render();
     });
+
+    // clear only user-added images (keep defaults)
+    clearLocalBtn.addEventListener('click', ()=> {
+      if(!confirm('حذف كل الصور المضافة من جهازك؟')) return;
+      const defaults = JSON.parse(localStorage.getItem(DEFAULTS_KEY) || '[]');
+      // keep only items whose src matches a default src
+      const defaultSrcs = new Set(defaults.map(d=>d.src));
+      items = items.filter(it => defaultSrcs.has(it.src));
+      saveGallery(items);
+      render();
+    });
+
+    // initial render
+    render();
+
+    // accessibility: keyboard shortcut Ctrl+K to focus search
+    document.addEventListener('keydown', (e)=> {
+      if(e.ctrlKey && e.key.toLowerCase() === 'k'){ e.preventDefault(); searchEl.focus(); }
+    });
+
+    // expose render for debugging
+    window.__arduinoGallery = { render, items, saveGallery };
+
   </script>
 </body>
 </html>
