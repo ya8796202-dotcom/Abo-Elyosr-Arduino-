@@ -1,34 +1,331 @@
-<!DOCTYPE html>
-<html lang="ar">
+<!doctype html>
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>تعلم برمجة الأردوينو - الدرس 6</title>
-  <meta name="description" content="شرح الحساسات في الأردوينو.">
-  <meta name="keywords" content="Arduino, تعلم الأردوينو, الحساسات, sensors">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>معرض صور أردوينو — صور مدمجة</title>
+  <meta name="description" content="صفحة HTML واحدة تعرض صوراً مدمجة (SVG) لعدة أنواع شائعة من لوحات أردوينو ووحدات متعلقة بها." />
+  <style>
+    :root{
+      --bg:#0b1224; --card:#071428; --accent:#1d4ed8; --muted:#93c5fd; --text:#e6eef8;
+      --glass: rgba(255,255,255,0.03);
+      --radius:12px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:system-ui, "Noto Naskh Arabic", Tahoma, Arial, sans-serif;
+      background:linear-gradient(180deg,#07102a,#071428); color:var(--text); -webkit-font-smoothing:antialiased;
+      padding:20px;
+    }
+    header{max-width:1200px;margin:0 auto 18px;display:flex;align-items:center;gap:12px}
+    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#06b6d4)}
+    h1{margin:0;font-size:20px}
+    p.lead{margin:6px 0 0;color:var(--muted);font-size:13px}
+
+    .wrap{max-width:1200px;margin:18px auto}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    @media (max-width:980px){ .grid{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:640px){ .grid{grid-template-columns:1fr} }
+
+    .card{background:linear-gradient(180deg,var(--card),#061026);border-radius:12px;padding:12px;border:1px solid var(--glass);display:flex;flex-direction:column;gap:10px}
+    .card h3{margin:0;font-size:16px;color:#a5b4fc}
+    .card p{margin:0;color:var(--muted);font-size:13px}
+    .svg-wrap{background:#000;border-radius:8px;padding:10px;display:flex;align-items:center;justify-content:center}
+    .caption{display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .tag{background:rgba(255,255,255,0.03);padding:6px 8px;border-radius:999px;font-size:12px;color:var(--muted)}
+    .note{font-size:12px;color:#c7d2fe}
+    footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
+  </style>
 </head>
 <body>
-  <div class="yasser-logo">
-  🛠️ <strong>ياسر أحمد حمدي</strong>
-</div>
-  <h1>📘 الدرس 6: الحساسات (Sensors)</h1>
-  <p>هنتعلم إزاي نوصل حساس ونقرأ بياناته.</p>
+  <header>
+    <div class="logo" aria-hidden="true"></div>
+    <div>
+      <h1>معرض صور أردوينو (مضمّن SVG)</h1>
+      <p class="lead">صور توضيحية مدمجة لعدة أنواع شائعة من لوحات أردوينو ووحدات متعلقة بها — قابلة للعرض دون اتصال.</p>
+    </div>
+  </header>
 
-  <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+  <main class="wrap" role="main">
+    <section class="grid" aria-live="polite">
+      <!-- Arduino Uno -->
+      <article class="card" id="uno">
+        <div class="svg-wrap" role="img" aria-label="صورة توضيحية لأردوينو أونو">
+          <svg width="320" height="120" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="false" focusable="false">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#1e3a8a"/><stop offset="1" stop-color="#06b6d4"/></linearGradient>
+            </defs>
+            <rect x="8" y="12" rx="8" ry="8" width="304" height="96" fill="#0b3b5a" stroke="#083047" stroke-width="2"/>
+            <!-- header -->
+            <rect x="18" y="20" width="120" height="18" rx="4" fill="url(#g1)"/>
+            <text x="26" y="33" font-size="12" fill="#fff" font-family="sans-serif">Arduino UNO R3</text>
+            <!-- pins top -->
+            <g fill="#dbeafe">
+              <circle cx="50" cy="18" r="3" />
+              <circle cx="66" cy="18" r="3" />
+              <circle cx="82" cy="18" r="3" />
+              <circle cx="98" cy="18" r="3" />
+              <circle cx="114" cy="18" r="3" />
+            </g>
+            <!-- pins bottom -->
+            <g fill="#dbeafe">
+              <circle cx="50" cy="102" r="3" />
+              <circle cx="66" cy="102" r="3" />
+              <circle cx="82" cy="102" r="3" />
+              <circle cx="98" cy="102" r="3" />
+              <circle cx="114" cy="102" r="3" />
+            </g>
+            <!-- connectors right -->
+            <rect x="220" y="36" width="70" height="48" rx="6" fill="#07263a"/>
+            <text x="230" y="60" font-size="11" fill="#9ec5ff">DIGITAL</text>
+            <!-- USB -->
+            <rect x="18" y="64" width="28" height="18" rx="3" fill="#9ca3af"/>
+            <text x="22" y="76" font-size="9" fill="#022">USB</text>
+          </svg>
+        </div>
+        <div class="caption">
+          <h3>Arduino Uno</h3>
+          <span class="tag">مبتدئ</span>
+        </div>
+        <p>لوحة شائعة للمبتدئين، مناسبة للمشاريع العامة والتعليم.</p>
+      </article>
 
-  <div class="nav-buttons">
-    <button onclick="navigateWithEffect('lesson5.html')">⬅️ السابق</button>
-    <button onclick="navigateWithEffect('lesson7.html')">➡️ التالي</button>
-    <button onclick="navigateWithEffect('index.html')">🏠 الرئيسية</button>
-  </div>
+      <!-- Arduino Nano -->
+      <article class="card" id="nano">
+        <div class="svg-wrap" role="img" aria-label="صورة توضيحية لأردوينو نانو">
+          <svg width="320" height="120" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg">
+            <rect x="40" y="28" rx="6" ry="6" width="240" height="64" fill="#0b2f3f" stroke="#083047" stroke-width="2"/>
+            <text x="70" y="52" font-size="12" fill="#a5b4fc">Arduino Nano</text>
+            <g fill="#dbeafe">
+              <!-- left pins -->
+              <rect x="44" y="36" width="8" height="8" rx="2"/>
+              <rect x="44" y="52" width="8" height="8" rx="2"/>
+              <rect x="44" y="68" width="8" height="8" rx="2"/>
+              <!-- right pins -->
+              <rect x="268" y="36" width="8" height="8" rx="2"/>
+              <rect x="268" y="52" width="8" height="8" rx="2"/>
+              <rect x="268" y="68" width="8" height="8" rx="2"/>
+            </g>
+            <rect x="140" y="64" width="40" height="12" rx="3" fill="#9ca3af"/>
+            <text x="146" y="73" font-size="9" fill="#022">USB</text>
+          </svg>
+        </div>
+        <div class="caption">
+          <h3>Arduino Nano</h3>
+          <span class="tag">محمول</span>
+        </div>
+        <p>لوحة صغيرة مناسبة للمشاريع المدمجة والـ breadboard.</p>
+      </article>
 
-  <button onclick="navigateWithEffect('simulator.html')">⚙️ المحاكي</button>
+      <!-- Arduino Mega -->
+      <article class="card" id="mega">
+        <div class="svg-wrap" role="img" aria-label="صورة توضيحية لأردوينو ميجا">
+          <svg width="320" height="120" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg">
+            <rect x="12" y="12" rx="8" ry="8" width="296" height="96" fill="#072b3a" stroke="#04202a" stroke-width="2"/>
+            <text x="24" y="34" font-size="12" fill="#a5b4fc">Arduino MEGA</text>
+            <!-- many pins -->
+            <g fill="#dbeafe">
+              <!-- top row -->
+              <circle cx="40" cy="22" r="3"/><circle cx="60" cy="22" r="3"/><circle cx="80" cy="22" r="3"/><circle cx="100" cy="22" r="3"/><circle cx="120" cy="22" r="3"/><circle cx="140" cy="22" r="3"/>
+              <!-- bottom row -->
+              <circle cx="40" cy="98" r="3"/><circle cx="60" cy="98" r="3"/><circle cx="80" cy="98" r="3"/><circle cx="100" cy="98" r="3"/><circle cx="120" cy="98" r="3"/><circle cx="140" cy="98" r="3"/>
+            </g>
+            <rect x="220" y="36" width="70" height="48" rx="6" fill="#083047"/>
+            <text x="228" y="60" font-size="11" fill="#9ec5ff">I/O</text>
+          </svg>
+        </div>
+        <div class="caption">
+          <h3>Arduino Mega</h3>
+          <span class="tag">متقدم</span>
+        </div>
+        <p>لوحة بعدد كبير من المداخل والمخارج للمشاريع المعقدة.</p>
+      </article>
 
-  <script>
-    const lessonNumber = 6, totalLessons = 10;
-    document.getElementById("progressBar").style.width = (lessonNumber/totalLessons*100)+"%";
-    function navigateWithEffect(url){ window.location.href = url; }
-  </script>
+      <!-- Arduino Leonardo -->
+      <article class="card" id="leonardo">
+        <div class="svg-wrap" role="img" aria-label="صورة توضيحية لأردوينو ليوناردو">
+          <svg width="320" height="120" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg">
+            <rect x="24" y="20" rx="8" ry="8" width="272" height="80" fill="#0b2f3f" stroke="#04202a" stroke-width="2"/>
+            <text x="36" y="44" font-size="12" fill="#a5b4fc">Arduino Leonardo</text>
+            <rect x="40" y="64" width="40" height="12" rx="3" fill="#9ca3af"/>
+            <text x="44" y="73" font-size="9" fill="#022">USB</text>
+            <g fill="#dbeafe">
+              <rect x="92" y="32" width="8" height="8" rx="2"/><rect x="108" y="32" width="8" height="8" rx="2"/>
+              <rect x="92" y="80" width="8" height="8" rx="2"/><rect x="108" y="80" width="8" height="8" rx="2"/>
+            </g>
+          </svg>
+        </div>
+        <div class="caption">
+          <h3>Arduino Leonardo</h3>
+          <span class="tag">متوسط</span>
+        </div>
+        <p>يدعم محاكاة لوحة إدخال (HID) مثل لوحة مفاتيح وفأرة.</p>
+      </article>
+
+      <!-- Arduino Due -->
+      <article class="card" id="due">
+        <div class="svg-wrap" role="img" aria-label="صورة توضيحية لأردوينو ديو">
+          <svg width="320" height="120" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg">
+            <rect x="16" y="16" rx="8" ry="8" width="288" height="88" fill="#062b3a" stroke="#041b22" stroke-width="2"/>
+            <text x="28" y="36" font-size="12" fill="#a5b4fc">Arduino DUE</text>
+            <rect x="220" y="36" width="70" height="48" rx="6" fill="#083047"/>
+            <text x="228" y="60" font-size="11" fill="#9ec5ff">ARM</text>
+            <g fill="#dbeafe">
+              <circle cx="60" cy="28" r="3"/><circle cx="80" cy="28" r="3"/><circle cx="100" cy="28" r="3"/>
+              <circle cx="60" cy="92" r="3"/><circle cx="80" cy="92" r="3"/><circle cx="100" cy="92" r="3"/>
+            </g>
+          </svg>
+        </div>
+        <div class="caption">
+          <h3>Arduino Due</h3>
+          <span class="tag">محترف</span>
+        </div>
+        <p>لوحة بمعالج ARM 32‑bit لأداء أعلى ومشاريع متقدمة.</p>
+      </article>
+
+      <!-- Pro Mini -->
+      <article class="card" id="promini">
+        <div class="svg-wrap" role="img" aria-label="صورة توضيحية لأردوينو برو ميني">
+          <svg width="320" height="120" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg">
+            <rect x="80" y="36" rx="6" ry="6" width="160" height="48" fill="#072b3a" stroke="#041b22" stroke-width="2"/>
+            <text x="120" y="62" font-size="12" fill="#a5b4fc">Pro Mini</text>
+            <g fill="#dbeafe">
+              <rect x="86" y="40" width="8" height="8" rx="2"/><rect x="86" y="56" width="8" height="8" rx="2"/>
+              <rect x="266" y="40" width="8" height="8" rx="2"/><rect x="266" y="56" width="8" height="8" rx="2"/>
+            </g>
+          </svg>
+        </div>
+        <div class="caption">
+          <h3>Pro Mini</h3>
+          <span class="tag">محمول</span>
+        </div>
+        <p>لوحة صغيرة وخفيفة للمشاريع المدمجة مع استهلاك منخفض للطاقة.</p>
+      </article>
+
+      <!-- MKR Series -->
+      <article class="card" id="mkr">
+        <div class="svg-wrap" role="img" aria-label="صورة توضيحية لسلسلة MKR">
+          <svg width="320" height="120" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg">
+            <rect x="60" y="30" rx="8" ry="8" width="200" height="60" fill="#083047" stroke="#04202a" stroke-width="2"/>
+            <text x="110" y="58" font-size="12" fill="#a5b4fc">MKR Series</text>
+            <g fill="#dbeafe">
+              <circle cx="80" cy="44" r="3"/><circle cx="100" cy="44" r="3"/><circle cx="120" cy="44" r="3"/>
+              <circle cx="200" cy="44" r="3"/><circle cx="220" cy="44" r="3"/><circle cx="240" cy="44" r="3"/>
+            </g>
+          </svg>
+        </div>
+        <div class="caption">
+          <h3>MKR (مثل MKR Zero)</h3>
+          <span class="tag">IoT</span>
+        </div>
+        <p>سلسلة مخصصة للـ IoT مع دعم بطاريات وواجهات اتصال متقدمة.</p>
+      </article>
+
+      <!-- Nano Every -->
+      <article class="card" id="nano-every">
+        <div class="svg-wrap" role="img" aria-label="صورة توضيحية لأردوينو نانو ايفري">
+          <svg width="320" height="120" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg">
+            <rect x="48" y="34" rx="6" ry="6" width="224" height="52" fill="#0b2f3f" stroke="#041b22" stroke-width="2"/>
+            <text x="110" y="62" font-size="12" fill="#a5b4fc">Nano Every</text>
+            <g fill="#dbeafe">
+              <rect x="52" y="40" width="8" height="8" rx="2"/><rect x="52" y="64" width="8" height="8" rx="2"/>
+              <rect x="264" y="40" width="8" height="8" rx="2"/><rect x="264" y="64" width="8" height="8" rx="2"/>
+            </g>
+          </svg>
+        </div>
+        <div class="caption">
+          <h3>Nano Every</h3>
+          <span class="tag">محدث</span>
+        </div>
+        <p>نسخة محسّنة من Nano مع MCU أحدث وميزات أفضل للمشاريع الصغيرة.</p>
+      </article>
+
+      <!-- ESP8266 NodeMCU -->
+      <article class="card" id="esp8266">
+        <div class="svg-wrap" role="img" aria-label="صورة توضيحية لوحدة ESP8266 NodeMCU">
+          <svg width="320" height="120" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg">
+            <rect x="60" y="28" rx="8" ry="8" width="200" height="64" fill="#0b2f3f" stroke="#041b22" stroke-width="2"/>
+            <text x="100" y="52" font-size="12" fill="#a5b4fc">ESP8266 NodeMCU</text>
+            <rect x="140" y="68" width="40" height="10" rx="3" fill="#9ca3af"/>
+            <text x="144" y="76" font-size="9" fill="#022">USB</text>
+            <g fill="#dbeafe">
+              <circle cx="72" cy="36" r="3"/><circle cx="92" cy="36" r="3"/><circle cx="112" cy="36" r="3"/>
+              <circle cx="208" cy="36" r="3"/><circle cx="228" cy="36" r="3"/><circle cx="248" cy="36" r="3"/>
+            </g>
+          </svg>
+        </div>
+        <div class="caption">
+          <h3>ESP8266 (NodeMCU)</h3>
+          <span class="tag">Wi‑Fi</span>
+        </div>
+        <p>وحدة شائعة للاتصال اللاسلكي (Wi‑Fi) ومشاريع IoT منخفضة التكلفة.</p>
+      </article>
+
+      <!-- ESP32 DevKit -->
+      <article class="card" id="esp32">
+        <div class="svg-wrap" role="img" aria-label="صورة توضيحية لوحدة ESP32 DevKit">
+          <svg width="320" height="120" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg">
+            <rect x="48" y="28" rx="8" ry="8" width="224" height="64" fill="#062b3a" stroke="#041b22" stroke-width="2"/>
+            <text x="110" y="52" font-size="12" fill="#a5b4fc">ESP32 DevKit</text>
+            <rect x="140" y="68" width="40" height="10" rx="3" fill="#9ca3af"/>
+            <text x="144" y="76" font-size="9" fill="#022">USB</text>
+            <g fill="#dbeafe">
+              <rect x="56" y="36" width="6" height="6" rx="1"/><rect x="56" y="56" width="6" height="6" rx="1"/>
+              <rect x="258" y="36" width="6" height="6" rx="1"/><rect x="258" y="56" width="6" height="6" rx="1"/>
+            </g>
+          </svg>
+        </div>
+        <div class="caption">
+          <h3>ESP32 DevKit</h3>
+          <span class="tag">Wi‑Fi / BLE</span>
+        </div>
+        <p>وحدة أقوى من ESP8266 مع Wi‑Fi وBluetooth ومزايا معالجة أعلى.</p>
+      </article>
+
+      <!-- Nano RP2040 -->
+      <article class="card" id="rp2040">
+        <div class="svg-wrap" role="img" aria-label="صورة توضيحية لأردوينو نانو RP2040">
+          <svg width="320" height="120" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg">
+            <rect x="72" y="36" rx="6" ry="6" width="176" height="48" fill="#072b3a" stroke="#041b22" stroke-width="2"/>
+            <text x="110" y="62" font-size="12" fill="#a5b4fc">Nano RP2040</text>
+            <g fill="#dbeafe">
+              <rect x="78" y="42" width="6" height="6" rx="1"/><rect x="78" y="60" width="6" height="6" rx="1"/>
+              <rect x="246" y="42" width="6" height="6" rx="1"/><rect x="246" y="60" width="6" height="6" rx="1"/>
+            </g>
+          </svg>
+        </div>
+        <div class="caption">
+          <h3>Nano RP2040</h3>
+          <span class="tag">Raspberry‑based</span>
+        </div>
+        <p>نسخة حديثة مبنية على معالج RP2040 (مثل Raspberry Pi Pico) لمشاريع متقدمة.</p>
+      </article>
+
+      <!-- Arduino Micro -->
+      <article class="card" id="micro">
+        <div class="svg-wrap" role="img" aria-label="صورة توضيحية لأردوينو مايكرو">
+          <svg width="320" height="120" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg">
+            <rect x="96" y="36" rx="6" ry="6" width="128" height="48" fill="#0b2f3f" stroke="#041b22" stroke-width="2"/>
+            <text x="120" y="62" font-size="12" fill="#a5b4fc">Arduino Micro</text>
+            <g fill="#dbeafe">
+              <rect x="100" y="42" width="6" height="6" rx="1"/><rect x="100" y="60" width="6" height="6" rx="1"/>
+              <rect x="218" y="42" width="6" height="6" rx="1"/><rect x="218" y="60" width="6" height="6" rx="1"/>
+            </g>
+          </svg>
+        </div>
+        <div class="caption">
+          <h3>Arduino Micro</h3>
+          <span class="tag">HID</span>
+        </div>
+        <p>لوحة صغيرة تدعم HID وتناسب مشاريع التحكم والواجهات.</p>
+      </article>
+
+    </section>
+
+    <footer>
+      هذه الصفحة تستخدم رسومات SVG مدمجة لتوضيح أشكال اللوحات الشائعة. إذا أردت صورًا فوتوغرافية حقيقية لكل لوحة (JPEG/PNG)، أقدر أجهز ملف HTML يحمِل روابط صور موثوقة أو أدرج صورًا مضمّنة (Base64) حسب رغبتك.
+    </footer>
+  </main>
 </body>
 </html>
