@@ -1,34 +1,449 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>تعلم برمجة الأردوينو - الدرس 3</title>
-  <meta name="description" content="شرح المتغيرات في الأردوينو.">
-  <meta name="keywords" content="Arduino, تعلم الأردوينو, المتغيرات">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>دروس إضافية أردوينو — مستويات 21 إلى 30</title>
+  <meta name="description" content="ملف واحد يحتوي دروس أردوينو إضافية (L21-L30) مع أهداف وكود جاهز وأزرار نسخ وتشغيل في المحاكي." />
+  <style>
+    :root{
+      --bg:#0f172a; --panel:#0b1224; --card:#071428; --accent:#1d4ed8; --accent2:#06b6d4;
+      --text:#e5e7eb; --muted:#93c5fd; --radius:12px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:system-ui,"Segoe UI",Tahoma,Arial; line-height:1.7;
+      background: radial-gradient(900px 480px at 70% -10%, #142045 0%, var(--bg) 60%), var(--bg);
+      color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      padding-bottom:64px;
+    }
+    header{
+      position:sticky; top:0; z-index:40; background:rgba(6,10,20,.75); backdrop-filter:blur(8px);
+      border-bottom:1px solid rgba(255,255,255,.05); padding:12px 16px;
+    }
+    .brand{display:flex; gap:12px; align-items:center; max-width:1100px; margin:0 auto}
+    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 8px 30px rgba(29,78,216,.18)}
+    .title{margin:0}
+    .subtitle{margin:2px 0 0; font-size:13px; opacity:.85}
+    .container{max-width:1100px;margin:18px auto;padding:0 16px; display:grid; grid-template-columns: 320px 1fr; gap:18px; align-items:start}
+    /* Sidebar / TOC */
+    .toc{position:sticky; top:86px; align-self:start; background:linear-gradient(180deg,#071428,#07102a); border:1px solid #0f1b38; padding:12px; border-radius:12px}
+    .toc h3{margin:0 0 8px; color:var(--muted)}
+    .toc ul{list-style:none; padding:0; margin:0; display:grid; gap:6px}
+    .toc a{display:block; padding:8px 10px; border-radius:8px; color:var(--text); text-decoration:none; border:1px solid transparent}
+    .toc a:hover{background:rgba(255,255,255,.02); border-color:rgba(255,255,255,.04)}
+    /* Lessons */
+    .lessons{display:grid; gap:14px}
+    .lesson{background:linear-gradient(180deg,#071428,#07102a); border:1px solid #0f1b38; border-radius:12px; overflow:hidden; padding:12px}
+    .lesson-head{display:flex; justify-content:space-between; gap:12px; align-items:center}
+    .lesson-title{font-weight:800; color:#a5b4fc}
+    .badge{background:#18264a;color:#9ec1ff;padding:6px 10px;border-radius:999px;font-size:13px}
+    .controls{display:flex; gap:8px}
+    .btn{border:none; padding:8px 12px; border-radius:8px; background:var(--accent); color:#fff; font-weight:700; cursor:pointer}
+    .btn.secondary{background:var(--accent2); color:#022}
+    .btn.ghost{background:transparent; border:1px solid rgba(255,255,255,.06)}
+    .goals, .tokens{margin-top:10px; display:grid; gap:6px}
+    .goal, .token{background:rgba(255,255,255,.02); padding:8px 10px; border-radius:8px; font-size:14px}
+    .code-box{margin-top:12px; border-radius:10px; overflow:hidden; border:1px solid #0f1b38; background:var(--card)}
+    .code-head{display:flex; justify-content:space-between; align-items:center; padding:8px 10px; background:linear-gradient(180deg,#071a3a,#071428); border-bottom:1px solid #0f1b38}
+    .code-head .meta{font-size:13px; color:var(--muted)}
+    .code-body{padding:10px; max-height:360px; overflow:auto}
+    pre{margin:0; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace; font-size:13px; color:#d7e3ff; white-space:pre; line-height:1.45}
+    .lined code{display:block}
+    .lined code span{display:block; white-space:pre}
+    .lined code span::before{counter-increment:line; content:counter(line); display:inline-block; width:3ch; margin-inline-end:10px; color:#7ea2ff; opacity:.8}
+    .tip{margin-top:10px; font-size:13px; color:#c7d2fe}
+    /* Modal for Wokwi */
+    .iframe-modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.6); z-index:60}
+    .iframe-modal .panel{width:92%; max-width:980px; height:82%; background:#000; border-radius:10px; overflow:hidden; border:1px solid #0f1b38}
+    .iframe-modal .panel header{display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:#071428; color:var(--text)}
+    .iframe-modal iframe{width:100%; height:calc(100% - 44px); border:0}
+    /* Footer search */
+    .composer{position:fixed; inset-inline:0; bottom:0; display:flex; gap:8px; padding:10px 16px; background:rgba(6,10,20,.9); border-top:1px solid rgba(255,255,255,.04)}
+    .composer input{flex:1; padding:10px 12px; border-radius:10px; border:1px solid #0f1b38; background:#071428; color:var(--text)}
+    @media (max-width:980px){
+      .container{grid-template-columns: 1fr}
+      .toc{position:static; order:2}
+    }
+  </style>
 </head>
 <body>
-  <div class="yasser-logo">
-  🛠️ <strong>ياسر أحمد حمدي</strong>
-</div>
-  <h1>📘 الدرس 3: المتغيرات</h1>
-  <p>في هذا الدرس هنتعلم يعني إيه متغير وإزاي نستخدمه.</p>
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div style="flex:1">
+        <h1 class="title">دروس إضافية — أردوينو (L21 → L30)</h1>
+        <p class="subtitle">مستويات متقدمة مع أهداف واضحة وكود جاهز — انسخ أو شغّل مباشرة في محاكي Wokwi داخل الصفحة</p>
+      </div>
+    </div>
+  </header>
 
-  <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="container">
+    <aside class="toc" aria-label="فهرس الدروس">
+      <h3>فهرس الدروس</h3>
+      <ul id="tocList"></ul>
+      <div style="margin-top:10px; font-size:13px; color:var(--muted)">اضغط على عنوان للانتقال للدرس</div>
+    </aside>
 
-  <div class="nav-buttons">
-    <button onclick="navigateWithEffect('lesson2.html')">⬅️ السابق</button>
-    <button onclick="navigateWithEffect('lesson4.html')">➡️ التالي</button>
-    <button onclick="navigateWithEffect('index.html')">🏠 الرئيسية</button>
+    <section class="lessons" id="lessonsList" aria-live="polite"></section>
   </div>
 
-  <button onclick="navigateWithEffect('simulator.html')">⚙️ المحاكي</button>
+  <!-- Modal for embedded Wokwi simulator -->
+  <div class="iframe-modal" id="iframeModal" role="dialog" aria-hidden="true">
+    <div class="panel" role="document">
+      <header>
+        <div id="iframeTitle">محاكي Wokwi</div>
+        <div>
+          <button class="btn ghost" id="closeIframe">إغلاق</button>
+        </div>
+      </header>
+      <iframe id="simFrame" title="Wokwi Simulator"></iframe>
+    </div>
+  </div>
+
+  <footer class="composer" aria-label="بحث">
+    <input id="searchInput" placeholder="ابحث عن درس أو كلمة مفتاحية (ESP32, LoRa, GPS, DHT، إلخ)..." />
+    <button class="btn ghost" id="clearSearch">مسح</button>
+  </footer>
 
   <script>
-    const lessonNumber = 3, totalLessons = 10;
-    document.getElementById("progressBar").style.width = (lessonNumber/totalLessons*100)+"%";
-    function navigateWithEffect(url){ window.location.href = url; }
+    // قائمة الدروس الإضافية (L21-L30)
+    const lessons = [
+      {
+        id:'L21', level:21, title:'ESP32 WiFi + BLE',
+        goals:['الاتصال بالـ WiFi','تشغيل BLE','إرسال بيانات مزدوجة'],
+        tokens:['WiFi.h','BLEDevice','WiFi.begin','BLEDevice::init'],
+        code:`#include <WiFi.h>
+#include <BLEDevice.h>
+
+void setup(){
+  WiFi.begin("SSID","PASS");
+  BLEDevice::init("ESP32");
+  Serial.begin(115200);
+}
+
+void loop(){}`,
+        tips:'ESP32 يجمع بين WiFi و BLE على نفس الشريحة — تأكد من اختيار اللوحة الصحيحة في IDE.'
+      },
+      {
+        id:'L22', level:22, title:'LoRa SX1278 — إرسال/استقبال',
+        goals:['تهيئة LoRa','إرسال نص','استقبال الحزم'],
+        tokens:['SPI.h','LoRa.h','LoRa.begin','LoRa.print'],
+        code:`#include <SPI.h>
+#include <LoRa.h>
+
+void setup(){
+  Serial.begin(9600);
+  if(!LoRa.begin(433E6)){
+    Serial.println("LoRa init failed");
+    while(true);
+  }
+}
+
+void loop(){
+  LoRa.beginPacket();
+  LoRa.print("Hello LoRa");
+  LoRa.endPacket();
+  delay(2000);
+}`,
+        tips:'اختر التردد المناسب لمنطقتك (433/868/915 MHz) وتأكد من الهوائي.'
+      },
+      {
+        id:'L23', level:23, title:'GPS NEO-6M — استخراج الإحداثيات',
+        goals:['قراءة NMEA','استخراج lat/lng','عرض على Serial'],
+        tokens:['TinyGPS++','SoftwareSerial','parser.encode','location.isUpdated'],
+        code:`#include <TinyGPS++.h>
+#include <SoftwareSerial.h>
+
+SoftwareSerial gps(4,3); // RX, TX
+TinyGPSPlus parser;
+
+void setup(){
+  Serial.begin(9600);
+  gps.begin(9600);
+}
+
+void loop(){
+  while(gps.available()){
+    parser.encode(gps.read());
+    if(parser.location.isUpdated()){
+      Serial.print("Lat: "); Serial.println(parser.location.lat(), 6);
+      Serial.print("Lng: "); Serial.println(parser.location.lng(), 6);
+    }
+  }
+}`,
+        tips:'ضع الهوائي في مكان مفتوح للحصول على إشارة جيدة وتعامل مع زمن الإقلاع البارد.'
+      },
+      {
+        id:'L24', level:24, title:'حساس الغاز MQ-2 — قراءة analog',
+        goals:['قراءة analog','تقدير المستوى','عرض النتائج'],
+        tokens:['analogRead','A0','Serial.begin'],
+        code:`const int sensor=A0;
+
+void setup(){
+  Serial.begin(9600);
+}
+
+void loop(){
+  int val=analogRead(sensor);
+  Serial.println(val);
+  delay(500);
+}`,
+        tips:'الحساس يحتاج فترة تسخين (preheat) للحصول على قراءات دقيقة.'
+      },
+      {
+        id:'L25', level:25, title:'شاشة TFT ST7735 — عرض نص وصورة',
+        goals:['تهيئة ST7735','عرض نص ملون','رسم مستطيلات'],
+        tokens:['Adafruit_GFX','Adafruit_ST7735','fillScreen','setTextColor'],
+        code:`#include <Adafruit_GFX.h>
+#include <Adafruit_ST7735.h>
+#include <SPI.h>
+
+#define TFT_CS 10
+#define TFT_DC 9
+#define TFT_RST 8
+Adafruit_ST7735 tft(TFT_CS, TFT_DC, TFT_RST);
+
+void setup(){
+  tft.initR(INITR_BLACKTAB);
+  tft.fillScreen(ST77XX_BLACK);
+  tft.setTextColor(ST77XX_RED);
+  tft.setCursor(0,0);
+  tft.print("Hello TFT");
+}
+
+void loop(){}`,
+        tips:'تأكد من توصيل CS/DC/RST وولّف سرعة SPI إذا لزم الأداء.'
+      },
+      {
+        id:'L26', level:26, title:'حساس الرطوبة DHT22',
+        goals:['قراءة الحرارة والرطوبة','عرض القيم','التعامل مع NaN'],
+        tokens:['DHT.h','dht.begin','dht.readTemperature','dht.readHumidity'],
+        code:`#include <DHT.h>
+
+#define DHTPIN 2
+#define DHTTYPE DHT22
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup(){
+  Serial.begin(9600);
+  dht.begin();
+}
+
+void loop(){
+  float t = dht.readTemperature();
+  float h = dht.readHumidity();
+  if(isnan(t) || isnan(h)){
+    Serial.println("Read error");
+  } else {
+    Serial.print("T: "); Serial.print(t);
+    Serial.print(" H: "); Serial.println(h);
+  }
+  delay(2000);
+}`,
+        tips:'استخدم مقاومة سحب مناسبة على خط البيانات واهتم بطول السلك وجودته.'
+      },
+      {
+        id:'L27', level:27, title:'حساس الضوء BH1750 — I2C',
+        goals:['تهيئة BH1750','قراءة lux','عرض النتائج'],
+        tokens:['Wire.h','BH1750.h','begin','readLightLevel'],
+        code:`#include <Wire.h>
+#include <BH1750.h>
+
+BH1750 lightMeter;
+
+void setup(){
+  Serial.begin(9600);
+  Wire.begin();
+  lightMeter.begin();
+}
+
+void loop(){
+  uint16_t lux = lightMeter.readLightLevel();
+  Serial.print("Lux: "); Serial.println(lux);
+  delay(1000);
+}`,
+        tips:'العنوان الافتراضي 0x23 — تأكد من الأسلاك: SDA/SCL والقدرة.'
+      },
+      {
+        id:'L28', level:28, title:'حساس الحركة PIR — إنذار بسيط',
+        goals:['كشف الحركة','طباعة حدث','تأخير مناسب'],
+        tokens:['pinMode','digitalRead','INPUT'],
+        code:`const int pir=7;
+
+void setup(){
+  pinMode(pir, INPUT);
+  Serial.begin(9600);
+}
+
+void loop(){
+  if(digitalRead(pir)){
+    Serial.println("Motion!");
+  }
+  delay(300);
+}`,
+        tips:'ضع الحساس في زاوية مرتفعة لمجال رؤية أفضل وتجنب مصادر الحرارة المباشرة.'
+      },
+      {
+        id:'L29', level:29, title:'حساس الصوت KY-038 — تفعيل LED',
+        goals:['قراءة الصوت','شرط عتبة','تحكم LED'],
+        tokens:['analogRead','digitalWrite','pinMode'],
+        code:`const int mic=A0; const int led=13;
+
+void setup(){
+  pinMode(led, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop(){
+  int val = analogRead(mic);
+  digitalWrite(led, val > 500 ? HIGH : LOW);
+  Serial.println(val);
+  delay(100);
+}`,
+        tips:'اضبط المقاومة المتغيرة على الوحدة لضبط الحساسية وتقليل الضوضاء.'
+      },
+      {
+        id:'L30', level:30, title:'ESP32-CAM — إعداد أساسي',
+        goals:['تهيئة الكاميرا','اختيار الإعدادات','حل مشاكل شائعة'],
+        tokens:['esp_camera.h','camera_config_t','esp_camera_init'],
+        code:`#include "esp_camera.h"
+// ضع إعدادات الكاميرا حسب الوحدة
+void setup(){
+  // camera_config_t cfg = { ... };
+  // esp_camera_init(&cfg);
+}
+
+void loop(){}`,
+        tips:'اختر لوحة ESP32-CAM في IDE، وتأكد من مزود طاقة مستقر للكاميرا.'
+      }
+    ];
+
+    // Helpers
+    const tocList = document.getElementById('tocList');
+    const lessonsList = document.getElementById('lessonsList');
+    function escapeHtml(str){ return str.replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch])); }
+
+    function makeTOCItem(lesson){
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#' + lesson.id;
+      a.textContent = `المستوى ${lesson.level} — ${lesson.title}`;
+      li.appendChild(a);
+      return li;
+    }
+
+    function makeLessonCard(lesson){
+      const wrap = document.createElement('article');
+      wrap.className = 'lesson';
+      wrap.id = lesson.id;
+
+      const head = document.createElement('div');
+      head.className = 'lesson-head';
+      head.innerHTML = `<div style="display:flex;gap:10px;align-items:center">
+        <span class="badge">المستوى ${lesson.level}</span>
+        <div class="lesson-title">${lesson.title}</div>
+      </div>`;
+
+      const controls = document.createElement('div');
+      controls.className = 'controls';
+      const copyBtn = document.createElement('button');
+      copyBtn.className = 'btn'; copyBtn.textContent = 'نسخ الكود';
+      const openBtn = document.createElement('button');
+      openBtn.className = 'btn secondary'; openBtn.textContent = 'تشغيل في المحاكي';
+      controls.appendChild(copyBtn); controls.appendChild(openBtn);
+      head.appendChild(controls);
+
+      const body = document.createElement('div');
+      body.className = 'lesson-body';
+
+      const goals = document.createElement('div'); goals.className = 'goals';
+      lesson.goals.forEach(g=>{ const d=document.createElement('div'); d.className='goal'; d.textContent=g; goals.appendChild(d); });
+      body.appendChild(goals);
+
+      const tokens = document.createElement('div'); tokens.className = 'tokens';
+      lesson.tokens.forEach(t=>{ const d=document.createElement('div'); d.className='token'; d.textContent=t; tokens.appendChild(d); });
+      body.appendChild(tokens);
+
+      const codeBox = document.createElement('div'); codeBox.className = 'code-box lined';
+      const codeHead = document.createElement('div'); codeHead.className = 'code-head';
+      codeHead.innerHTML = `<div class="meta">كود تجريبي</div><div class="meta">نسخ | محاكي</div>`;
+      const codeBody = document.createElement('div'); codeBody.className = 'code-body';
+      const pre = document.createElement('pre'); const codeEl = document.createElement('code');
+      const numbered = lesson.code.split('\n').map(l=>`<span>${escapeHtml(l)}</span>`).join('\n');
+      codeEl.innerHTML = numbered; pre.appendChild(codeEl); codeBody.appendChild(pre);
+      codeBox.appendChild(codeHead); codeBox.appendChild(codeBody);
+      body.appendChild(codeBox);
+
+      if(lesson.tips){ const tip = document.createElement('div'); tip.className='tip'; tip.textContent='نصيحة: ' + lesson.tips; body.appendChild(tip); }
+
+      wrap.appendChild(head); wrap.appendChild(body);
+
+      // Events
+      copyBtn.addEventListener('click', async ()=>{
+        try{
+          await navigator.clipboard.writeText(lesson.code);
+          const old = copyBtn.textContent; copyBtn.textContent = 'تم النسخ ✅';
+          setTimeout(()=> copyBtn.textContent = old, 1200);
+        }catch(e){ alert('فشل النسخ. انسخ يدويًا من الكود.'); }
+      });
+      openBtn.addEventListener('click', ()=> openSimulator(lesson.title, lesson.code));
+
+      return wrap;
+    }
+
+    // Render all
+    lessons.forEach(ls=>{
+      tocList.appendChild(makeTOCItem(ls));
+      lessonsList.appendChild(makeLessonCard(ls));
+    });
+
+    // Smooth TOC
+    document.addEventListener('click', (e)=>{
+      const a = e.target.closest('.toc a');
+      if(!a) return;
+      e.preventDefault();
+      const id = a.getAttribute('href').slice(1);
+      const el = document.getElementById(id);
+      if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+
+    // Search
+    const searchInput = document.getElementById('searchInput');
+    const clearSearch = document.getElementById('clearSearch');
+    searchInput.addEventListener('input', ()=>{
+      const q = searchInput.value.trim().toLowerCase();
+      document.querySelectorAll('.lesson').forEach(card=>{
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(q) ? '' : 'none';
+      });
+    });
+    clearSearch.addEventListener('click', ()=>{
+      searchInput.value = '';
+      searchInput.dispatchEvent(new Event('input'));
+    });
+
+    // Wokwi modal
+    const iframeModal = document.getElementById('iframeModal');
+    const simFrame = document.getElementById('simFrame');
+    const iframeTitle = document.getElementById('iframeTitle');
+    const closeIframe = document.getElementById('closeIframe');
+
+    function openSimulator(title, code){
+      iframeTitle.textContent = title + ' — المحاكي';
+      const url = 'https://wokwi.com/arduino/new?sketch=' + encodeURIComponent(code);
+      simFrame.src = url;
+      iframeModal.style.display = 'flex';
+      iframeModal.setAttribute('aria-hidden','false');
+    }
+    closeIframe.addEventListener('click', ()=>{
+      simFrame.src = 'about:blank';
+      iframeModal.style.display = 'none';
+      iframeModal.setAttribute('aria-hidden','true');
+    });
+    iframeModal.addEventListener('click', (e)=>{ if(e.target === iframeModal) closeIframe.click(); });
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && iframeModal.style.display==='flex') closeIframe.click(); });
   </script>
 </body>
 </html>
