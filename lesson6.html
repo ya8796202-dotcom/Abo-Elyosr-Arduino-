@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>معرض صور أردوينو — تفاعلي وأنيق</title>
-  <meta name="description" content="معرض صور فوتوغرافية لأنواع أردوينو مع إمكانية إضافة صور من جهازك، حفظ محلي، بحث، وفلاتر، وتأثيرات متحركة." />
+  <title>معرض صور أردوينو — مصحح وتفاعلي</title>
+  <meta name="description" content="معرض صور فوتوغرافية لأنواع أردوينو مع إمكانية إضافة صور من الجهاز أو عبر رابط، حفظ محلي، بحث، فلتر، وعرض كامل (lightbox)." />
   <style>
     :root{
-      --bg:#07102a; --panel:#071428; --card:#0b1224; --glass:rgba(255,255,255,0.03);
-      --accent:#1d4ed8; --accent2:#06b6d4; --muted:#93c5fd; --text:#e6eef8;
-      --radius:14px; --shadow:0 12px 30px rgba(2,6,23,.6);
+      --bg:#07102a; --panel:#071428; --card:#0b1224; --accent:#1d4ed8; --accent2:#06b6d4;
+      --text:#e6eef8; --muted:#93c5fd; --glass:rgba(255,255,255,0.03);
+      --radius:12px; --shadow:0 12px 30px rgba(2,6,23,.6);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0; font-family:system-ui,"Noto Naskh Arabic",Tahoma,Arial; background:linear-gradient(180deg,#041026,#07102a);
-      color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; padding:20px;
+      color:var(--text); -webkit-font-smoothing:antialiased; padding:20px;
     }
 
     header{display:flex;gap:12px;align-items:center;max-width:1200px;margin:0 auto 18px}
@@ -23,9 +23,9 @@
     h1{margin:0;font-size:20px}
     p.lead{margin:4px 0 0;color:var(--muted);font-size:13px}
 
-    .container{max-width:1200px;margin:18px auto;display:grid;grid-template-columns:1fr;gap:14px;padding:0 8px}
-
+    .container{max-width:1200px;margin:18px auto;display:grid;gap:14px;padding:0 8px}
     .panel{background:linear-gradient(180deg,#071428,#061026);border-radius:16px;padding:14px;border:1px solid var(--glass);box-shadow:var(--shadow)}
+
     .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
     .search{flex:1;display:flex;gap:8px;align-items:center}
     .input, .select, .btn{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.04);background:#071428;color:var(--text)}
@@ -35,41 +35,35 @@
     .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.06);color:var(--text);font-weight:700}
     .small{font-size:13px;color:var(--muted)}
 
-    /* gallery grid */
+    .uploader{display:flex;gap:10px;align-items:center;padding:12px;border-radius:12px;border:1px dashed rgba(255,255,255,.04);background:linear-gradient(180deg,rgba(255,255,255,.01),transparent)}
+    .uploader.dragover{border-color:rgba(29,78,216,.9);box-shadow:0 8px 30px rgba(29,78,216,.06)}
+    .file-preview img{width:64px;height:48px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,.04)}
+
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
     .card{background:linear-gradient(180deg,#071428,#061026);border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.03);transition:transform .28s ease, box-shadow .28s ease}
     .card:hover{transform:translateY(-8px) scale(1.01);box-shadow:0 20px 40px rgba(2,6,23,.7)}
     .thumb{position:relative;overflow:hidden;background:#000;height:180px;display:flex;align-items:center;justify-content:center}
     .thumb img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.9,.2,1);transform-origin:center}
-    .card:hover .thumb img{transform:scale(1.08) rotate(.5deg)}
+    .card:hover .thumb img{transform:scale(1.08) rotate(.3deg)}
     .meta{padding:12px;display:flex;flex-direction:column;gap:8px}
     .meta h3{margin:0;font-size:15px;color:#a5b4fc}
     .meta p{margin:0;color:var(--muted);font-size:13px}
     .tags{display:flex;gap:8px;flex-wrap:wrap}
     .tag{background:rgba(255,255,255,.03);padding:6px 8px;border-radius:999px;font-size:12px;color:#cfe8ff}
 
-    .card .actions{display:flex;gap:8px;padding:12px;border-top:1px solid rgba(255,255,255,.02);align-items:center}
+    .actions{display:flex;gap:8px;padding:12px;border-top:1px solid rgba(255,255,255,.02);align-items:center}
     .actions .btn{padding:8px 10px;font-size:13px}
     .actions .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.04)}
 
-    /* upload area */
-    .uploader{display:flex;gap:10px;align-items:center;padding:12px;border-radius:12px;border:1px dashed rgba(255,255,255,.04);background:linear-gradient(180deg,rgba(255,255,255,.01),transparent)}
-    .uploader.dragover{border-color:rgba(29,78,216,.9);box-shadow:0 8px 30px rgba(29,78,216,.06)}
-    .file-preview{display:flex;gap:10px;align-items:center}
-    .file-preview img{width:64px;height:48px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,.04)}
-
-    /* lightbox */
     .lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(0,0,0,.6),rgba(0,0,0,.85));z-index:120}
     .lightbox.open{display:flex}
     .lightbox .panel{max-width:1100px;width:92%;border-radius:12px;overflow:hidden;background:#000;border:1px solid rgba(255,255,255,.04)}
     .lightbox img{width:100%;height:auto;display:block}
     .lightbox .caption{padding:12px;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
 
-    /* subtle animations */
     @keyframes fadeInUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
     .card{animation:fadeInUp .36s ease both}
 
-    /* responsive */
     @media (max-width:720px){
       .thumb{height:160px}
       .controls{flex-direction:column;align-items:stretch}
@@ -81,8 +75,8 @@
   <header>
     <div class="logo" aria-hidden="true"></div>
     <div>
-      <h1>معرض صور أردوينو — تفاعلي</h1>
-      <p class="lead">صور فوتوغرافية لأنواع أردوينو مع إضافة صور من جهازك، حفظ محلي، بحث، وفلاتر مع ستايل أنيق</p>
+      <h1>معرض صور أردوينو — مصحح</h1>
+      <p class="lead">كل الصور تظهر الآن. أضف صورًا من جهازك أو عبر رابط، احفظ محليًا، وابحث بسهولة.</p>
     </div>
   </header>
 
@@ -107,20 +101,18 @@
         </div>
       </div>
 
-      <div class="uploader" id="uploader" aria-label="منطقة رفع الصور">
-        <div style="flex:1">
-          <div style="display:flex;gap:8px;align-items:center">
-            <input id="fileInput" type="file" accept="image/*" style="display:none" />
-            <button id="chooseBtn" class="btn ghost">اختر صورة</button>
-            <input id="urlInput" class="input" placeholder="أو ألصق رابط صورة (URL)" />
-            <input id="titleInput" class="input" placeholder="عنوان الصورة (اختياري)" style="width:220px" />
-            <select id="levelInput" class="select" style="width:140px">
-              <option value="">مستوى</option><option value="beginner">مبتدئ</option><option value="intermediate">متوسط</option><option value="advanced">متقدم</option>
-            </select>
-            <button id="addBtn" class="btn">أضف</button>
-          </div>
-          <div class="small" style="margin-top:8px;color:var(--muted)">يمكنك السحب والإفلات هنا أيضاً. الصور المضافة تحفظ محليًا في المتصفح.</div>
+      <div id="uploader" class="uploader" aria-label="منطقة رفع الصور">
+        <div style="flex:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <input id="fileInput" type="file" accept="image/*" style="display:none" />
+          <button id="chooseBtn" class="btn ghost">اختر صورة</button>
+          <input id="urlInput" class="input" placeholder="أو ألصق رابط صورة (URL)" />
+          <input id="titleInput" class="input" placeholder="عنوان الصورة (اختياري)" style="width:220px" />
+          <select id="levelInput" class="select" style="width:140px">
+            <option value="">مستوى</option><option value="beginner">مبتدئ</option><option value="intermediate">متوسط</option><option value="advanced">متقدم</option>
+          </select>
+          <button id="addBtn" class="btn">أضف</button>
         </div>
+        <div style="width:100%;margin-top:8px;color:var(--muted);font-size:13px">اسحب الصورة إلى هنا أو استخدم زر "اختر صورة". الصور المضافة تحفظ محليًا في المتصفح.</div>
       </div>
 
       <div style="height:12px"></div>
@@ -144,16 +136,9 @@
   </div>
 
   <script>
-    /************************************************************************
-     * Arduino Photo Gallery (single HTML file)
-     * - صور افتراضية من ويكيبيديا ومتجر Arduino
-     * - إضافة صور عبر ملف أو رابط
-     * - حفظ الصور المضافة في localStorage (Base64 أو URL)
-     * - بحث، فلتر حسب مستوى، lightbox، تأثيرات أنيقة
-     ************************************************************************/
-
-    const STORAGE_KEY = 'arduino_gallery_v3';
-    const DEFAULTS_KEY = 'arduino_gallery_defaults_v3';
+    // مفاتيح التخزين
+    const STORAGE_KEY = 'arduino_gallery_v4';
+    const DEFAULTS_KEY = 'arduino_gallery_defaults_v4';
 
     // صور افتراضية (روابط موثوقة)
     const defaultItems = [
@@ -171,15 +156,14 @@
       { id:'micro', title:'Arduino Micro', src:'https://upload.wikimedia.org/wikipedia/commons/1/1b/Arduino_Micro.jpg', level:'intermediate', tags:['micro','hid'] }
     ];
 
-    // Save defaults once (so reset works)
+    // حفظ النسخة الافتراضية إن لم تكن محفوظة
     if(!localStorage.getItem(DEFAULTS_KEY)) localStorage.setItem(DEFAULTS_KEY, JSON.stringify(defaultItems));
 
-    // load gallery (defaults + user items)
+    // تحميل المعرض من localStorage أو تهيئته بالقيم الافتراضية
     function loadGallery(){
       try{
         const raw = localStorage.getItem(STORAGE_KEY);
-        if(!raw) {
-          // initialize with defaults
+        if(!raw){
           localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultItems));
           return defaultItems.slice();
         }
@@ -197,7 +181,7 @@
 
     let items = loadGallery();
 
-    // DOM
+    // عناصر DOM
     const galleryEl = document.getElementById('gallery');
     const searchEl = document.getElementById('search');
     const filterLevelEl = document.getElementById('filterLevel');
@@ -217,11 +201,11 @@
     const closeLightbox = document.getElementById('closeLightbox');
     const downloadBtn = document.getElementById('downloadBtn');
 
-    // helpers
+    // مساعدة: معرف فريد
     function uid(){ return 'id_' + Math.random().toString(36).slice(2,9); }
     function escapeHtml(s){ return String(s || '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch])); }
 
-    // render gallery
+    // عرض المعرض
     function render(){
       galleryEl.innerHTML = '';
       const q = (searchEl.value || '').trim().toLowerCase();
@@ -241,31 +225,51 @@
       filtered.forEach(it => {
         const card = document.createElement('article');
         card.className = 'card';
-        card.innerHTML = `
-          <div class="thumb" data-id="${escapeHtml(it.id)}" role="button" tabindex="0" aria-label="عرض ${escapeHtml(it.title)}">
-            <img loading="lazy" src="${escapeHtml(it.src)}" alt="${escapeHtml(it.title)}" onerror="this.dataset.err=1;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22240%22 height=%22140%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23071428%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%2393c5fd%22 font-size=%2212%22 font-family=%22Arial%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22>فشل تحميل الصورة</text></svg>'" />
-          </div>
-          <div class="meta">
-            <h3>${escapeHtml(it.title)}</h3>
-            <p class="small">${escapeHtml(it.level || '')} ${it.tags && it.tags.length ? ' • ' + it.tags.join(', ') : ''}</p>
-            <div class="tags">${(it.tags||[]).slice(0,4).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
-          </div>
-          <div class="actions">
-            <button class="btn ghost" data-action="view" data-id="${escapeHtml(it.id)}">عرض</button>
-            <button class="btn ghost" data-action="copy" data-id="${escapeHtml(it.id)}">نسخ الرابط</button>
-            <button class="btn ghost" data-action="del" data-id="${escapeHtml(it.id)}">حذف</button>
-          </div>
-        `;
+
+        const thumb = document.createElement('div');
+        thumb.className = 'thumb';
+        thumb.setAttribute('data-id', it.id);
+        thumb.setAttribute('role','button');
+        thumb.setAttribute('tabindex','0');
+
+        const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.alt = it.title || '';
+        img.src = it.src;
+        // fallback placeholder on error
+        img.addEventListener('error', ()=> {
+          img.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="600" height="360"><rect width="100%" height="100%" fill="#071428"/><text x="50%" y="50%" fill="#93c5fd" font-size="18" font-family="Arial" dominant-baseline="middle" text-anchor="middle">فشل تحميل الصورة</text></svg>`);
+        });
+
+        thumb.appendChild(img);
+
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        const h3 = document.createElement('h3'); h3.textContent = it.title || 'صورة';
+        const p = document.createElement('p'); p.className = 'small'; p.textContent = (it.level || '') + (it.tags && it.tags.length ? ' • ' + it.tags.join(', ') : '');
+        const tagsWrap = document.createElement('div'); tagsWrap.className = 'tags';
+        (it.tags || []).slice(0,4).forEach(t => {
+          const span = document.createElement('span'); span.className = 'tag'; span.textContent = t;
+          tagsWrap.appendChild(span);
+        });
+        meta.appendChild(h3); meta.appendChild(p); meta.appendChild(tagsWrap);
+
+        const actions = document.createElement('div'); actions.className = 'actions';
+        const viewBtn = document.createElement('button'); viewBtn.className = 'btn ghost'; viewBtn.textContent = 'عرض'; viewBtn.dataset.id = it.id;
+        const copyBtn = document.createElement('button'); copyBtn.className = 'btn ghost'; copyBtn.textContent = 'نسخ الرابط'; copyBtn.dataset.id = it.id;
+        const delBtn = document.createElement('button'); delBtn.className = 'btn ghost'; delBtn.textContent = 'حذف'; delBtn.dataset.id = it.id;
+        actions.appendChild(viewBtn); actions.appendChild(copyBtn); actions.appendChild(delBtn);
+
+        card.appendChild(thumb); card.appendChild(meta); card.appendChild(actions);
         galleryEl.appendChild(card);
       });
     }
 
-    // open lightbox
+    // فتح lightbox
     function openLightbox(item){
       lightboxImg.src = item.src;
       lightboxTitle.textContent = item.title || '';
       downloadBtn.onclick = ()=> {
-        // download via anchor
         const a = document.createElement('a');
         a.href = item.src;
         a.download = (item.title || 'image') + '.jpg';
@@ -277,28 +281,27 @@
       lightbox.setAttribute('aria-hidden','false');
     }
 
-    // events
+    // تعامل مع أزرار داخل المعرض
     galleryEl.addEventListener('click', (e)=>{
-      const btn = e.target.closest('button[data-action]');
+      const btn = e.target.closest('button');
       if(btn){
         const id = btn.dataset.id;
-        const action = btn.dataset.action;
         const item = items.find(x=>x.id === id);
         if(!item) return;
-        if(action === 'view') openLightbox(item);
-        else if(action === 'copy'){
+        if(btn.textContent.includes('عرض')) openLightbox(item);
+        else if(btn.textContent.includes('نسخ')) {
           navigator.clipboard.writeText(item.src).then(()=> {
-            btn.textContent = 'تم النسخ ✅';
-            setTimeout(()=> btn.textContent = 'نسخ الرابط', 1200);
+            const old = btn.textContent; btn.textContent = 'تم النسخ ✅';
+            setTimeout(()=> btn.textContent = old, 1200);
           }).catch(()=> alert('فشل النسخ'));
-        } else if(action === 'del'){
+        } else if(btn.textContent.includes('حذف')) {
           if(!confirm('حذف هذه الصورة من المعرض؟')) return;
           items = items.filter(x=>x.id !== id);
           saveGallery(items);
           render();
         }
       } else {
-        // click on thumb to view
+        // click on thumb
         const thumb = e.target.closest('.thumb');
         if(thumb){
           const id = thumb.dataset.id;
@@ -308,7 +311,7 @@
       }
     });
 
-    // keyboard accessibility for thumbs
+    // دعم فتح بالكيبورد
     galleryEl.addEventListener('keydown', (e)=>{
       if(e.key === 'Enter'){
         const thumb = e.target.closest('.thumb');
@@ -320,6 +323,7 @@
       }
     });
 
+    // إغلاق lightbox
     closeLightbox.addEventListener('click', ()=> {
       lightbox.classList.remove('open');
       lightbox.setAttribute('aria-hidden','true');
@@ -327,11 +331,11 @@
     });
     lightbox.addEventListener('click', (e)=> { if(e.target === lightbox) closeLightbox.click(); });
 
-    // search & filter
+    // بحث وفلتر
     searchEl.addEventListener('input', render);
     filterLevelEl.addEventListener('change', render);
 
-    // choose file
+    // اختيار ملف
     chooseBtn.addEventListener('click', ()=> fileInput.click());
     fileInput.addEventListener('change', ()=> {
       const f = fileInput.files[0];
@@ -339,25 +343,20 @@
       previewAndAddFile(f);
     });
 
-    // drag & drop
-    ['dragenter','dragover'].forEach(ev => {
-      uploader.addEventListener(ev, (e)=> { e.preventDefault(); uploader.classList.add('dragover'); });
-    });
-    ['dragleave','drop'].forEach(ev => {
-      uploader.addEventListener(ev, (e)=> { e.preventDefault(); uploader.classList.remove('dragover'); });
-    });
+    // سحب وإفلات
+    ['dragenter','dragover'].forEach(ev => uploader.addEventListener(ev, (e)=> { e.preventDefault(); uploader.classList.add('dragover'); }));
+    ['dragleave','drop'].forEach(ev => uploader.addEventListener(ev, (e)=> { e.preventDefault(); uploader.classList.remove('dragover'); }));
     uploader.addEventListener('drop', (e)=> {
       const f = e.dataTransfer.files && e.dataTransfer.files[0];
       if(f) previewAndAddFile(f);
     });
 
-    // add via URL or file
-    addBtn.addEventListener('click', async ()=>{
+    // إضافة عبر رابط أو ملف
+    addBtn.addEventListener('click', ()=> {
       const url = urlInput.value.trim();
       const title = titleInput.value.trim() || 'صورة مضافة';
       const level = levelInput.value || '';
       if(url){
-        // add URL directly
         const id = uid();
         items.unshift({ id, title, src: url, level, tags: extractTags(title) });
         saveGallery(items);
@@ -365,7 +364,6 @@
         render();
         return;
       }
-      // if file selected
       const f = fileInput.files[0];
       if(f){
         previewAndAddFile(f);
@@ -374,7 +372,7 @@
       alert('اختر ملفًا أو ألصق رابط صورة ثم اضغط أضف');
     });
 
-    // preview file and add (convert to DataURL)
+    // قراءة ملف وتحويله إلى DataURL ثم الإضافة
     function previewAndAddFile(file){
       if(!file.type.startsWith('image/')){ alert('الملف ليس صورة'); return; }
       const reader = new FileReader();
@@ -385,19 +383,18 @@
         const id = uid();
         items.unshift({ id, title, src, level, tags: extractTags(title), user:true });
         saveGallery(items);
-        // reset inputs
         fileInput.value = ''; urlInput.value = ''; titleInput.value = ''; levelInput.value = '';
         render();
       };
       reader.readAsDataURL(file);
     }
 
-    // extract tags from title (simple)
+    // استخراج وسوم بسيطة من العنوان
     function extractTags(title){
       return title.split(/[\s,._-]+/).slice(0,6).map(s=>s.toLowerCase()).filter(Boolean);
     }
 
-    // reset to defaults
+    // إعادة الافتراضيات
     resetDefaultsBtn.addEventListener('click', ()=> {
       if(!confirm('إعادة الصور إلى المجموعة الافتراضية (سيُحذف كل الصور المضافة)؟')) return;
       const defaults = JSON.parse(localStorage.getItem(DEFAULTS_KEY) || '[]');
@@ -406,28 +403,38 @@
       render();
     });
 
-    // clear only user-added images (keep defaults)
+    // مسح الصور المضافة (الاحتفاظ بالافتراضيات)
     clearLocalBtn.addEventListener('click', ()=> {
       if(!confirm('حذف كل الصور المضافة من جهازك؟')) return;
       const defaults = JSON.parse(localStorage.getItem(DEFAULTS_KEY) || '[]');
-      // keep only items whose src matches a default src
       const defaultSrcs = new Set(defaults.map(d=>d.src));
       items = items.filter(it => defaultSrcs.has(it.src));
       saveGallery(items);
       render();
     });
 
-    // initial render
+    // بدء العرض
     render();
 
-    // accessibility: keyboard shortcut Ctrl+K to focus search
-    document.addEventListener('keydown', (e)=> {
-      if(e.ctrlKey && e.key.toLowerCase() === 'k'){ e.preventDefault(); searchEl.focus(); }
+    // اختصار لوحة مفاتيح: Ctrl+K للبحث
+    document.addEventListener('keydown', (e)=> { if(e.ctrlKey && e.key.toLowerCase() === 'k'){ e.preventDefault(); searchEl.focus(); } });
+
+    // كشف أخطاء التحميل في الكونسول (اختياري)
+    window.addEventListener('error', (ev)=> {
+      // لا نعرض للمستخدم، لكن يمكن تتبع الأخطاء هنا إن لزم
+      // console.log('Error event', ev);
     });
 
-    // expose render for debugging
-    window.__arduinoGallery = { render, items, saveGallery };
+    // كشف التغييرات في localStorage من تبويبات أخرى
+    window.addEventListener('storage', (e)=> {
+      if(e.key === STORAGE_KEY) {
+        items = loadGallery();
+        render();
+      }
+    });
 
+    // كشف وتحميل الصورة الافتراضية في حال لم تُحفظ مسبقًا
+    function saveGallery(items){ localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); }
   </script>
 </body>
 </html>
