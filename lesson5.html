@@ -3,247 +3,586 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>محادثة مع صاحب المنصة</title>
-  <meta name="description" content="واجهة محادثة تفاعلية مع صاحب المنصة: رسائل جاهزة، إرسال، حفظ محلي، ومحاكاة ردود صاحب المنصة." />
+  <title>محادثة صاحب المنصة — دردشة ذكية</title>
+  <meta name="description" content="واجهة محادثة مستقلة مع نظام توليد ردود ذكي محلياً وقابل للتخصيص." />
   <style>
     :root{
-      --bg:#07102a; --panel:#0b1224; --owner:#0ea5a4; --user:#1d4ed8; --text:#e6eef8;
-      --muted:#93c5fd; --card:#071428; --radius:12px;
+      --bg:#07102a; --panel:#0b1224; --accent:#06b6d4; --accent2:#1d4ed8;
+      --text:#e6eef8; --muted:#93c5fd; --ok:#22c55e; --warn:#f59e0b;
+      --radius:12px;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0; font-family:system-ui,"Segoe UI",Tahoma,Arial,"Noto Naskh Arabic",sans-serif;
       background:linear-gradient(180deg,#07102a,#0b1224); color:var(--text); -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale; padding-bottom:84px;
+      -moz-osx-font-smoothing:grayscale; padding:18px;
     }
-    header{
-      position:sticky; top:0; z-index:30; background:rgba(6,10,20,.75); backdrop-filter:blur(6px);
-      border-bottom:1px solid rgba(255,255,255,.04); padding:12px 16px;
-    }
-    .brand{max-width:980px;margin:0 auto;display:flex;gap:12px;align-items:center}
-    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--owner),#06b6d4);box-shadow:0 8px 30px rgba(14,165,164,.12)}
-    .title{margin:0;font-weight:800}
-    .subtitle{margin:2px 0 0;font-size:13px;opacity:.85}
-    main.container{max-width:980px;margin:18px auto;padding:0 16px; display:grid; gap:12px}
-    .panel{background:linear-gradient(180deg,#071428,#07102a); border:1px solid #0f1b38; border-radius:12px; overflow:hidden}
-    .chat{height:64vh; overflow:auto; padding:14px; display:flex; flex-direction:column; gap:12px}
-    .msg{max-width:78%; padding:10px 14px; border-radius:14px; box-shadow:0 8px 20px rgba(0,0,0,.45); word-break:break-word}
-    .from-owner{align-self:flex-start; background:linear-gradient(180deg,var(--owner),#0b9b98); color:#022; border-top-right-radius:18px}
-    .from-user{align-self:flex-end; background:linear-gradient(180deg,var(--user),#1e40af); color:#fff; border-top-left-radius:18px}
-    .meta{font-size:12px; opacity:.85; margin-bottom:6px}
-    .meta .who{font-weight:700}
-    .controls{display:flex; gap:8px; padding:10px; align-items:center; border-top:1px solid #0f1b38; background:linear-gradient(180deg,#071428,#07102a)}
-    .composer{display:flex; gap:8px; width:100%}
-    .composer input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid #0f1b38;background:#071428;color:var(--text);outline:none}
-    .btn{border:none;padding:10px 12px;border-radius:10px;background:var(--owner);color:#022;font-weight:800;cursor:pointer}
+    header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 8px 30px rgba(6,182,212,.08)}
+    h1{margin:0;font-size:18px}
+    p.lead{margin:6px 0 0;color:var(--muted);font-size:13px}
+
+    .panel{max-width:980px;margin:12px auto;background:linear-gradient(180deg,#071428,#07102a);border:1px solid #0f1b38;border-radius:12px;overflow:hidden}
+    .topbar{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:10px;border-bottom:1px solid #0f1b38}
+    .controls{display:flex;gap:8px;align-items:center}
+    .btn{border:none;padding:8px 12px;border-radius:8px;background:var(--accent);color:#022;font-weight:800;cursor:pointer}
     .btn.ghost{background:transparent;border:1px solid #0f1b38;color:var(--text)}
-    .small{padding:6px 8px;border-radius:8px;font-size:13px}
-    .row{display:flex;gap:8px;align-items:center}
-    .status{font-size:13px;color:var(--muted)}
-    .actions{display:flex;gap:8px}
-    .toast{position:fixed;left:12px;bottom:84px;background:#071428;border:1px solid #0f1b38;padding:10px 12px;border-radius:10px;display:none;color:var(--text)}
-    .saved{color:var(--owner);font-weight:700}
-    .empty{opacity:.8;color:#9ca3af;padding:18px;text-align:center}
-    @media (max-width:720px){
-      .chat{height:56vh}
-      .msg{max-width:92%}
-    }
+    .btn.small{padding:6px 8px;font-size:13px}
+
+    .main{display:grid;grid-template-columns: 1fr 360px; gap:12px;padding:12px}
+    @media (max-width:980px){ .main{grid-template-columns:1fr} }
+
+    /* Chat area */
+    .chat-area{display:flex;flex-direction:column;height:64vh;border-radius:10px;overflow:hidden;border:1px solid #0f1b38;background:linear-gradient(180deg,#071428,#07102a)}
+    .chat-body{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+    .bubble{max-width:78%;padding:10px 12px;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,.45);word-break:break-word}
+    .bubble.me{align-self:flex-end;background:linear-gradient(180deg,var(--accent2),#1e40af);color:#fff}
+    .bubble.owner{align-self:flex-start;background:linear-gradient(180deg,var(--accent),#06b6d4);color:#022}
+    .meta{font-size:12px;color:var(--muted);margin-bottom:6px}
+
+    .chat-footer{display:flex;gap:8px;padding:10px;border-top:1px solid #0f1b38;background:linear-gradient(180deg,#071428,#07102a)}
+    input[type="text"], textarea{padding:8px;border-radius:8px;border:1px solid #0f1b38;background:#071428;color:var(--text);outline:none}
+    input.name{width:140px}
+    textarea.msg{flex:1;height:56px;resize:vertical}
+
+    /* Sidebar: settings & templates */
+    .sidebar{border-radius:10px;border:1px solid #0f1b38;padding:12px;background:linear-gradient(180deg,#071428,#07102a);height:64vh;overflow:auto}
+    .section{margin-bottom:12px}
+    .section h3{margin:0 0 8px;font-size:14px;color:var(--muted)}
+    .list{display:grid;gap:8px}
+    .template{background:rgba(255,255,255,.02);padding:8px;border-radius:8px}
+    .small-input{padding:6px;border-radius:8px;border:1px solid #0f1b38;background:#071428;color:var(--text)}
+
+    /* modal */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);z-index:90}
+    .modal .card{width:92%;max-width:720px;background:#071428;border-radius:10px;padding:12px;border:1px solid #0f1b38}
+
+    .footer-note{font-size:13px;color:var(--muted);margin-top:8px}
   </style>
 </head>
 <body>
   <header>
-    <div class="brand">
-      <div class="logo" aria-hidden="true"></div>
-      <div style="flex:1">
-        <h1 class="title">محادثة مع صاحب المنصة</h1>
-        <p class="subtitle">سجل محادثتك، اطلب نصائح، واحفظ التقدّم محليًا</p>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <div class="status" id="statusText">وضع الرد التلقائي: مفعل</div>
-      </div>
+    <div class="logo" aria-hidden="true"></div>
+    <div>
+      <h1>محادثة صاحب المنصة (مستقلة)</h1>
+      <p class="lead">واجهة دردشة مستقلة مع **مولد ردود ذكي محلياً** وقابل للتخصيص. لا حاجة لخادم خارجي.</p>
     </div>
   </header>
 
-  <main class="container">
-    <section class="panel">
-      <div class="chat" id="chat" role="log" aria-live="polite" aria-relevant="additions">
-        <!-- رسائل مُعبّأة تلقائيًا -->
+  <div class="panel">
+    <div class="topbar">
+      <div style="display:flex;gap:8px;align-items:center">
+        <div style="font-weight:800">لوحة المحادثة</div>
+        <div style="color:var(--muted);font-size:13px">حفظ محليًا · ردود قابلة للتعديل</div>
       </div>
+      <div class="controls">
+        <button class="btn ghost small" id="exportChat">تصدير المحادثة</button>
+        <button class="btn ghost small" id="importChat">استيراد</button>
+        <button class="btn ghost small" id="clearChat">مسح</button>
+        <button class="btn small" id="openTemplates">قوالب الردود</button>
+      </div>
+    </div>
 
-      <div class="controls" role="region" aria-label="أدوات المحادثة">
-        <div class="row" style="flex:1">
-          <div style="display:flex;flex-direction:column">
-            <div style="font-size:13px;color:var(--muted)">أرسل رسالة لصاحب المنصة</div>
-            <div class="composer" style="margin-top:6px">
-              <input id="input" placeholder="اكتب رسالتك هنا..." aria-label="مربع كتابة الرسالة" />
-              <button class="btn" id="sendBtn">إرسال</button>
-            </div>
+    <div class="main">
+      <!-- Chat column -->
+      <div>
+        <div class="chat-area" role="log" aria-live="polite" aria-relevant="additions">
+          <div class="chat-body" id="chatBody" tabindex="0"></div>
+
+          <div class="chat-footer" role="region" aria-label="مربع الكتابة">
+            <input class="name small-input" id="userName" type="text" placeholder="اسمك (اختياري)" aria-label="اسم المستخدم" />
+            <textarea class="msg" id="userMsg" placeholder="اكتب رسالتك هنا..." aria-label="نص الرسالة"></textarea>
+            <button class="btn" id="sendBtn">إرسال</button>
           </div>
         </div>
 
-        <div class="actions">
-          <button class="btn ghost small" id="saveBtn">حفظ محلي</button>
-          <button class="btn ghost small" id="loadBtn">تحميل المحفوظ</button>
-          <button class="btn ghost small" id="clearBtn">مسح المحادثة</button>
-          <button class="btn small" id="toggleAuto">إيقاف الرد التلقائي</button>
+        <div style="padding:10px 12px">
+          <div class="footer-note">اختصار: اضغط <strong>Ctrl+M</strong> لفتح/إغلاق نافذة القوالب. الردود تُولّد محليًا ولا تُرسل إلى خوادم خارجية.</div>
         </div>
       </div>
-    </section>
-  </main>
 
-  <div class="toast" id="toast"></div>
+      <!-- Sidebar: templates & settings -->
+      <aside class="sidebar" aria-label="إعدادات مولد الردود">
+        <div class="section">
+          <h3>حالة الرد التلقائي</h3>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="btn small" id="toggleAuto">إيقاف الرد التلقائي</button>
+            <div id="autoStatus" style="color:var(--muted)">مفعل</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>قواعد سريعة (مضمّنة)</h3>
+          <div class="list" id="rulesList">
+            <!-- populated by JS -->
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>قوالب ردود مخصصة</h3>
+          <div style="display:flex;gap:8px;margin-bottom:8px">
+            <input id="tplKeyword" class="small-input" placeholder="كلمة مفتاحية" />
+            <input id="tplReply" class="small-input" placeholder="نص الرد (قالب)" />
+            <button class="btn small" id="addTpl">إضافة</button>
+          </div>
+          <div id="templatesList" class="list"></div>
+        </div>
+
+        <div class="section">
+          <h3>استيراد / تصدير القوالب</h3>
+          <div style="display:flex;gap:8px">
+            <button class="btn ghost small" id="exportTpl">تصدير القوالب</button>
+            <button class="btn ghost small" id="importTpl">استيراد</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>خيارات متقدمة</h3>
+          <div style="display:grid;gap:8px">
+            <label><input type="checkbox" id="useFuzzy" /> تفعيل مطابقة تقريبية (تشابه نصي)</label>
+            <label><input type="checkbox" id="includeLessons" checked /> تمكين ردود الدروس (مثال: "درس 5")</label>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Templates modal (for quick editing) -->
+  <div class="modal" id="modal" role="dialog" aria-hidden="true">
+    <div class="card">
+      <h3 style="margin-top:0">قوالب الردود</h3>
+      <div id="modalContent" style="max-height:50vh;overflow:auto"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px">
+        <button class="btn ghost" id="closeModal">إغلاق</button>
+      </div>
+    </div>
+  </div>
 
   <script>
-    // بيانات المحادثة المبدئية
-    const initialConversation = [
-      { who: 'owner', name: 'صاحب المنصة', time: now(), text: 'أهلاً يا ياسر، سعيد إنك هنا. أنا صاحب المنصة — اسألني عن أي درس أو مشروع.' },
-      { who: 'owner', name: 'صاحب المنصة', time: now(), text: 'لو محتاج مساعدة في رفع المشروع على GitHub أو ربط Firebase، اكتب "مساعدة رفع" أو "ربط Firebase".' },
-      { who: 'user', name: 'ياسر', time: now(), text: 'أهلاً، أريد نصيحة عن مشروع NeoPixel.' },
-      { who: 'owner', name: 'صاحب المنصة', time: now(), text: 'فكرة ممتازة. كم عدد الـ LEDs؟ وهل تريد تأثيرات جاهزة أم تحكم ديناميكي؟' }
-    ];
+    /************************************************************************
+     * chat-only.html
+     * واجهة محادثة مستقلة مع نظام توليد ردود ذكي محلياً وقابل للتخصيص
+     ************************************************************************/
 
-    const STORAGE_KEY = 'platform_owner_chat_v1';
-    const chatEl = document.getElementById('chat');
-    const inputEl = document.getElementById('input');
+    // ---------- مفاتيح التخزين ----------
+    const CHAT_KEY = 'chat_only_messages_v1';
+    const TPL_KEY = 'chat_only_templates_v1';
+    const RULES_KEY = 'chat_only_rules_v1';
+
+    // ---------- عناصر DOM ----------
+    const chatBody = document.getElementById('chatBody');
+    const userName = document.getElementById('userName');
+    const userMsg = document.getElementById('userMsg');
     const sendBtn = document.getElementById('sendBtn');
-    const saveBtn = document.getElementById('saveBtn');
-    const loadBtn = document.getElementById('loadBtn');
-    const clearBtn = document.getElementById('clearBtn');
+    const clearChatBtn = document.getElementById('clearChat');
+    const exportChatBtn = document.getElementById('exportChat');
+    const importChatBtn = document.getElementById('importChat');
+    const openTemplatesBtn = document.getElementById('openTemplates');
+    const modal = document.getElementById('modal');
+    const modalContent = document.getElementById('modalContent');
+    const closeModal = document.getElementById('closeModal');
     const toggleAutoBtn = document.getElementById('toggleAuto');
-    const toastEl = document.getElementById('toast');
-    const statusText = document.getElementById('statusText');
+    const autoStatus = document.getElementById('autoStatus');
+    const rulesList = document.getElementById('rulesList');
+    const templatesList = document.getElementById('templatesList');
+    const tplKeyword = document.getElementById('tplKeyword');
+    const tplReply = document.getElementById('tplReply');
+    const addTplBtn = document.getElementById('addTpl');
+    const exportTplBtn = document.getElementById('exportTpl');
+    const importTplBtn = document.getElementById('importTpl');
+    const useFuzzyChk = document.getElementById('useFuzzy');
+    const includeLessonsChk = document.getElementById('includeLessons');
 
-    let conversation = [];
+    // ---------- حالة التطبيق ----------
+    let chatState = loadChat();
+    let templates = loadTemplates();
+    let rules = loadRules();
     let autoReply = true;
 
-    // Helpers
-    function now(){ const d=new Date(); return d.toLocaleString('ar-EG'); }
-    function showToast(msg, ms=1400){ toastEl.textContent = msg; toastEl.style.display='block'; setTimeout(()=> toastEl.style.display='none', ms); }
+    // ---------- دروس بسيطة للردود على "درس 5" الخ ----------
+    const lessonsIndex = {
+      L1: 'تشغيل LED — أساسيات',
+      L2: 'زر + LED — INPUT_PULLUP',
+      L3: 'حساس LM35 — قراءة analog',
+      L4: 'PWM للموتور — L298N',
+      L5: 'شاشة LCD 16x2 — LiquidCrystal',
+      L6: 'Servo SG90 — زاوية تدريجية',
+      L7: 'Serial أوامر بسيطة',
+      L8: 'I2C مثال عام',
+      L9: 'SPI إرسال/استقبال',
+      L10: 'مشروع: سيارة بالتحكم عبر Serial'
+    };
 
-    function renderMessage(m){
-      const el = document.createElement('div');
-      el.className = 'msg ' + (m.who === 'owner' ? 'from-owner' : 'from-user');
-      const meta = document.createElement('div'); meta.className='meta';
-      meta.innerHTML = `<span class="who">${m.name}</span> • <span class="time">${m.time}</span>`;
-      const body = document.createElement('div'); body.className='body';
-      body.innerHTML = `<div>${escapeHtml(m.text)}</div>`;
-      el.appendChild(meta);
-      el.appendChild(body);
-      chatEl.appendChild(el);
-      chatEl.scrollTop = chatEl.scrollHeight;
+    // ---------- قواعد مضمّنة أولية ----------
+    const defaultRules = [
+      { id: 'r_wifi', keys: ['wifi','esp','esp8266','esp32'], reply: 'لو تستخدم ESP، تأكد من اختيار اللوحة الصحيحة في الـ IDE وضبط SSID/PASS قبل الرفع.' },
+      { id: 'r_neopixel', keys: ['neo','neopixel','ws2812'], reply: 'لـ NeoPixel استخدم مكتبة Adafruit_NeoPixel ومزود طاقة منفصل عند عدد كبير من LEDs.' },
+      { id: 'r_motor', keys: ['motor','l298','driver','pwm'], reply: 'للموتور استخدم درايفر ومزود طاقة منفصل؛ لا توصل الموتور مباشرة بمخارج الأردوينو.' },
+      { id: 'r_servo', keys: ['servo'], reply: 'السيرفو يحتاج تيار ثابت؛ لو الحمل كبير استخدم مصدر طاقة خارجي وشارك الأرضي.' },
+      { id: 'r_github', keys: ['github','رفع','push'], reply: 'أستطيع إرشادك خطوة بخطوة لرفع المشروع على GitHub أو تجهيز README جاهز.' },
+      { id: 'r_wokwi', keys: ['wokwi','محاكي'], reply: 'يمكنك تشغيل الكود داخل المحاكي المدمج بالضغط على "فتح في المحاكي" أو لصق الكود هنا.' }
+    ];
+
+    // ---------- تحميل/حفظ ----------
+    function loadChat(){
+      try{ return JSON.parse(localStorage.getItem(CHAT_KEY)) || { messages: [] }; }catch(e){ return { messages: [] }; }
     }
+    function saveChat(){ localStorage.setItem(CHAT_KEY, JSON.stringify(chatState)); }
+    function loadTemplates(){
+      try{ return JSON.parse(localStorage.getItem(TPL_KEY)) || []; }catch(e){ return []; }
+    }
+    function saveTemplates(){ localStorage.setItem(TPL_KEY, JSON.stringify(templates)); }
+    function loadRules(){
+      try{ return JSON.parse(localStorage.getItem(RULES_KEY)) || defaultRules; }catch(e){ return defaultRules; }
+    }
+    function saveRules(){ localStorage.setItem(RULES_KEY, JSON.stringify(rules)); }
 
-    function escapeHtml(s){ return s.replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch])); }
-
-    function loadInitial(){
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if(saved){
-        try{
-          conversation = JSON.parse(saved);
-          conversation.forEach(renderMessage);
-          showToast('تم تحميل المحفوظ');
-          return;
-        }catch(e){
-          conversation = [...initialConversation];
-        }
-      } else {
-        conversation = [...initialConversation];
+    // ---------- واجهة الدردشة ----------
+    function renderChat(){
+      chatBody.innerHTML = '';
+      if(chatState.messages.length === 0){
+        const empty = document.createElement('div'); empty.className='bubble owner'; empty.innerHTML = `<div class="meta">صاحب المنصة</div><div>أهلاً! ابدأ المحادثة الآن.</div>`;
+        chatBody.appendChild(empty);
+        return;
       }
-      conversation.forEach(renderMessage);
+      chatState.messages.forEach(m => {
+        const b = document.createElement('div');
+        b.className = 'bubble ' + (m.who === 'me' ? 'me' : 'owner');
+        b.innerHTML = `<div class="meta">${escapeHTML(m.name || (m.who==='me'?'أنت':'صاحب المنصة'))} • ${escapeHTML(m.time)}</div><div>${escapeHTML(m.text)}</div>`;
+        chatBody.appendChild(b);
+      });
+      chatBody.scrollTop = chatBody.scrollHeight;
     }
 
     function appendMessage(who, name, text){
-      const msg = { who, name, time: now(), text };
-      conversation.push(msg);
-      renderMessage(msg);
-      // حفظ تلقائي مؤقت
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(conversation));
+      const msg = { who, name, text, time: new Date().toLocaleString('ar-EG') };
+      chatState.messages.push(msg);
+      saveChat();
+      renderChat();
     }
 
-    // محاكاة ردود صاحب المنصة (قائمة ردود ذكية بسيطة)
-    const ownerReplies = [
-      'جميل، أقدر أساعدك بخطوات مفصّلة أو أرسل لك مثال جاهز.',
-      'هل تريد أن أشرح التوصيلات الكهربائية أم الكود؟',
-      'أنصحك بتجربة الكود على Wokwi أولاً قبل التجميع الحقيقي.',
-      'لو عندك صورة للتوصيلات أقدر أراجعها لو رفعتها.',
-      'ممتاز، لو تريد أضيف لك درس خاص بالمشروع مع اختبار قصير.'
-    ];
-
-    function ownerAutoReply(userText){
-      // قواعد بسيطة لاختيار رد مناسب
-      const t = userText.toLowerCase();
-      if(t.includes('git') || t.includes('github') || t.includes('رفع')) return 'أستطيع إرشادك خطوة بخطوة لرفع المشروع على GitHub. تريد ملف README؟';
-      if(t.includes('firebase') || t.includes('مزامنة')) return 'ربط Firebase يتطلب إعداد مشروع في Firebase Console وسأعطيك كود التهيئة.';
-      if(t.includes('neo') || t.includes('neopixel')) return 'كم عدد الـ LEDs؟ لو أقل من 30 يمكنك تشغيلها من 5V مباشرة مع مقاومة على الداتا.';
-      if(t.includes('wokwi') || t.includes('محاكي')) return 'يمكنك فتح الكود في Wokwi عبر زر المحاكي في الدروس أو أرسل لي الكود وسأجهّز رابط تشغيل.';
-      // رد عشوائي من القائمة
-      return ownerReplies[Math.floor(Math.random()*ownerReplies.length)];
-    }
-
-    // أحداث الواجهة
-    sendBtn.addEventListener('click', ()=>{
-      const text = inputEl.value.trim();
+    // ---------- إرسال رسالة المستخدم ----------
+    sendBtn.addEventListener('click', ()=> {
+      const text = userMsg.value.trim();
       if(!text) return;
-      appendMessage('user', 'ياسر', text);
-      inputEl.value = '';
-      if(autoReply){
-        setTimeout(()=>{
-          const reply = ownerAutoReply(text);
-          appendMessage('owner', 'صاحب المنصة', reply);
-        }, 700 + Math.random()*900);
+      const name = userName.value.trim() || 'مستخدم';
+      appendMessage('me', name, text);
+      userMsg.value = '';
+      if(autoReply) simulateOwnerReply(text, name);
+    });
+    userMsg.addEventListener('keydown', (e)=> { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendBtn.click(); } });
+
+    // ---------- محاكاة رد صاحب المنصة ----------
+    function simulateOwnerReply(userText, userName){
+      // typing indicator
+      const typing = { who:'owner', name:'صاحب المنصة', text:'...', time: new Date().toLocaleString('ar-EG'), typing:true };
+      chatState.messages.push(typing);
+      renderChat();
+
+      setTimeout(()=> {
+        // remove typing
+        chatState.messages = chatState.messages.filter(m => !m.typing);
+        // generate reply
+        const reply = generateReply(userText, userName);
+        chatState.messages.push({ who:'owner', name:'صاحب المنصة', text: reply, time: new Date().toLocaleString('ar-EG') });
+        saveChat();
+        renderChat();
+      }, 600 + Math.random()*900);
+    }
+
+    // ---------- مولد الردود الذكي ----------
+    function generateReply(userText, userName){
+      const t = userText.toLowerCase();
+
+      // 1) طلب درس مباشر: "درس 5" أو "L5"
+      const lessonMatch = t.match(/درس\s*(\d+)|\bl(\d+)\b|lesson\s*(\d+)/i);
+      if(lessonMatch){
+        const num = lessonMatch[1] || lessonMatch[2] || lessonMatch[3];
+        const id = 'L' + num;
+        if(includeLessonsChk.checked && lessonsIndex[id]){
+          return `أكيد ${userName || ''} — الدرس ${id}: ${lessonsIndex[id]}. تقدر تطلب "فتح الدرس" أو "كود الدرس" وسأرسله لك.`;
+        } else {
+          return `لم أجد درسًا برقم ${num} هنا. لو تريد أضف عنوان الدرس في إعدادات القوالب أو اكتب اسم الدرس بالكامل.`;
+        }
+      }
+
+      // 2) قواعد مخصصة (قوالب المستخدم)
+      // تحقق من القوالب أولاً (مطابقة كلمة مفتاحية كاملة أو ضمنية)
+      for(const tpl of templates){
+        const key = tpl.keyword.toLowerCase().trim();
+        if(!key) continue;
+        if(useFuzzyChk.checked){
+          if(similarity(t, key) >= 0.6) return fillTemplate(tpl.reply, userName, userText);
+        } else {
+          if(t.includes(key)) return fillTemplate(tpl.reply, userName, userText);
+        }
+      }
+
+      // 3) قواعد مضمّنة (keywords)
+      for(const r of rules){
+        for(const k of r.keys){
+          if(useFuzzyChk.checked){
+            if(similarity(t, k.toLowerCase()) >= 0.6) return r.reply;
+          } else {
+            if(t.includes(k.toLowerCase())) return r.reply;
+          }
+        }
+      }
+
+      // 4) حالات خاصة: أخطاء/compile/upload
+      if(/error|compile|upload|failed|خطأ|فشل|رفع|compile/i.test(t)){
+        return 'لو ظهرت لك رسالة خطأ انسخ لي نص الخطأ أو صورة للـ Serial Monitor وسأحاول أساعدك بخطوات تصحيحية.';
+      }
+
+      // 5) fallback: قوالب ودية عشوائية
+      const templatesFallback = [
+        `فكرة ممتازة، ${userName || ''}. أقدر أقدملك خطوات مفصّلة أو مثال جاهز.`,
+        `ممتاز — هل تريد شرح التوصيلات أم الكود؟`,
+        `أنصحك بتجربة الكود أولًا على المحاكي ثم التجميع الحقيقي.`,
+        `لو تحب أجهّز لك درس مخصّص بالمشروع مع اختبار قصير.`,
+        `أرسل لي الكود أو وصف المشكلة وسأعطيك ملاحظات سريعة.`
+      ];
+      return templatesFallback[Math.floor(Math.random()*templatesFallback.length)];
+    }
+
+    // ---------- مساعدة: تعبئة قالب مع متغيرات بسيطة ----------
+    function fillTemplate(tpl, userName, userText){
+      return tpl.replace(/\{\{name\}\}/g, userName || '').replace(/\{\{text\}\}/g, userText || '');
+    }
+
+    // ---------- وظائف القوالب (Templates) ----------
+    function renderTemplates(){
+      templatesList.innerHTML = '';
+      if(templates.length === 0){
+        templatesList.innerHTML = '<div class="template">لا توجد قوالب مخصصة بعد.</div>';
+        return;
+      }
+      templates.forEach((t, idx) => {
+        const el = document.createElement('div'); el.className='template';
+        el.innerHTML = `<div style="font-weight:700">${escapeHTML(t.keyword)}</div><div style="margin-top:6px">${escapeHTML(t.reply)}</div>
+          <div style="display:flex;gap:6px;margin-top:8px">
+            <button class="btn ghost small" data-edit="${idx}">تعديل</button>
+            <button class="btn ghost small" data-del="${idx}">حذف</button>
+          </div>`;
+        templatesList.appendChild(el);
+      });
+    }
+
+    addTplBtn.addEventListener('click', ()=> {
+      const k = tplKeyword.value.trim();
+      const r = tplReply.value.trim();
+      if(!k || !r){ alert('أدخل كلمة مفتاحية ونص الرد'); return; }
+      templates.push({ keyword: k, reply: r });
+      saveTemplates();
+      tplKeyword.value = ''; tplReply.value = '';
+      renderTemplates();
+    });
+
+    templatesList.addEventListener('click', (e)=> {
+      const edit = e.target.getAttribute('data-edit');
+      const del = e.target.getAttribute('data-del');
+      if(edit !== null){
+        const idx = Number(edit);
+        const t = templates[idx];
+        const newK = prompt('تعديل الكلمة المفتاحية', t.keyword);
+        if(newK === null) return;
+        const newR = prompt('تعديل نص الرد (استخدم {{name}} لاسم المستخدم)', t.reply);
+        if(newR === null) return;
+        templates[idx] = { keyword: newK, reply: newR };
+        saveTemplates(); renderTemplates();
+      } else if(del !== null){
+        const idx = Number(del);
+        if(confirm('حذف القالب؟')){ templates.splice(idx,1); saveTemplates(); renderTemplates(); }
       }
     });
 
-    inputEl.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') sendBtn.click(); });
+    // ---------- قواعد مضمّنة (عرض وتحرير) ----------
+    function renderRules(){
+      rulesList.innerHTML = '';
+      rules.forEach((r, idx) => {
+        const el = document.createElement('div'); el.className='template';
+        el.innerHTML = `<div style="font-weight:700">${escapeHTML(r.keys.join(', '))}</div><div style="margin-top:6px">${escapeHTML(r.reply)}</div>
+          <div style="display:flex;gap:6px;margin-top:8px">
+            <button class="btn ghost small" data-edit-rule="${idx}">تعديل</button>
+            <button class="btn ghost small" data-del-rule="${idx}">حذف</button>
+          </div>`;
+        rulesList.appendChild(el);
+      });
+    }
+    rulesList.addEventListener('click', (e)=> {
+      const edit = e.target.getAttribute('data-edit-rule');
+      const del = e.target.getAttribute('data-del-rule');
+      if(edit !== null){
+        const idx = Number(edit);
+        const r = rules[idx];
+        const newKeys = prompt('تعديل الكلمات المفتاحية (مفصولة بفواصل)', r.keys.join(','));
+        if(newKeys === null) return;
+        const newReply = prompt('تعديل نص الرد', r.reply);
+        if(newReply === null) return;
+        rules[idx] = { id: r.id || ('r_' + Date.now()), keys: newKeys.split(',').map(s=>s.trim()).filter(Boolean), reply: newReply };
+        saveRules(); renderRules();
+      } else if(del !== null){
+        const idx = Number(del);
+        if(confirm('حذف القاعدة؟')){ rules.splice(idx,1); saveRules(); renderRules(); }
+      }
+    });
 
-    saveBtn.addEventListener('click', ()=>{
+    // ---------- تصدير / استيراد المحادثة ----------
+    exportChatBtn.addEventListener('click', ()=> {
+      const data = JSON.stringify(chatState, null, 2);
+      const w = window.open('', '_blank');
+      w.document.body.style.background = '#071428';
+      w.document.body.style.color = '#d7e3ff';
+      const pre = w.document.createElement('pre'); pre.textContent = data; pre.style.whiteSpace='pre-wrap'; pre.style.padding='12px';
+      w.document.body.appendChild(pre);
+    });
+
+    importChatBtn.addEventListener('click', ()=> {
+      const txt = prompt('ألصق JSON المحادثة هنا للاستيراد');
+      if(!txt) return;
       try{
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(conversation));
-        showToast('تم حفظ المحادثة محليًا');
-      }catch(e){
-        showToast('فشل الحفظ');
-      }
+        const obj = JSON.parse(txt);
+        if(obj && Array.isArray(obj.messages)) { chatState = obj; saveChat(); renderChat(); alert('تم الاستيراد'); }
+        else alert('الملف غير صالح');
+      }catch(e){ alert('خطأ في قراءة JSON'); }
     });
 
-    loadBtn.addEventListener('click', ()=>{
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if(!saved){ showToast('لا توجد محادثة محفوظة'); return; }
-      chatEl.innerHTML = '';
+    // ---------- تصدير / استيراد القوالب ----------
+    exportTplBtn.addEventListener('click', ()=> {
+      const data = JSON.stringify(templates, null, 2);
+      const w = window.open('', '_blank');
+      w.document.body.style.background = '#071428';
+      w.document.body.style.color = '#d7e3ff';
+      const pre = w.document.createElement('pre'); pre.textContent = data; pre.style.whiteSpace='pre-wrap'; pre.style.padding='12px';
+      w.document.body.appendChild(pre);
+    });
+    importTplBtn.addEventListener('click', ()=> {
+      const txt = prompt('ألصق JSON القوالب هنا للاستيراد');
+      if(!txt) return;
       try{
-        conversation = JSON.parse(saved);
-        conversation.forEach(renderMessage);
-        showToast('تم تحميل المحفوظ');
-      }catch(e){
-        showToast('خطأ في تحميل المحفوظ');
-      }
+        const obj = JSON.parse(txt);
+        if(Array.isArray(obj)){ templates = obj; saveTemplates(); renderTemplates(); alert('تم استيراد القوالب'); }
+        else alert('الملف غير صالح');
+      }catch(e){ alert('خطأ في قراءة JSON'); }
     });
 
-    clearBtn.addEventListener('click', ()=>{
-      if(!confirm('هل تريد مسح المحادثة الحالية؟')) return;
-      conversation = [];
-      chatEl.innerHTML = '';
-      localStorage.removeItem(STORAGE_KEY);
-      showToast('تم مسح المحادثة');
+    // ---------- مسح المحادثة ----------
+    clearChatBtn.addEventListener('click', ()=> {
+      if(!confirm('هل تريد مسح كل المحادثة؟')) return;
+      chatState.messages = [];
+      saveChat(); renderChat();
     });
 
-    toggleAutoBtn.addEventListener('click', ()=>{
+    // ---------- فتح/إغلاق نافذة القوالب ----------
+    openTemplatesBtn.addEventListener('click', ()=> {
+      modal.style.display = 'flex'; modal.setAttribute('aria-hidden','false');
+      renderModal();
+    });
+    closeModal.addEventListener('click', ()=> { modal.style.display='none'; modal.setAttribute('aria-hidden','true'); });
+
+    function renderModal(){
+      modalContent.innerHTML = '';
+      const h = document.createElement('div'); h.style.marginBottom='8px'; h.innerHTML = '<strong>قوالب مخصصة</strong>';
+      modalContent.appendChild(h);
+      if(templates.length === 0) modalContent.appendChild(document.createTextNode('لا توجد قوالب مخصصة.'));
+      templates.forEach((t, idx) => {
+        const d = document.createElement('div'); d.style.marginBottom='8px';
+        d.innerHTML = `<div style="font-weight:700">${escapeHTML(t.keyword)}</div><div>${escapeHTML(t.reply)}</div>
+          <div style="margin-top:6px"><button class="btn ghost small" data-edit="${idx}">تعديل</button> <button class="btn ghost small" data-del="${idx}">حذف</button></div>`;
+        modalContent.appendChild(d);
+      });
+      // modal edit handlers
+      modalContent.querySelectorAll('[data-edit]').forEach(btn=>{
+        btn.addEventListener('click', (e)=>{
+          const idx = Number(e.target.getAttribute('data-edit'));
+          const t = templates[idx];
+          const newK = prompt('تعديل الكلمة المفتاحية', t.keyword);
+          if(newK === null) return;
+          const newR = prompt('تعديل نص الرد', t.reply);
+          if(newR === null) return;
+          templates[idx] = { keyword: newK, reply: newR };
+          saveTemplates(); renderTemplates(); renderModal();
+        });
+      });
+      modalContent.querySelectorAll('[data-del]').forEach(btn=>{
+        btn.addEventListener('click', (e)=>{
+          const idx = Number(e.target.getAttribute('data-del'));
+          if(confirm('حذف القالب؟')){ templates.splice(idx,1); saveTemplates(); renderTemplates(); renderModal(); }
+        });
+      });
+    }
+
+    // ---------- تبديل الرد التلقائي ----------
+    toggleAutoBtn.addEventListener('click', ()=> {
       autoReply = !autoReply;
       toggleAutoBtn.textContent = autoReply ? 'إيقاف الرد التلقائي' : 'تفعيل الرد التلقائي';
-      statusText.textContent = 'وضع الرد التلقائي: ' + (autoReply ? 'مفعل' : 'متوقف');
-      showToast(autoReply ? 'الرد التلقائي مفعل' : 'الرد التلقائي متوقف');
+      autoStatus.textContent = autoReply ? 'مفعل' : 'متوقف';
+      appendMessage('owner', 'النظام', autoReply ? 'الرد التلقائي مفعل' : 'الرد التلقائي متوقف');
     });
 
-    // حفظ تلقائي دوري (كل 10 ثواني)
-    setInterval(()=> {
-      try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(conversation)); }catch(e){}
-    }, 10000);
+    // ---------- مساعدة: تشابه نصي بسيط (Levenshtein-based ratio) ----------
+    function similarity(a, b){
+      // normalize
+      a = a.toLowerCase().trim(); b = b.toLowerCase().trim();
+      if(!a || !b) return 0;
+      const dist = levenshtein(a, b);
+      const maxLen = Math.max(a.length, b.length);
+      return 1 - (dist / maxLen);
+    }
+    function levenshtein(a, b){
+      const m = [], i, j;
+      for(i = 0; i <= b.length; i++) m[i] = [i];
+      for(j = 0; j <= a.length; j++) m[0][j] = j;
+      for(i = 1; i <= b.length; i++){
+        for(j = 1; j <= a.length; j++){
+          if(b.charAt(i-1) === a.charAt(j-1)) m[i][j] = m[i-1][j-1];
+          else m[i][j] = Math.min(m[i-1][j-1]+1, m[i][j-1]+1, m[i-1][j]+1);
+        }
+      }
+      return m[b.length][a.length];
+    }
 
-    // تحميل أولي
-    loadInitial();
+    // ---------- أدوات مساعدة ----------
+    function escapeHTML(s){ return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch])); }
 
-    // تحسين الوصول: التركيز على مربع الإدخال عند التحميل
-    window.addEventListener('load', ()=> inputEl.focus());
+    // ---------- تهيئة الواجهة ----------
+    function init(){
+      renderChat();
+      renderTemplates();
+      renderRules();
+      // ensure default rules saved if none
+      if(!localStorage.getItem(RULES_KEY)) saveRules();
+      // keyboard shortcut: Ctrl+M to open templates modal
+      document.addEventListener('keydown', (e)=> { if(e.ctrlKey && e.key.toLowerCase() === 'm'){ openTemplatesBtn.click(); } });
+    }
+    init();
+
+    // ---------- حفظ القوالب والقواعد عند التغيير ----------
+    function saveTemplates(){ localStorage.setItem(TPL_KEY, JSON.stringify(templates)); }
+    function saveRules(){ localStorage.setItem(RULES_KEY, JSON.stringify(rules)); }
+
+    // ---------- تصدير / استيراد القوالب من الواجهة ----------
+    document.getElementById('exportChat').addEventListener('click', ()=> {
+      const data = JSON.stringify(chatState, null, 2);
+      const w = window.open('', '_blank');
+      w.document.body.style.background = '#071428';
+      w.document.body.style.color = '#d7e3ff';
+      const pre = w.document.createElement('pre'); pre.textContent = data; pre.style.whiteSpace='pre-wrap'; pre.style.padding='12px';
+      w.document.body.appendChild(pre);
+    });
+
+    // ---------- واجهة القوالب: تحميل القوالب المبدئية إن لم توجد ----------
+    if(!localStorage.getItem(TPL_KEY)){
+      templates = [
+        { keyword: 'رفع', reply: 'لو تريد خطوات رفع المشروع على GitHub أقدر أكتب لك دليل مختصر أو ملف README.' },
+        { keyword: 'wokwi', reply: 'يمكنك تشغيل الكود داخل المحاكي المدمج بالضغط على "فتح في المحاكي".' }
+      ];
+      saveTemplates();
+      renderTemplates();
+    }
+
+    // ---------- نهاية الملف ----------
   </script>
 </body>
 </html>
