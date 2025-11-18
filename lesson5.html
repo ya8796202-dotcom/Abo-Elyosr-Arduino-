@@ -3,228 +3,125 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>محادثة صاحب المنصة — دردشة ذكية</title>
-  <meta name="description" content="واجهة محادثة مستقلة مع نظام توليد ردود ذكي محلياً وقابل للتخصيص." />
+  <title>محادثة صاحب المنصة — ثابت</title>
   <style>
-    :root{
-      --bg:#07102a; --panel:#0b1224; --accent:#06b6d4; --accent2:#1d4ed8;
-      --text:#e6eef8; --muted:#93c5fd; --ok:#22c55e; --warn:#f59e0b;
-      --radius:12px;
-    }
+    :root{ --bg:#07102a; --panel:#0b1224; --accent:#06b6d4; --text:#e6eef8; --muted:#93c5fd; }
     *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font-family:system-ui,"Segoe UI",Tahoma,Arial,"Noto Naskh Arabic",sans-serif;
-      background:linear-gradient(180deg,#07102a,#0b1224); color:var(--text); -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale; padding:18px;
-    }
-    header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 8px 30px rgba(6,182,212,.08)}
+    body{margin:0;font-family:system-ui,"Noto Naskh Arabic",sans-serif;background:linear-gradient(180deg,#07102a,#0b1224);color:var(--text);padding:18px}
+    .wrap{max-width:980px;margin:0 auto}
+    header{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+    .logo{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#1d4ed8)}
     h1{margin:0;font-size:18px}
-    p.lead{margin:6px 0 0;color:var(--muted);font-size:13px}
-
-    .panel{max-width:980px;margin:12px auto;background:linear-gradient(180deg,#071428,#07102a);border:1px solid #0f1b38;border-radius:12px;overflow:hidden}
-    .topbar{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:10px;border-bottom:1px solid #0f1b38}
-    .controls{display:flex;gap:8px;align-items:center}
-    .btn{border:none;padding:8px 12px;border-radius:8px;background:var(--accent);color:#022;font-weight:800;cursor:pointer}
-    .btn.ghost{background:transparent;border:1px solid #0f1b38;color:var(--text)}
-    .btn.small{padding:6px 8px;font-size:13px}
-
-    .main{display:grid;grid-template-columns: 1fr 360px; gap:12px;padding:12px}
-    @media (max-width:980px){ .main{grid-template-columns:1fr} }
-
-    /* Chat area */
-    .chat-area{display:flex;flex-direction:column;height:64vh;border-radius:10px;overflow:hidden;border:1px solid #0f1b38;background:linear-gradient(180deg,#071428,#07102a)}
+    .panel{display:grid;grid-template-columns:1fr 320px;gap:12px;background:linear-gradient(180deg,#071428,#07102a);border:1px solid #0f1b38;border-radius:10px;overflow:hidden}
+    @media(max-width:900px){ .panel{grid-template-columns:1fr} }
+    .chat-area{display:flex;flex-direction:column;height:68vh}
     .chat-body{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
-    .bubble{max-width:78%;padding:10px 12px;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,.45);word-break:break-word}
-    .bubble.me{align-self:flex-end;background:linear-gradient(180deg,var(--accent2),#1e40af);color:#fff}
-    .bubble.owner{align-self:flex-start;background:linear-gradient(180deg,var(--accent),#06b6d4);color:#022}
+    .bubble{max-width:78%;padding:10px 12px;border-radius:12px;word-break:break-word}
+    .me{align-self:flex-end;background:linear-gradient(180deg,#1d4ed8,#1e40af);color:#fff}
+    .owner{align-self:flex-start;background:linear-gradient(180deg,#06b6d4,#0ea5a4);color:#022}
     .meta{font-size:12px;color:var(--muted);margin-bottom:6px}
-
     .chat-footer{display:flex;gap:8px;padding:10px;border-top:1px solid #0f1b38;background:linear-gradient(180deg,#071428,#07102a)}
-    input[type="text"], textarea{padding:8px;border-radius:8px;border:1px solid #0f1b38;background:#071428;color:var(--text);outline:none}
-    input.name{width:140px}
-    textarea.msg{flex:1;height:56px;resize:vertical}
-
-    /* Sidebar: settings & templates */
-    .sidebar{border-radius:10px;border:1px solid #0f1b38;padding:12px;background:linear-gradient(180deg,#071428,#07102a);height:64vh;overflow:auto}
+    input.name{width:140px;padding:8px;border-radius:8px;border:1px solid #0f1b38;background:#071428;color:var(--text)}
+    textarea.msg{flex:1;padding:8px;border-radius:8px;border:1px solid #0f1b38;background:#071428;color:var(--text);resize:vertical;height:56px}
+    .btn{padding:8px 12px;border-radius:8px;border:none;background:var(--accent);color:#022;font-weight:700;cursor:pointer}
+    .btn.ghost{background:transparent;border:1px solid #0f1b38;color:var(--text)}
+    .sidebar{padding:12px;border-left:1px solid #0f1b38;overflow:auto}
     .section{margin-bottom:12px}
-    .section h3{margin:0 0 8px;font-size:14px;color:var(--muted)}
-    .list{display:grid;gap:8px}
     .template{background:rgba(255,255,255,.02);padding:8px;border-radius:8px}
-    .small-input{padding:6px;border-radius:8px;border:1px solid #0f1b38;background:#071428;color:var(--text)}
-
-    /* modal */
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);z-index:90}
-    .modal .card{width:92%;max-width:720px;background:#071428;border-radius:10px;padding:12px;border:1px solid #0f1b38}
-
-    .footer-note{font-size:13px;color:var(--muted);margin-top:8px}
+    .small{font-size:13px;color:var(--muted)}
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo" aria-hidden="true"></div>
-    <div>
-      <h1>محادثة صاحب المنصة (مستقلة)</h1>
-      <p class="lead">واجهة دردشة مستقلة مع **مولد ردود ذكي محلياً** وقابل للتخصيص. لا حاجة لخادم خارجي.</p>
-    </div>
-  </header>
-
-  <div class="panel">
-    <div class="topbar">
-      <div style="display:flex;gap:8px;align-items:center">
-        <div style="font-weight:800">لوحة المحادثة</div>
-        <div style="color:var(--muted);font-size:13px">حفظ محليًا · ردود قابلة للتعديل</div>
-      </div>
-      <div class="controls">
-        <button class="btn ghost small" id="exportChat">تصدير المحادثة</button>
-        <button class="btn ghost small" id="importChat">استيراد</button>
-        <button class="btn ghost small" id="clearChat">مسح</button>
-        <button class="btn small" id="openTemplates">قوالب الردود</button>
-      </div>
-    </div>
-
-    <div class="main">
-      <!-- Chat column -->
+  <div class="wrap">
+    <header>
+      <div class="logo" aria-hidden="true"></div>
       <div>
-        <div class="chat-area" role="log" aria-live="polite" aria-relevant="additions">
-          <div class="chat-body" id="chatBody" tabindex="0"></div>
+        <h1>محادثة صاحب المنصة</h1>
+        <div class="small">واجهة مستقلة؛ الردود مولّدة محليًا وتُحفظ في المتصفح</div>
+      </div>
+    </header>
 
-          <div class="chat-footer" role="region" aria-label="مربع الكتابة">
-            <input class="name small-input" id="userName" type="text" placeholder="اسمك (اختياري)" aria-label="اسم المستخدم" />
-            <textarea class="msg" id="userMsg" placeholder="اكتب رسالتك هنا..." aria-label="نص الرسالة"></textarea>
-            <button class="btn" id="sendBtn">إرسال</button>
-          </div>
-        </div>
+    <div class="panel" role="application">
+      <!-- Chat column -->
+      <div class="chat-area" aria-live="polite">
+        <div class="chat-body" id="chatBody" tabindex="0"></div>
 
-        <div style="padding:10px 12px">
-          <div class="footer-note">اختصار: اضغط <strong>Ctrl+M</strong> لفتح/إغلاق نافذة القوالب. الردود تُولّد محليًا ولا تُرسل إلى خوادم خارجية.</div>
+        <div class="chat-footer" role="region" aria-label="مربع الكتابة">
+          <input id="userName" class="name" placeholder="اسمك (اختياري)" />
+          <textarea id="userMsg" class="msg" placeholder="اكتب رسالتك هنا..."></textarea>
+          <button id="sendBtn" class="btn">إرسال</button>
         </div>
       </div>
 
-      <!-- Sidebar: templates & settings -->
-      <aside class="sidebar" aria-label="إعدادات مولد الردود">
+      <!-- Sidebar -->
+      <aside class="sidebar" aria-label="إعدادات">
         <div class="section">
-          <h3>حالة الرد التلقائي</h3>
-          <div style="display:flex;gap:8px;align-items:center">
-            <button class="btn small" id="toggleAuto">إيقاف الرد التلقائي</button>
-            <div id="autoStatus" style="color:var(--muted)">مفعل</div>
+          <div style="display:flex;gap:8px;align-items:center;justify-content:space-between">
+            <strong>الرد التلقائي</strong>
+            <button id="toggleAuto" class="btn ghost">إيقاف</button>
           </div>
+          <div class="small" style="margin-top:8px">يمكنك تعطيل/تفعيل الردود الآلية.</div>
         </div>
 
         <div class="section">
-          <h3>قواعد سريعة (مضمّنة)</h3>
-          <div class="list" id="rulesList">
-            <!-- populated by JS -->
+          <strong>قوالب سريعة</strong>
+          <div style="display:flex;gap:6px;margin-top:8px">
+            <input id="tplKey" class="small" placeholder="كلمة مفتاحية" />
+            <input id="tplText" class="small" placeholder="نص الرد" />
           </div>
+          <div style="display:flex;gap:6px;margin-top:8px">
+            <button id="addTpl" class="btn ghost">أضف</button>
+            <button id="exportTpl" class="btn ghost">تصدير</button>
+          </div>
+          <div id="tplList" style="margin-top:10px"></div>
         </div>
 
         <div class="section">
-          <h3>قوالب ردود مخصصة</h3>
-          <div style="display:flex;gap:8px;margin-bottom:8px">
-            <input id="tplKeyword" class="small-input" placeholder="كلمة مفتاحية" />
-            <input id="tplReply" class="small-input" placeholder="نص الرد (قالب)" />
-            <button class="btn small" id="addTpl">إضافة</button>
-          </div>
-          <div id="templatesList" class="list"></div>
-        </div>
-
-        <div class="section">
-          <h3>استيراد / تصدير القوالب</h3>
-          <div style="display:flex;gap:8px">
-            <button class="btn ghost small" id="exportTpl">تصدير القوالب</button>
-            <button class="btn ghost small" id="importTpl">استيراد</button>
+          <strong>المحادثة</strong>
+          <div style="display:flex;gap:6px;margin-top:8px">
+            <button id="exportChat" class="btn ghost">تصدير</button>
+            <button id="importChat" class="btn ghost">استيراد</button>
+            <button id="clearChat" class="btn ghost">مسح</button>
           </div>
         </div>
 
-        <div class="section">
-          <h3>خيارات متقدمة</h3>
-          <div style="display:grid;gap:8px">
-            <label><input type="checkbox" id="useFuzzy" /> تفعيل مطابقة تقريبية (تشابه نصي)</label>
-            <label><input type="checkbox" id="includeLessons" checked /> تمكين ردود الدروس (مثال: "درس 5")</label>
-          </div>
+        <div class="section small">
+          <div>اختصار: اضغط Enter لإرسال (Shift+Enter لسطر جديد).</div>
         </div>
       </aside>
     </div>
   </div>
 
-  <!-- Templates modal (for quick editing) -->
-  <div class="modal" id="modal" role="dialog" aria-hidden="true">
-    <div class="card">
-      <h3 style="margin-top:0">قوالب الردود</h3>
-      <div id="modalContent" style="max-height:50vh;overflow:auto"></div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px">
-        <button class="btn ghost" id="closeModal">إغلاق</button>
-      </div>
-    </div>
-  </div>
-
   <script>
-    /************************************************************************
-     * chat-only.html
-     * واجهة محادثة مستقلة مع نظام توليد ردود ذكي محلياً وقابل للتخصيص
-     ************************************************************************/
+    // مفاتيح التخزين
+    const CHAT_KEY = 'chat_only_fixed_v1';
+    const TPL_KEY = 'chat_only_fixed_templates_v1';
 
-    // ---------- مفاتيح التخزين ----------
-    const CHAT_KEY = 'chat_only_messages_v1';
-    const TPL_KEY = 'chat_only_templates_v1';
-    const RULES_KEY = 'chat_only_rules_v1';
-
-    // ---------- عناصر DOM ----------
+    // عناصر DOM
     const chatBody = document.getElementById('chatBody');
     const userName = document.getElementById('userName');
     const userMsg = document.getElementById('userMsg');
     const sendBtn = document.getElementById('sendBtn');
-    const clearChatBtn = document.getElementById('clearChat');
-    const exportChatBtn = document.getElementById('exportChat');
-    const importChatBtn = document.getElementById('importChat');
-    const openTemplatesBtn = document.getElementById('openTemplates');
-    const modal = document.getElementById('modal');
-    const modalContent = document.getElementById('modalContent');
-    const closeModal = document.getElementById('closeModal');
-    const toggleAutoBtn = document.getElementById('toggleAuto');
-    const autoStatus = document.getElementById('autoStatus');
-    const rulesList = document.getElementById('rulesList');
-    const templatesList = document.getElementById('templatesList');
-    const tplKeyword = document.getElementById('tplKeyword');
-    const tplReply = document.getElementById('tplReply');
-    const addTplBtn = document.getElementById('addTpl');
-    const exportTplBtn = document.getElementById('exportTpl');
-    const importTplBtn = document.getElementById('importTpl');
-    const useFuzzyChk = document.getElementById('useFuzzy');
-    const includeLessonsChk = document.getElementById('includeLessons');
+    const toggleAuto = document.getElementById('toggleAuto');
+    const tplKey = document.getElementById('tplKey');
+    const tplText = document.getElementById('tplText');
+    const addTpl = document.getElementById('addTpl');
+    const tplList = document.getElementById('tplList');
+    const exportTpl = document.getElementById('exportTpl');
+    const exportChat = document.getElementById('exportChat');
+    const importChat = document.getElementById('importChat');
+    const clearChat = document.getElementById('clearChat');
 
-    // ---------- حالة التطبيق ----------
+    // حالة التطبيق
     let chatState = loadChat();
     let templates = loadTemplates();
-    let rules = loadRules();
     let autoReply = true;
 
-    // ---------- دروس بسيطة للردود على "درس 5" الخ ----------
-    const lessonsIndex = {
-      L1: 'تشغيل LED — أساسيات',
-      L2: 'زر + LED — INPUT_PULLUP',
-      L3: 'حساس LM35 — قراءة analog',
-      L4: 'PWM للموتور — L298N',
-      L5: 'شاشة LCD 16x2 — LiquidCrystal',
-      L6: 'Servo SG90 — زاوية تدريجية',
-      L7: 'Serial أوامر بسيطة',
-      L8: 'I2C مثال عام',
-      L9: 'SPI إرسال/استقبال',
-      L10: 'مشروع: سيارة بالتحكم عبر Serial'
-    };
+    // تهيئة واجهة
+    renderChat();
+    renderTemplates();
 
-    // ---------- قواعد مضمّنة أولية ----------
-    const defaultRules = [
-      { id: 'r_wifi', keys: ['wifi','esp','esp8266','esp32'], reply: 'لو تستخدم ESP، تأكد من اختيار اللوحة الصحيحة في الـ IDE وضبط SSID/PASS قبل الرفع.' },
-      { id: 'r_neopixel', keys: ['neo','neopixel','ws2812'], reply: 'لـ NeoPixel استخدم مكتبة Adafruit_NeoPixel ومزود طاقة منفصل عند عدد كبير من LEDs.' },
-      { id: 'r_motor', keys: ['motor','l298','driver','pwm'], reply: 'للموتور استخدم درايفر ومزود طاقة منفصل؛ لا توصل الموتور مباشرة بمخارج الأردوينو.' },
-      { id: 'r_servo', keys: ['servo'], reply: 'السيرفو يحتاج تيار ثابت؛ لو الحمل كبير استخدم مصدر طاقة خارجي وشارك الأرضي.' },
-      { id: 'r_github', keys: ['github','رفع','push'], reply: 'أستطيع إرشادك خطوة بخطوة لرفع المشروع على GitHub أو تجهيز README جاهز.' },
-      { id: 'r_wokwi', keys: ['wokwi','محاكي'], reply: 'يمكنك تشغيل الكود داخل المحاكي المدمج بالضغط على "فتح في المحاكي" أو لصق الكود هنا.' }
-    ];
-
-    // ---------- تحميل/حفظ ----------
+    // تحميل/حفظ
     function loadChat(){
       try{ return JSON.parse(localStorage.getItem(CHAT_KEY)) || { messages: [] }; }catch(e){ return { messages: [] }; }
     }
@@ -233,153 +130,129 @@
       try{ return JSON.parse(localStorage.getItem(TPL_KEY)) || []; }catch(e){ return []; }
     }
     function saveTemplates(){ localStorage.setItem(TPL_KEY, JSON.stringify(templates)); }
-    function loadRules(){
-      try{ return JSON.parse(localStorage.getItem(RULES_KEY)) || defaultRules; }catch(e){ return defaultRules; }
-    }
-    function saveRules(){ localStorage.setItem(RULES_KEY, JSON.stringify(rules)); }
 
-    // ---------- واجهة الدردشة ----------
+    // عرض المحادثة
     function renderChat(){
       chatBody.innerHTML = '';
       if(chatState.messages.length === 0){
-        const empty = document.createElement('div'); empty.className='bubble owner'; empty.innerHTML = `<div class="meta">صاحب المنصة</div><div>أهلاً! ابدأ المحادثة الآن.</div>`;
-        chatBody.appendChild(empty);
+        appendOwner('أهلاً! ابدأ المحادثة وسأرد عليك.');
         return;
       }
       chatState.messages.forEach(m => {
-        const b = document.createElement('div');
-        b.className = 'bubble ' + (m.who === 'me' ? 'me' : 'owner');
-        b.innerHTML = `<div class="meta">${escapeHTML(m.name || (m.who==='me'?'أنت':'صاحب المنصة'))} • ${escapeHTML(m.time)}</div><div>${escapeHTML(m.text)}</div>`;
-        chatBody.appendChild(b);
+        const el = document.createElement('div');
+        el.className = 'bubble ' + (m.who === 'me' ? 'me' : 'owner');
+        el.innerHTML = `<div class="meta">${escapeHTML(m.name || (m.who==='me'?'أنت':'صاحب المنصة'))} • ${escapeHTML(m.time)}</div><div>${escapeHTML(m.text)}</div>`;
+        chatBody.appendChild(el);
       });
       chatBody.scrollTop = chatBody.scrollHeight;
     }
 
-    function appendMessage(who, name, text){
-      const msg = { who, name, text, time: new Date().toLocaleString('ar-EG') };
-      chatState.messages.push(msg);
-      saveChat();
-      renderChat();
+    // إضافة رسائل
+    function appendMe(name, text){
+      const msg = { who:'me', name: name || 'مستخدم', text, time: new Date().toLocaleString('ar-EG') };
+      chatState.messages.push(msg); saveChat(); renderChat();
+    }
+    function appendOwner(text){
+      const msg = { who:'owner', name:'صاحب المنصة', text, time: new Date().toLocaleString('ar-EG') };
+      chatState.messages.push(msg); saveChat(); renderChat();
     }
 
-    // ---------- إرسال رسالة المستخدم ----------
-    sendBtn.addEventListener('click', ()=> {
+    // إرسال المستخدم
+    sendBtn.addEventListener('click', sendHandler);
+    userMsg.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendHandler(); }
+    });
+
+    function sendHandler(){
       const text = userMsg.value.trim();
       if(!text) return;
       const name = userName.value.trim() || 'مستخدم';
-      appendMessage('me', name, text);
+      appendMe(name, text);
       userMsg.value = '';
-      if(autoReply) simulateOwnerReply(text, name);
-    });
-    userMsg.addEventListener('keydown', (e)=> { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendBtn.click(); } });
-
-    // ---------- محاكاة رد صاحب المنصة ----------
-    function simulateOwnerReply(userText, userName){
-      // typing indicator
-      const typing = { who:'owner', name:'صاحب المنصة', text:'...', time: new Date().toLocaleString('ar-EG'), typing:true };
-      chatState.messages.push(typing);
-      renderChat();
-
-      setTimeout(()=> {
-        // remove typing
-        chatState.messages = chatState.messages.filter(m => !m.typing);
-        // generate reply
-        const reply = generateReply(userText, userName);
-        chatState.messages.push({ who:'owner', name:'صاحب المنصة', text: reply, time: new Date().toLocaleString('ar-EG') });
-        saveChat();
-        renderChat();
-      }, 600 + Math.random()*900);
+      if(autoReply) simulateReply(text, name);
     }
 
-    // ---------- مولد الردود الذكي ----------
+    // محاكاة رد صاحب المنصة مع مؤشر كتابة
+    function simulateReply(userText, userName){
+      // ضع مؤشر كتابة مؤقت
+      const typing = { who:'owner', name:'صاحب المنصة', text:'...', time: new Date().toLocaleString('ar-EG'), typing:true };
+      chatState.messages.push(typing); renderChat();
+
+      setTimeout(()=> {
+        // أزل مؤشر الكتابة
+        chatState.messages = chatState.messages.filter(m => !m.typing);
+        // أنشئ الرد
+        const reply = generateReply(userText, userName);
+        chatState.messages.push({ who:'owner', name:'صاحب المنصة', text: reply, time: new Date().toLocaleString('ar-EG') });
+        saveChat(); renderChat();
+      }, 600 + Math.random()*800);
+    }
+
+    // مولد الردود (قواعد بسيطة + قوالب)
     function generateReply(userText, userName){
       const t = userText.toLowerCase();
 
-      // 1) طلب درس مباشر: "درس 5" أو "L5"
+      // طلب درس: "درس 5" أو "L5"
       const lessonMatch = t.match(/درس\s*(\d+)|\bl(\d+)\b|lesson\s*(\d+)/i);
       if(lessonMatch){
         const num = lessonMatch[1] || lessonMatch[2] || lessonMatch[3];
-        const id = 'L' + num;
-        if(includeLessonsChk.checked && lessonsIndex[id]){
-          return `أكيد ${userName || ''} — الدرس ${id}: ${lessonsIndex[id]}. تقدر تطلب "فتح الدرس" أو "كود الدرس" وسأرسله لك.`;
-        } else {
-          return `لم أجد درسًا برقم ${num} هنا. لو تريد أضف عنوان الدرس في إعدادات القوالب أو اكتب اسم الدرس بالكامل.`;
-        }
+        return `طلبت الدرس رقم ${num}. أرسل "كود درس ${num}" أو "ملخص درس ${num}" وسأساعدك.`;
       }
 
-      // 2) قواعد مخصصة (قوالب المستخدم)
-      // تحقق من القوالب أولاً (مطابقة كلمة مفتاحية كاملة أو ضمنية)
+      // تحقق من القوالب
       for(const tpl of templates){
-        const key = tpl.keyword.toLowerCase().trim();
-        if(!key) continue;
-        if(useFuzzyChk.checked){
-          if(similarity(t, key) >= 0.6) return fillTemplate(tpl.reply, userName, userText);
-        } else {
-          if(t.includes(key)) return fillTemplate(tpl.reply, userName, userText);
-        }
+        if(!tpl.keyword) continue;
+        if(t.includes(tpl.keyword.toLowerCase())) return tpl.reply.replace(/\{\{name\}\}/g, userName || '');
       }
 
-      // 3) قواعد مضمّنة (keywords)
-      for(const r of rules){
-        for(const k of r.keys){
-          if(useFuzzyChk.checked){
-            if(similarity(t, k.toLowerCase()) >= 0.6) return r.reply;
-          } else {
-            if(t.includes(k.toLowerCase())) return r.reply;
-          }
-        }
-      }
-
-      // 4) حالات خاصة: أخطاء/compile/upload
-      if(/error|compile|upload|failed|خطأ|فشل|رفع|compile/i.test(t)){
-        return 'لو ظهرت لك رسالة خطأ انسخ لي نص الخطأ أو صورة للـ Serial Monitor وسأحاول أساعدك بخطوات تصحيحية.';
-      }
-
-      // 5) fallback: قوالب ودية عشوائية
-      const templatesFallback = [
-        `فكرة ممتازة، ${userName || ''}. أقدر أقدملك خطوات مفصّلة أو مثال جاهز.`,
-        `ممتاز — هل تريد شرح التوصيلات أم الكود؟`,
-        `أنصحك بتجربة الكود أولًا على المحاكي ثم التجميع الحقيقي.`,
-        `لو تحب أجهّز لك درس مخصّص بالمشروع مع اختبار قصير.`,
-        `أرسل لي الكود أو وصف المشكلة وسأعطيك ملاحظات سريعة.`
+      // كلمات مفتاحية عامة
+      const keywords = [
+        { keys:['wifi','esp','esp8266','esp32'], reply:'لو تستخدم ESP تأكد من SSID/PASS واختيار اللوحة في IDE.' },
+        { keys:['neopixel','ws2812','neo'], reply:'لـ NeoPixel استخدم مكتبة Adafruit_NeoPixel ومزود طاقة مناسب.' },
+        { keys:['motor','l298','servo'], reply:'المحركات تحتاج درايفر ومصدر طاقة منفصل؛ لا توصلها مباشرة.' },
+        { keys:['github','رفع'], reply:'أقدر أشرح خطوات رفع المشروع على GitHub خطوة بخطوة.' }
       ];
-      return templatesFallback[Math.floor(Math.random()*templatesFallback.length)];
-    }
-
-    // ---------- مساعدة: تعبئة قالب مع متغيرات بسيطة ----------
-    function fillTemplate(tpl, userName, userText){
-      return tpl.replace(/\{\{name\}\}/g, userName || '').replace(/\{\{text\}\}/g, userText || '');
-    }
-
-    // ---------- وظائف القوالب (Templates) ----------
-    function renderTemplates(){
-      templatesList.innerHTML = '';
-      if(templates.length === 0){
-        templatesList.innerHTML = '<div class="template">لا توجد قوالب مخصصة بعد.</div>';
-        return;
+      for(const k of keywords){
+        for(const word of k.keys){
+          if(t.includes(word)) return k.reply;
+        }
       }
+
+      // أخطاء عامة
+      if(/error|compile|upload|خطأ|فشل/i.test(t)) return 'انسخ لي نص الخطأ أو صورة من Serial Monitor وسأحاول أساعدك في التصحيح.';
+
+      // رد افتراضي
+      const fallbacks = [
+        `فكرة جيدة، ${userName || ''}. أقدر أقدملك مثال أو خطوات مفصّلة.`,
+        'هل تريد شرح التوصيلات أم الكود؟',
+        'جرّب تشغيل الكود على المحاكي أولاً ثم نجرب التعديلات.'
+      ];
+      return fallbacks[Math.floor(Math.random()*fallbacks.length)];
+    }
+
+    // قوالب: إضافة/عرض/حذف
+    function renderTemplates(){
+      tplList.innerHTML = '';
+      if(templates.length === 0){ tplList.innerHTML = '<div class="template small">لا توجد قوالب بعد.</div>'; return; }
       templates.forEach((t, idx) => {
         const el = document.createElement('div'); el.className='template';
         el.innerHTML = `<div style="font-weight:700">${escapeHTML(t.keyword)}</div><div style="margin-top:6px">${escapeHTML(t.reply)}</div>
           <div style="display:flex;gap:6px;margin-top:8px">
-            <button class="btn ghost small" data-edit="${idx}">تعديل</button>
-            <button class="btn ghost small" data-del="${idx}">حذف</button>
+            <button data-edit="${idx}" class="btn ghost small">تعديل</button>
+            <button data-del="${idx}" class="btn ghost small">حذف</button>
           </div>`;
-        templatesList.appendChild(el);
+        tplList.appendChild(el);
       });
     }
 
-    addTplBtn.addEventListener('click', ()=> {
-      const k = tplKeyword.value.trim();
-      const r = tplReply.value.trim();
+    addTpl.addEventListener('click', ()=>{
+      const k = tplKey.value.trim(); const r = tplText.value.trim();
       if(!k || !r){ alert('أدخل كلمة مفتاحية ونص الرد'); return; }
       templates.push({ keyword: k, reply: r });
-      saveTemplates();
-      tplKeyword.value = ''; tplReply.value = '';
-      renderTemplates();
+      saveTemplates(); tplKey.value=''; tplText.value=''; renderTemplates();
     });
 
-    templatesList.addEventListener('click', (e)=> {
+    tplList.addEventListener('click', (e)=>{
       const edit = e.target.getAttribute('data-edit');
       const del = e.target.getAttribute('data-del');
       if(edit !== null){
@@ -397,192 +270,65 @@
       }
     });
 
-    // ---------- قواعد مضمّنة (عرض وتحرير) ----------
-    function renderRules(){
-      rulesList.innerHTML = '';
-      rules.forEach((r, idx) => {
-        const el = document.createElement('div'); el.className='template';
-        el.innerHTML = `<div style="font-weight:700">${escapeHTML(r.keys.join(', '))}</div><div style="margin-top:6px">${escapeHTML(r.reply)}</div>
-          <div style="display:flex;gap:6px;margin-top:8px">
-            <button class="btn ghost small" data-edit-rule="${idx}">تعديل</button>
-            <button class="btn ghost small" data-del-rule="${idx}">حذف</button>
-          </div>`;
-        rulesList.appendChild(el);
-      });
-    }
-    rulesList.addEventListener('click', (e)=> {
-      const edit = e.target.getAttribute('data-edit-rule');
-      const del = e.target.getAttribute('data-del-rule');
-      if(edit !== null){
-        const idx = Number(edit);
-        const r = rules[idx];
-        const newKeys = prompt('تعديل الكلمات المفتاحية (مفصولة بفواصل)', r.keys.join(','));
-        if(newKeys === null) return;
-        const newReply = prompt('تعديل نص الرد', r.reply);
-        if(newReply === null) return;
-        rules[idx] = { id: r.id || ('r_' + Date.now()), keys: newKeys.split(',').map(s=>s.trim()).filter(Boolean), reply: newReply };
-        saveRules(); renderRules();
-      } else if(del !== null){
-        const idx = Number(del);
-        if(confirm('حذف القاعدة؟')){ rules.splice(idx,1); saveRules(); renderRules(); }
-      }
+    // زر التبديل التلقائي
+    toggleAuto.addEventListener('click', ()=>{
+      autoReply = !autoReply;
+      toggleAuto.textContent = autoReply ? 'إيقاف' : 'تشغيل';
+      appendOwner(autoReply ? 'الرد التلقائي مفعل' : 'الرد التلقائي متوقف');
     });
 
-    // ---------- تصدير / استيراد المحادثة ----------
-    exportChatBtn.addEventListener('click', ()=> {
-      const data = JSON.stringify(chatState, null, 2);
+    // تصدير/استيراد/مسح المحادثة
+    exportChat.addEventListener('click', ()=> {
       const w = window.open('', '_blank');
       w.document.body.style.background = '#071428';
       w.document.body.style.color = '#d7e3ff';
-      const pre = w.document.createElement('pre'); pre.textContent = data; pre.style.whiteSpace='pre-wrap'; pre.style.padding='12px';
+      const pre = w.document.createElement('pre'); pre.textContent = JSON.stringify(chatState, null, 2);
+      pre.style.whiteSpace='pre-wrap'; pre.style.padding='12px';
       w.document.body.appendChild(pre);
     });
-
-    importChatBtn.addEventListener('click', ()=> {
+    importChat.addEventListener('click', ()=> {
       const txt = prompt('ألصق JSON المحادثة هنا للاستيراد');
       if(!txt) return;
       try{
         const obj = JSON.parse(txt);
-        if(obj && Array.isArray(obj.messages)) { chatState = obj; saveChat(); renderChat(); alert('تم الاستيراد'); }
+        if(obj && Array.isArray(obj.messages)){ chatState = obj; saveChat(); renderChat(); alert('تم الاستيراد'); }
         else alert('الملف غير صالح');
       }catch(e){ alert('خطأ في قراءة JSON'); }
     });
+    clearChat.addEventListener('click', ()=> {
+      if(!confirm('مسح المحادثة؟')) return;
+      chatState.messages = []; saveChat(); renderChat();
+    });
 
-    // ---------- تصدير / استيراد القوالب ----------
-    exportTplBtn.addEventListener('click', ()=> {
-      const data = JSON.stringify(templates, null, 2);
+    // تصدير القوالب
+    exportTpl.addEventListener('click', ()=> {
       const w = window.open('', '_blank');
       w.document.body.style.background = '#071428';
       w.document.body.style.color = '#d7e3ff';
-      const pre = w.document.createElement('pre'); pre.textContent = data; pre.style.whiteSpace='pre-wrap'; pre.style.padding='12px';
+      const pre = w.document.createElement('pre'); pre.textContent = JSON.stringify(templates, null, 2);
+      pre.style.whiteSpace='pre-wrap'; pre.style.padding='12px';
       w.document.body.appendChild(pre);
     });
-    importTplBtn.addEventListener('click', ()=> {
-      const txt = prompt('ألصق JSON القوالب هنا للاستيراد');
-      if(!txt) return;
-      try{
-        const obj = JSON.parse(txt);
-        if(Array.isArray(obj)){ templates = obj; saveTemplates(); renderTemplates(); alert('تم استيراد القوالب'); }
-        else alert('الملف غير صالح');
-      }catch(e){ alert('خطأ في قراءة JSON'); }
-    });
 
-    // ---------- مسح المحادثة ----------
-    clearChatBtn.addEventListener('click', ()=> {
-      if(!confirm('هل تريد مسح كل المحادثة؟')) return;
-      chatState.messages = [];
-      saveChat(); renderChat();
-    });
-
-    // ---------- فتح/إغلاق نافذة القوالب ----------
-    openTemplatesBtn.addEventListener('click', ()=> {
-      modal.style.display = 'flex'; modal.setAttribute('aria-hidden','false');
-      renderModal();
-    });
-    closeModal.addEventListener('click', ()=> { modal.style.display='none'; modal.setAttribute('aria-hidden','true'); });
-
-    function renderModal(){
-      modalContent.innerHTML = '';
-      const h = document.createElement('div'); h.style.marginBottom='8px'; h.innerHTML = '<strong>قوالب مخصصة</strong>';
-      modalContent.appendChild(h);
-      if(templates.length === 0) modalContent.appendChild(document.createTextNode('لا توجد قوالب مخصصة.'));
-      templates.forEach((t, idx) => {
-        const d = document.createElement('div'); d.style.marginBottom='8px';
-        d.innerHTML = `<div style="font-weight:700">${escapeHTML(t.keyword)}</div><div>${escapeHTML(t.reply)}</div>
-          <div style="margin-top:6px"><button class="btn ghost small" data-edit="${idx}">تعديل</button> <button class="btn ghost small" data-del="${idx}">حذف</button></div>`;
-        modalContent.appendChild(d);
-      });
-      // modal edit handlers
-      modalContent.querySelectorAll('[data-edit]').forEach(btn=>{
-        btn.addEventListener('click', (e)=>{
-          const idx = Number(e.target.getAttribute('data-edit'));
-          const t = templates[idx];
-          const newK = prompt('تعديل الكلمة المفتاحية', t.keyword);
-          if(newK === null) return;
-          const newR = prompt('تعديل نص الرد', t.reply);
-          if(newR === null) return;
-          templates[idx] = { keyword: newK, reply: newR };
-          saveTemplates(); renderTemplates(); renderModal();
-        });
-      });
-      modalContent.querySelectorAll('[data-del]').forEach(btn=>{
-        btn.addEventListener('click', (e)=>{
-          const idx = Number(e.target.getAttribute('data-del'));
-          if(confirm('حذف القالب؟')){ templates.splice(idx,1); saveTemplates(); renderTemplates(); renderModal(); }
-        });
-      });
-    }
-
-    // ---------- تبديل الرد التلقائي ----------
-    toggleAutoBtn.addEventListener('click', ()=> {
-      autoReply = !autoReply;
-      toggleAutoBtn.textContent = autoReply ? 'إيقاف الرد التلقائي' : 'تفعيل الرد التلقائي';
-      autoStatus.textContent = autoReply ? 'مفعل' : 'متوقف';
-      appendMessage('owner', 'النظام', autoReply ? 'الرد التلقائي مفعل' : 'الرد التلقائي متوقف');
-    });
-
-    // ---------- مساعدة: تشابه نصي بسيط (Levenshtein-based ratio) ----------
-    function similarity(a, b){
-      // normalize
-      a = a.toLowerCase().trim(); b = b.toLowerCase().trim();
-      if(!a || !b) return 0;
-      const dist = levenshtein(a, b);
-      const maxLen = Math.max(a.length, b.length);
-      return 1 - (dist / maxLen);
-    }
-    function levenshtein(a, b){
-      const m = [], i, j;
-      for(i = 0; i <= b.length; i++) m[i] = [i];
-      for(j = 0; j <= a.length; j++) m[0][j] = j;
-      for(i = 1; i <= b.length; i++){
-        for(j = 1; j <= a.length; j++){
-          if(b.charAt(i-1) === a.charAt(j-1)) m[i][j] = m[i-1][j-1];
-          else m[i][j] = Math.min(m[i-1][j-1]+1, m[i][j-1]+1, m[i-1][j]+1);
-        }
-      }
-      return m[b.length][a.length];
-    }
-
-    // ---------- أدوات مساعدة ----------
+    // مساعدة صغيرة
     function escapeHTML(s){ return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch])); }
 
-    // ---------- تهيئة الواجهة ----------
-    function init(){
-      renderChat();
-      renderTemplates();
-      renderRules();
-      // ensure default rules saved if none
-      if(!localStorage.getItem(RULES_KEY)) saveRules();
-      // keyboard shortcut: Ctrl+M to open templates modal
-      document.addEventListener('keydown', (e)=> { if(e.ctrlKey && e.key.toLowerCase() === 'm'){ openTemplatesBtn.click(); } });
+    // تهيئة أولية: إذا لا توجد محادثة، أضف رسالة ترحيب
+    if(!chatState.messages || chatState.messages.length === 0){
+      chatState.messages = [{ who:'owner', name:'صاحب المنصة', text:'أهلاً! ابدأ المحادثة وسأرد عليك.', time: new Date().toLocaleString('ar-EG') }];
+      saveChat();
     }
-    init();
+    renderChat();
 
-    // ---------- حفظ القوالب والقواعد عند التغيير ----------
-    function saveTemplates(){ localStorage.setItem(TPL_KEY, JSON.stringify(templates)); }
-    function saveRules(){ localStorage.setItem(RULES_KEY, JSON.stringify(rules)); }
-
-    // ---------- تصدير / استيراد القوالب من الواجهة ----------
-    document.getElementById('exportChat').addEventListener('click', ()=> {
-      const data = JSON.stringify(chatState, null, 2);
-      const w = window.open('', '_blank');
-      w.document.body.style.background = '#071428';
-      w.document.body.style.color = '#d7e3ff';
-      const pre = w.document.createElement('pre'); pre.textContent = data; pre.style.whiteSpace='pre-wrap'; pre.style.padding='12px';
-      w.document.body.appendChild(pre);
-    });
-
-    // ---------- واجهة القوالب: تحميل القوالب المبدئية إن لم توجد ----------
-    if(!localStorage.getItem(TPL_KEY)){
+    // تحميل القوالب الافتراضية إن لم توجد
+    if(!templates || templates.length === 0){
       templates = [
-        { keyword: 'رفع', reply: 'لو تريد خطوات رفع المشروع على GitHub أقدر أكتب لك دليل مختصر أو ملف README.' },
-        { keyword: 'wokwi', reply: 'يمكنك تشغيل الكود داخل المحاكي المدمج بالضغط على "فتح في المحاكي".' }
+        { keyword:'رفع', reply:'لو تريد خطوات رفع المشروع على GitHub أقدر أكتب لك دليل مختصر.' },
+        { keyword:'wokwi', reply:'يمكنك تشغيل الكود داخل المحاكي أو لصق الكود هنا وسأرشدك.' }
       ];
       saveTemplates();
-      renderTemplates();
     }
-
-    // ---------- نهاية الملف ----------
+    renderTemplates();
   </script>
 </body>
 </html>
