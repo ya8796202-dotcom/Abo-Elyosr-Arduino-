@@ -1,34 +1,249 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>تعلم برمجة الأردوينو - الدرس 5</title>
-  <meta name="description" content="شرح الدوال في الأردوينو.">
-  <meta name="keywords" content="Arduino, تعلم الأردوينو, الدوال, functions">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>محادثة مع صاحب المنصة</title>
+  <meta name="description" content="واجهة محادثة تفاعلية مع صاحب المنصة: رسائل جاهزة، إرسال، حفظ محلي، ومحاكاة ردود صاحب المنصة." />
+  <style>
+    :root{
+      --bg:#07102a; --panel:#0b1224; --owner:#0ea5a4; --user:#1d4ed8; --text:#e6eef8;
+      --muted:#93c5fd; --card:#071428; --radius:12px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:system-ui,"Segoe UI",Tahoma,Arial,"Noto Naskh Arabic",sans-serif;
+      background:linear-gradient(180deg,#07102a,#0b1224); color:var(--text); -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale; padding-bottom:84px;
+    }
+    header{
+      position:sticky; top:0; z-index:30; background:rgba(6,10,20,.75); backdrop-filter:blur(6px);
+      border-bottom:1px solid rgba(255,255,255,.04); padding:12px 16px;
+    }
+    .brand{max-width:980px;margin:0 auto;display:flex;gap:12px;align-items:center}
+    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--owner),#06b6d4);box-shadow:0 8px 30px rgba(14,165,164,.12)}
+    .title{margin:0;font-weight:800}
+    .subtitle{margin:2px 0 0;font-size:13px;opacity:.85}
+    main.container{max-width:980px;margin:18px auto;padding:0 16px; display:grid; gap:12px}
+    .panel{background:linear-gradient(180deg,#071428,#07102a); border:1px solid #0f1b38; border-radius:12px; overflow:hidden}
+    .chat{height:64vh; overflow:auto; padding:14px; display:flex; flex-direction:column; gap:12px}
+    .msg{max-width:78%; padding:10px 14px; border-radius:14px; box-shadow:0 8px 20px rgba(0,0,0,.45); word-break:break-word}
+    .from-owner{align-self:flex-start; background:linear-gradient(180deg,var(--owner),#0b9b98); color:#022; border-top-right-radius:18px}
+    .from-user{align-self:flex-end; background:linear-gradient(180deg,var(--user),#1e40af); color:#fff; border-top-left-radius:18px}
+    .meta{font-size:12px; opacity:.85; margin-bottom:6px}
+    .meta .who{font-weight:700}
+    .controls{display:flex; gap:8px; padding:10px; align-items:center; border-top:1px solid #0f1b38; background:linear-gradient(180deg,#071428,#07102a)}
+    .composer{display:flex; gap:8px; width:100%}
+    .composer input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid #0f1b38;background:#071428;color:var(--text);outline:none}
+    .btn{border:none;padding:10px 12px;border-radius:10px;background:var(--owner);color:#022;font-weight:800;cursor:pointer}
+    .btn.ghost{background:transparent;border:1px solid #0f1b38;color:var(--text)}
+    .small{padding:6px 8px;border-radius:8px;font-size:13px}
+    .row{display:flex;gap:8px;align-items:center}
+    .status{font-size:13px;color:var(--muted)}
+    .actions{display:flex;gap:8px}
+    .toast{position:fixed;left:12px;bottom:84px;background:#071428;border:1px solid #0f1b38;padding:10px 12px;border-radius:10px;display:none;color:var(--text)}
+    .saved{color:var(--owner);font-weight:700}
+    .empty{opacity:.8;color:#9ca3af;padding:18px;text-align:center}
+    @media (max-width:720px){
+      .chat{height:56vh}
+      .msg{max-width:92%}
+    }
+  </style>
 </head>
 <body>
-  <div class="yasser-logo">
-  🛠️ <strong>ياسر أحمد حمدي</strong>
-</div>
-  <h1>📘 الدرس 5: الدوال (Functions)</h1>
-  <p>هنتعلم إزاي نكتب دوال ونعيد استخدامها.</p>
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div style="flex:1">
+        <h1 class="title">محادثة مع صاحب المنصة</h1>
+        <p class="subtitle">سجل محادثتك، اطلب نصائح، واحفظ التقدّم محليًا</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div class="status" id="statusText">وضع الرد التلقائي: مفعل</div>
+      </div>
+    </div>
+  </header>
 
-  <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+  <main class="container">
+    <section class="panel">
+      <div class="chat" id="chat" role="log" aria-live="polite" aria-relevant="additions">
+        <!-- رسائل مُعبّأة تلقائيًا -->
+      </div>
 
-  <div class="nav-buttons">
-    <button onclick="navigateWithEffect('lesson4.html')">⬅️ السابق</button>
-    <button onclick="navigateWithEffect('lesson6.html')">➡️ التالي</button>
-    <button onclick="navigateWithEffect('index.html')">🏠 الرئيسية</button>
-  </div>
+      <div class="controls" role="region" aria-label="أدوات المحادثة">
+        <div class="row" style="flex:1">
+          <div style="display:flex;flex-direction:column">
+            <div style="font-size:13px;color:var(--muted)">أرسل رسالة لصاحب المنصة</div>
+            <div class="composer" style="margin-top:6px">
+              <input id="input" placeholder="اكتب رسالتك هنا..." aria-label="مربع كتابة الرسالة" />
+              <button class="btn" id="sendBtn">إرسال</button>
+            </div>
+          </div>
+        </div>
 
-  <button onclick="navigateWithEffect('simulator.html')">⚙️ المحاكي</button>
+        <div class="actions">
+          <button class="btn ghost small" id="saveBtn">حفظ محلي</button>
+          <button class="btn ghost small" id="loadBtn">تحميل المحفوظ</button>
+          <button class="btn ghost small" id="clearBtn">مسح المحادثة</button>
+          <button class="btn small" id="toggleAuto">إيقاف الرد التلقائي</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
 
   <script>
-    const lessonNumber = 5, totalLessons = 10;
-    document.getElementById("progressBar").style.width = (lessonNumber/totalLessons*100)+"%";
-    function navigateWithEffect(url){ window.location.href = url; }
+    // بيانات المحادثة المبدئية
+    const initialConversation = [
+      { who: 'owner', name: 'صاحب المنصة', time: now(), text: 'أهلاً يا ياسر، سعيد إنك هنا. أنا صاحب المنصة — اسألني عن أي درس أو مشروع.' },
+      { who: 'owner', name: 'صاحب المنصة', time: now(), text: 'لو محتاج مساعدة في رفع المشروع على GitHub أو ربط Firebase، اكتب "مساعدة رفع" أو "ربط Firebase".' },
+      { who: 'user', name: 'ياسر', time: now(), text: 'أهلاً، أريد نصيحة عن مشروع NeoPixel.' },
+      { who: 'owner', name: 'صاحب المنصة', time: now(), text: 'فكرة ممتازة. كم عدد الـ LEDs؟ وهل تريد تأثيرات جاهزة أم تحكم ديناميكي؟' }
+    ];
+
+    const STORAGE_KEY = 'platform_owner_chat_v1';
+    const chatEl = document.getElementById('chat');
+    const inputEl = document.getElementById('input');
+    const sendBtn = document.getElementById('sendBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const loadBtn = document.getElementById('loadBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const toggleAutoBtn = document.getElementById('toggleAuto');
+    const toastEl = document.getElementById('toast');
+    const statusText = document.getElementById('statusText');
+
+    let conversation = [];
+    let autoReply = true;
+
+    // Helpers
+    function now(){ const d=new Date(); return d.toLocaleString('ar-EG'); }
+    function showToast(msg, ms=1400){ toastEl.textContent = msg; toastEl.style.display='block'; setTimeout(()=> toastEl.style.display='none', ms); }
+
+    function renderMessage(m){
+      const el = document.createElement('div');
+      el.className = 'msg ' + (m.who === 'owner' ? 'from-owner' : 'from-user');
+      const meta = document.createElement('div'); meta.className='meta';
+      meta.innerHTML = `<span class="who">${m.name}</span> • <span class="time">${m.time}</span>`;
+      const body = document.createElement('div'); body.className='body';
+      body.innerHTML = `<div>${escapeHtml(m.text)}</div>`;
+      el.appendChild(meta);
+      el.appendChild(body);
+      chatEl.appendChild(el);
+      chatEl.scrollTop = chatEl.scrollHeight;
+    }
+
+    function escapeHtml(s){ return s.replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch])); }
+
+    function loadInitial(){
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if(saved){
+        try{
+          conversation = JSON.parse(saved);
+          conversation.forEach(renderMessage);
+          showToast('تم تحميل المحفوظ');
+          return;
+        }catch(e){
+          conversation = [...initialConversation];
+        }
+      } else {
+        conversation = [...initialConversation];
+      }
+      conversation.forEach(renderMessage);
+    }
+
+    function appendMessage(who, name, text){
+      const msg = { who, name, time: now(), text };
+      conversation.push(msg);
+      renderMessage(msg);
+      // حفظ تلقائي مؤقت
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(conversation));
+    }
+
+    // محاكاة ردود صاحب المنصة (قائمة ردود ذكية بسيطة)
+    const ownerReplies = [
+      'جميل، أقدر أساعدك بخطوات مفصّلة أو أرسل لك مثال جاهز.',
+      'هل تريد أن أشرح التوصيلات الكهربائية أم الكود؟',
+      'أنصحك بتجربة الكود على Wokwi أولاً قبل التجميع الحقيقي.',
+      'لو عندك صورة للتوصيلات أقدر أراجعها لو رفعتها.',
+      'ممتاز، لو تريد أضيف لك درس خاص بالمشروع مع اختبار قصير.'
+    ];
+
+    function ownerAutoReply(userText){
+      // قواعد بسيطة لاختيار رد مناسب
+      const t = userText.toLowerCase();
+      if(t.includes('git') || t.includes('github') || t.includes('رفع')) return 'أستطيع إرشادك خطوة بخطوة لرفع المشروع على GitHub. تريد ملف README؟';
+      if(t.includes('firebase') || t.includes('مزامنة')) return 'ربط Firebase يتطلب إعداد مشروع في Firebase Console وسأعطيك كود التهيئة.';
+      if(t.includes('neo') || t.includes('neopixel')) return 'كم عدد الـ LEDs؟ لو أقل من 30 يمكنك تشغيلها من 5V مباشرة مع مقاومة على الداتا.';
+      if(t.includes('wokwi') || t.includes('محاكي')) return 'يمكنك فتح الكود في Wokwi عبر زر المحاكي في الدروس أو أرسل لي الكود وسأجهّز رابط تشغيل.';
+      // رد عشوائي من القائمة
+      return ownerReplies[Math.floor(Math.random()*ownerReplies.length)];
+    }
+
+    // أحداث الواجهة
+    sendBtn.addEventListener('click', ()=>{
+      const text = inputEl.value.trim();
+      if(!text) return;
+      appendMessage('user', 'ياسر', text);
+      inputEl.value = '';
+      if(autoReply){
+        setTimeout(()=>{
+          const reply = ownerAutoReply(text);
+          appendMessage('owner', 'صاحب المنصة', reply);
+        }, 700 + Math.random()*900);
+      }
+    });
+
+    inputEl.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') sendBtn.click(); });
+
+    saveBtn.addEventListener('click', ()=>{
+      try{
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(conversation));
+        showToast('تم حفظ المحادثة محليًا');
+      }catch(e){
+        showToast('فشل الحفظ');
+      }
+    });
+
+    loadBtn.addEventListener('click', ()=>{
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if(!saved){ showToast('لا توجد محادثة محفوظة'); return; }
+      chatEl.innerHTML = '';
+      try{
+        conversation = JSON.parse(saved);
+        conversation.forEach(renderMessage);
+        showToast('تم تحميل المحفوظ');
+      }catch(e){
+        showToast('خطأ في تحميل المحفوظ');
+      }
+    });
+
+    clearBtn.addEventListener('click', ()=>{
+      if(!confirm('هل تريد مسح المحادثة الحالية؟')) return;
+      conversation = [];
+      chatEl.innerHTML = '';
+      localStorage.removeItem(STORAGE_KEY);
+      showToast('تم مسح المحادثة');
+    });
+
+    toggleAutoBtn.addEventListener('click', ()=>{
+      autoReply = !autoReply;
+      toggleAutoBtn.textContent = autoReply ? 'إيقاف الرد التلقائي' : 'تفعيل الرد التلقائي';
+      statusText.textContent = 'وضع الرد التلقائي: ' + (autoReply ? 'مفعل' : 'متوقف');
+      showToast(autoReply ? 'الرد التلقائي مفعل' : 'الرد التلقائي متوقف');
+    });
+
+    // حفظ تلقائي دوري (كل 10 ثواني)
+    setInterval(()=> {
+      try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(conversation)); }catch(e){}
+    }, 10000);
+
+    // تحميل أولي
+    loadInitial();
+
+    // تحسين الوصول: التركيز على مربع الإدخال عند التحميل
+    window.addEventListener('load', ()=> inputEl.focus());
   </script>
 </body>
 </html>
