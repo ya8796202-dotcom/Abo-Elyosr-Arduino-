@@ -1,426 +1,539 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>معرض صور أردوينو — صور من  + رفع المستخدم</title>
-  <meta name="description" content="صفحة HTML واحدة تعرض صور فوتوغرافية لأنواع أردوينو مأخوذة من Wikimedia Commons، مع إمكانية إضافة صور من جهازك أو عبر رابط، حفظ محلي، بحث، فلتر، وعرض كامل (lightbox)." />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>منصة عرض منتجات أردوينو — مؤثرات أنيقة وتفاعل + إضافة صور</title>
+
+  <!-- خط عربي نظيف -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
   <style>
     :root{
-      --bg:#07102a; --panel:#071428; --card:#0b1224; --accent:#1d4ed8; --accent2:#06b6d4;
-      --text:#e6eef8; --muted:#93c5fd; --glass:rgba(255,255,255,0.03);
-      --radius:12px; --shadow:0 14px 40px rgba(2,6,23,.6);
+      --bg: #0f1216;
+      --card: #171b22;
+      --text: #e7ecf3;
+      --muted: #a9b3c2;
+      --brand: #4db6ff;
+      --accent: #74f6c2;
+      --danger: #ff6b6b;
+      --ok: #7bf58b;
+      --border: #28303a;
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font-family:system-ui,"Noto Naskh Arabic",Tahoma,Arial; background:linear-gradient(180deg,#041026,#07102a);
-      color:var(--text); -webkit-font-smoothing:antialiased; padding:20px;
+    html,body{
+      margin:0; padding:0; background:var(--bg); color:var(--text);
+      font-family: "Cairo", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    .container{
+      max-width: 1100px; margin: 40px auto; padding: 0 20px;
+    }
+    header{
+      display:flex; align-items:center; gap:16px; flex-wrap:wrap; justify-content:space-between; margin-bottom:20px;
+    }
+    .title{
+      display:flex; align-items:center; gap:12px;
+    }
+    .logo{
+      width:42px; height:42px; border-radius:10px; background:
+        radial-gradient(circle at 70% 30%, var(--accent), transparent 35%),
+        linear-gradient(135deg, #2b2f36, #141820);
+      box-shadow: inset 0 0 20px rgba(116,246,194,0.2), var(--shadow);
+      animation: glow 3.5s ease-in-out infinite;
+    }
+    @keyframes glow {
+      0%,100%{box-shadow: inset 0 0 20px rgba(116,246,194,0.2), 0 10px 30px rgba(0,0,0,0.35)}
+      50%{box-shadow: inset 0 0 35px rgba(116,246,194,0.35), 0 20px 45px rgba(0,0,0,0.45)}
+    }
+    h1{font-size: 1.6rem; margin:0}
+    .toolbar{
+      display:flex; gap:10px; flex-wrap:wrap;
+    }
+    .input, .btn{
+      background: #12161c; color: var(--text); border:1px solid var(--border);
+      border-radius:12px; padding: 12px 14px; outline:none; transition:.25s;
+    }
+    .input:focus{border-color:var(--brand); box-shadow: 0 0 0 3px rgba(77,182,255,0.15)}
+    .btn{cursor:pointer}
+    .btn.primary{
+      background: linear-gradient(135deg, #1c2633, #17202b);
+      border-color:#1f2a39;
+    }
+    .btn.primary:hover{transform: translateY(-1px); box-shadow: 0 8px 20px rgba(29, 95, 143, 0.3)}
+    .grid{
+      display:grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
+      gap:18px; margin-top:20px;
+    }
+    .card{
+      background: var(--card); border:1px solid var(--border); border-radius:16px; overflow:hidden;
+      box-shadow: var(--shadow); position:relative; transform: translateY(0);
+      transition: transform .25s, box-shadow .25s, border-color .25s;
+    }
+    .card:hover{transform: translateY(-4px); box-shadow: 0 20px 45px rgba(0,0,0,0.45); border-color:#334052}
+    .media{
+      aspect-ratio: 16/10; background: #0c0f13; position:relative; overflow:hidden;
+    }
+    .media img{
+      width:100%; height:100%; object-fit: cover; opacity:.96;
+      transform: scale(1.02); transition: transform .5s ease;
+    }
+    .card:hover .media img{transform: scale(1.06)}
+    .badge{
+      position:absolute; top:10px; left:10px; background:#12253a; color:#9fd3ff; border:1px solid #1e3a59;
+      padding:6px 10px; border-radius:999px; font-size:.82rem; backdrop-filter: blur(6px);
+    }
+    .content{padding:14px 14px 12px}
+    .name{font-weight:800; font-size:1.05rem; margin:0 0 4px}
+    .meta{display:flex; gap:8px; flex-wrap:wrap; color:var(--muted); font-size:.9rem; margin-bottom:10px}
+    .price{
+      display:flex; align-items:center; gap:10px; margin:10px 0 12px;
+    }
+    .current{color:var(--ok); font-weight:800}
+    .old{color:#8893a3; text-decoration: line-through}
+    .specs{
+      display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;
+    }
+    .chip{
+      background:#11161c; border:1px solid #243041; color:#cfe6ff; padding:6px 9px; border-radius:10px; font-size:.85rem
+    }
+    .actions{display:flex; gap:8px}
+    .btn.link{
+      background: #12161c; border:1px dashed #2b3a4e; color:#9fd3ff;
+    }
+    .btn.add{
+      background: #12251c; border:1px solid #204634; color:#9ff6ce;
+    }
+    .btn.add:hover{background:#173224}
+
+    /* قسم إضافة الصور */
+    .uploader{
+      margin-top:30px; background:#12161c; border:1px dashed #2b3a4e; border-radius:14px; padding:16px;
+    }
+    .uploader h3{margin:0 0 8px}
+    .drop{
+      margin-top:8px; border:2px dashed #36506a; border-radius:12px; padding:20px; text-align:center; color:#9fd3ff;
+      transition: .25s; background: #0f141a;
+    }
+    .drop.dragover{
+      border-color: var(--accent); color: var(--accent); background: #0c1713;
+      box-shadow: inset 0 0 25px rgba(116, 246, 194, 0.15);
+    }
+    .gallery{
+      display:grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr));
+      gap:10px; margin-top:14px;
+    }
+    .thumb{
+      position:relative; border:1px solid #2b3a4e; border-radius:10px; overflow:hidden;
+      background:#0b0f14;
+    }
+    .thumb img{width:100%; height:120px; object-fit:cover}
+    .remove{
+      position:absolute; top:8px; left:8px; background:#1b1010; color:#ffb1b1;
+      border:1px solid #4a2222; padding:5px 8px; border-radius:999px; font-size:.8rem; cursor:pointer;
     }
 
-    header{display:flex;gap:12px;align-items:center;max-width:1200px;margin:0 auto 18px}
-    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 8px 30px rgba(29,78,216,.12)}
-    h1{margin:0;font-size:20px}
-    p.lead{margin:4px 0 0;color:var(--muted);font-size:13px}
+    /* شريط إشعارات أنيق */
+    .toast{
+      position:fixed; bottom:20px; inset-inline:20px auto; background:#11161c; border:1px solid #2b3a4e;
+      padding:10px 12px; border-radius:12px; color:#cfe6ff; box-shadow: var(--shadow);
+      transform: translateY(20px); opacity:0; pointer-events:none; transition: .35s;
+      max-width: 420px;
+    }
+    .toast.show{transform: translateY(0); opacity:1; pointer-events:auto}
 
-    .container{max-width:1200px;margin:18px auto;display:grid;gap:14px;padding:0 8px}
-    .panel{background:linear-gradient(180deg,#071428,#061026);border-radius:16px;padding:14px;border:1px solid var(--glass);box-shadow:var(--shadow)}
+    /* حركة ظهور تدريجية */
+    .fade-enter{
+      animation: fadeIn .5s ease both;
+    }
+    @keyframes fadeIn {
+      from{opacity:0; transform: translateY(8px)}
+      to{opacity:1; transform: translateY(0)}
+    }
 
-    .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
-    .search{flex:1;display:flex;gap:8px;align-items:center}
-    .input, .select, .btn{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.04);background:#071428;color:var(--text)}
-    .input{flex:1}
-    .select{width:160px}
-    .btn{cursor:pointer;background:linear-gradient(90deg,var(--accent),var(--accent2));border:none;color:#022;font-weight:800}
-    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.06);color:var(--text);font-weight:700}
-    .small{font-size:13px;color:var(--muted)}
+    /* شريط أدوات ثانوي */
+    .filters{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    .select{
+      appearance:none; background:#12161c; color:var(--text); border:1px solid var(--border); border-radius:12px;
+      padding:12px 14px;
+      background-image: linear-gradient(180deg, transparent, transparent), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="%23a9b3c2"><path d="M7 10l5 5 5-5z"/></svg>');
+      background-repeat:no-repeat; background-position: left 10px center; background-size: 18px;
+      padding-left:36px;
+    }
 
-    .uploader{display:flex;gap:10px;align-items:center;padding:12px;border-radius:12px;border:1px dashed rgba(255,255,255,.04);background:linear-gradient(180deg,rgba(255,255,255,.01),transparent)}
-    .uploader.dragover{border-color:rgba(29,78,216,.9);box-shadow:0 8px 30px rgba(29,78,216,.06)}
-    .file-preview img{width:64px;height:48px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,.04)}
-
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
-    .card{background:linear-gradient(180deg,#071428,#061026);border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.03);transition:transform .28s ease, box-shadow .28s ease}
-    .card:hover{transform:translateY(-8px) scale(1.01);box-shadow:0 20px 40px rgba(2,6,23,.7)}
-    .thumb{position:relative;overflow:hidden;background:#000;height:180px;display:flex;align-items:center;justify-content:center}
-    .thumb img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.9,.2,1);transform-origin:center}
-    .card:hover .thumb img{transform:scale(1.08) rotate(.3deg)}
-    .meta{padding:12px;display:flex;flex-direction:column;gap:8px}
-    .meta h3{margin:0;font-size:15px;color:#a5b4fc}
-    .meta p{margin:0;color:var(--muted);font-size:13px}
-    .tags{display:flex;gap:8px;flex-wrap:wrap}
-    .tag{background:rgba(255,255,255,.03);padding:6px 8px;border-radius:999px;font-size:12px;color:#cfe8ff}
-
-    .actions{display:flex;gap:8px;padding:12px;border-top:1px solid rgba(255,255,255,.02);align-items:center}
-    .actions .btn{padding:8px 10px;font-size:13px}
-    .actions .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.04)}
-
-    .lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(0,0,0,.6),rgba(0,0,0,.85));z-index:120}
-    .lightbox.open{display:flex}
-    .lightbox .panel{max-width:1100px;width:92%;border-radius:12px;overflow:hidden;background:#000;border:1px solid rgba(255,255,255,.04)}
-    .lightbox img{width:100%;height:auto;display:block}
-    .lightbox .caption{padding:12px;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
-
-    @keyframes fadeInUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
-    .card{animation:fadeInUp .36s ease both}
-
-    @media (max-width:720px){
-      .thumb{height:160px}
-      .controls{flex-direction:column;align-items:stretch}
-      .select{width:100%}
+    /* نسخة للطباعة/تصدير */
+    @media print{
+      .uploader, .filters, .toolbar, .toast{display:none}
+      body{background:white; color:black}
+      .card{border-color:#ddd; box-shadow:none}
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo" aria-hidden="true"></div>
-    <div>
-      <h1>معرض صور أردوينو — من Wikimedia</h1>
-      <p class="lead">صور فوتوغرافية لأنواع أردوينو مأخوذة من Wikimedia Commons. أضف صورًا من جهازك أو عبر رابط، واحفظها محليًا.</p>
+  <div class="container">
+    <header>
+      <div class="title fade-enter">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>منصة عرض منتجات أردوينو</h1>
+          <div style="color:var(--muted); font-size:.95rem">مؤثرات أنيقة، تفاعل سريع، وإضافة صور محلية بدون رفع</div>
+        </div>
+      </div>
+
+      <div class="toolbar fade-enter" style="animation-delay:.05s">
+        <input id="q" class="input" type="search" placeholder="ابحث بالاسم أو المعالج..." />
+        <button id="exportBtn" class="btn">تصدير الصور</button>
+        <button id="clearBtn" class="btn">تفريغ الصور</button>
+        <button id="darkBtn" class="btn primary">تبديل النمط</button>
+      </div>
+    </header>
+
+    <div class="filters fade-enter" style="animation-delay:.1s">
+      <select id="sort" class="select" title="ترتيب">
+        <option value="default">الترتيب الافتراضي</option>
+        <option value="price-asc">السعر: من الأقل للأعلى</option>
+        <option value="price-desc">السعر: من الأعلى للأقل</option>
+      </select>
+      <select id="filter" class="select" title="فلترة">
+        <option value="all">جميع اللوحات</option>
+        <option value="mega">Mega</option>
+        <option value="nano">Nano</option>
+        <option value="promini">Pro Mini</option>
+        <option value="promicro">Pro Micro</option>
+      </select>
     </div>
-  </header>
 
-  <main class="container">
-    <section class="panel" aria-labelledby="controlsTitle">
-      <div id="controlsTitle" class="small" style="margin-bottom:8px">أدوات المعرض</div>
-
-      <div class="controls" role="region" aria-label="أدوات">
-        <div class="search">
-          <input id="search" class="input" placeholder="ابحث بعنوان أو وسم (مثال: Uno, ESP32, Nano)..." />
-          <select id="filterLevel" class="select" aria-label="فلتر المستوى">
-            <option value="">كل المستويات</option>
-            <option value="beginner">مبتدئ</option>
-            <option value="intermediate">متوسط</option>
-            <option value="advanced">متقدم</option>
-          </select>
-        </div>
-
-        <div style="display:flex;gap:8px">
-          <button id="resetDefaults" class="btn ghost">إعادة الصور الافتراضية</button>
-          <button id="clearLocal" class="btn ghost">مسح الصور المضافة</button>
-        </div>
-      </div>
-
-      <div id="uploader" class="uploader" aria-label="منطقة رفع الصور">
-        <div style="flex:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <input id="fileInput" type="file" accept="image/*" style="display:none" />
-          <button id="chooseBtn" class="btn ghost">اختر صورة</button>
-          <input id="urlInput" class="input" placeholder="أو ألصق رابط صورة (URL من Wikimedia أو أي مصدر)" />
-          <input id="titleInput" class="input" placeholder="عنوان الصورة (اختياري)" style="width:220px" />
-          <select id="levelInput" class="select" style="width:140px">
-            <option value="">مستوى</option><option value="beginner">مبتدئ</option><option value="intermediate">متوسط</option><option value="advanced">متقدم</option>
-          </select>
-          <button id="addBtn" class="btn">أضف</button>
-        </div>
-        <div style="width:100%;margin-top:8px;color:var(--muted);font-size:13px">اسحب الصورة إلى هنا أو استخدم زر "اختر صورة". الصور المضافة تحفظ محليًا في المتصفح.</div>
-      </div>
-
-      <div style="height:12px"></div>
-
-      <div id="gallery" class="grid" aria-live="polite"></div>
+    <section id="grid" class="grid">
+      <!-- يتم حقن البطاقات عبر JS -->
     </section>
-  </main>
 
-  <!-- Lightbox -->
-  <div id="lightbox" class="lightbox" role="dialog" aria-hidden="true">
-    <div class="panel">
-      <img id="lightboxImg" alt="عرض الصورة" />
-      <div class="caption">
-        <div id="lightboxTitle" style="font-weight:700;color:#dbeafe"></div>
-        <div style="display:flex;gap:8px">
-          <button id="downloadBtn" class="btn ghost">تحميل</button>
-          <button id="closeLightbox" class="btn ghost">إغلاق</button>
-        </div>
+    <section class="uploader fade-enter" style="animation-delay:.15s">
+      <h3>إضافة صور محليًا</h3>
+      <div style="color:var(--muted)">اسحب وأفلت صورك هنا أو استخدم الزر لاختيار ملفات. سيتم حفظها محليًا ويمكن ربطها بالبطاقات.</div>
+      <div id="drop" class="drop">اسحب الصور هنا</div>
+      <div style="display:flex; gap:10px; margin-top:10px">
+        <input id="file" type="file" accept="image/*" multiple class="input" />
+        <button id="assignBtn" class="btn add">ربط الصورة بالبطاقة المحددة</button>
       </div>
-    </div>
+      <div id="gallery" class="gallery"></div>
+    </section>
   </div>
 
-  <script>
-    // مفاتيح التخزين
-    const STORAGE_KEY = 'arduino_wikimedia_gallery_v1';
-    const DEFAULTS_KEY = 'arduino_wikimedia_defaults_v1';
+  <div id="toast" class="toast">تمت العملية بنجاح.</div>
 
-    // صور افتراضية من Wikimedia Commons (روابط مباشرة)
-    const defaultItems = [
-      { id:'uno', title:'Arduino Uno R3', src:'https://upload.wikimedia.org/wikipedia/commons/3/38/Arduino_Uno_-_R3.jpg', level:'beginner', tags:['uno','arduino'] },
-      { id:'nano', title:'Arduino Nano v3.0', src:'https://upload.wikimedia.org/wikipedia/commons/6/6e/Arduino_Nano_v3.0.jpg', level:'beginner', tags:['nano','arduino'] },
-      { id:'mega', title:'Arduino Mega 2560', src:'https://upload.wikimedia.org/wikipedia/commons/3/3f/Arduino_Mega_2560.jpg', level:'advanced', tags:['mega','arduino'] },
-      { id:'leonardo', title:'Arduino Leonardo', src:'https://upload.wikimedia.org/wikipedia/commons/4/4d/Arduino_Leonardo.jpg', level:'intermediate', tags:['leonardo','arduino'] },
-      { id:'due', title:'Arduino Due', src:'https://upload.wikimedia.org/wikipedia/commons/2/28/Arduino_Due.jpg', level:'advanced', tags:['due','arduino'] },
-      { id:'promini', title:'Arduino Pro Mini', src:'https://upload.wikimedia.org/wikipedia/commons/0/0c/Arduino_Pro_Mini.jpg', level:'intermediate', tags:['promini','arduino'] },
-      { id:'micro', title:'Arduino Micro', src:'https://upload.wikimedia.org/wikipedia/commons/1/1b/Arduino_Micro.jpg', level:'intermediate', tags:['micro','arduino'] },
-      { id:'esp8266', title:'ESP8266 NodeMCU', src:'https://upload.wikimedia.org/wikipedia/commons/3/3d/NodeMCU_DEVKIT_v1.0.jpg', level:'intermediate', tags:['esp8266','wifi'] },
-      { id:'esp32', title:'ESP32 DevKitC', src:'https://upload.wikimedia.org/wikipedia/commons/9/92/ESP32-DevKitC.jpg', level:'intermediate', tags:['esp32','wifi','ble'] },
-      { id:'rp2040', title:'Arduino Nano RP2040 Connect', src:'https://upload.wikimedia.org/wikipedia/commons/6/6b/Arduino_Nano_RP2040_Connect.jpg', level:'advanced', tags:['rp2040','nano'] }
+  <script>
+    // بيانات المنتجات (من روابط المصدر)
+    const products = [
+      {
+        id: "mega",
+        name: "Arduino MEGA 2560 (CH340)",
+        url: "https://makerselectronics.com/product/arduino-mega-2560/",
+        image: "https://i0.wp.com/makerselectronics.com/wp-content/uploads/2016/02/transparent-Photoroom1.jpg?fit=500%2C500&ssl=1",
+        price: 900, // EGP
+        oldPrice: 1250,
+        mcu: "ATmega2560",
+        clock: "16MHz",
+        io: "54 Digital I/O (15 PWM), 16 Analog",
+        notes: "4 منافذ UART، USB CH340، توافق كامل مع Arduino IDE",
+        chips: ["5V", "256KB Flash", "8KB SRAM", "4KB EEPROM"]
+      },
+      {
+        id: "nano",
+        name: "Arduino Nano ATmega328PB-U (CH340C)",
+        url: "https://makerselectronics.com/product/arduino-nano-atmega328pb-u/",
+        image: "https://i0.wp.com/makerselectronics.com/wp-content/uploads/2023/08/6b04ebd2-5e99-466c-a130-32bf5b20667c_800x800-800x800.jpeg?fit=510%2C510&ssl=1",
+        price: 240,
+        oldPrice: null,
+        mcu: "ATmega328PB-U",
+        clock: "16MHz",
+        io: "14 Digital I/O (6 PWM), 8 Analog",
+        notes: "Micro USB، USB-Serial CH340C، يحتاج تعريف CH340 في بعض الأنظمة",
+        chips: ["5V", "32KB Flash", "2KB SRAM", "1KB EEPROM"]
+      },
+      {
+        id: "promini",
+        name: "Arduino Pro Mini 5V/16MHz (ATmega328P)",
+        url: "https://makerselectronics.com/product/arduino-pro-mini-atmega328pu-th-5v-16mhz/",
+        image: "https://i0.wp.com/makerselectronics.com/wp-content/uploads/2016/02/arduino-pro-mini-2-1-1000x1000.jpg?fit=510%2C510&ssl=1",
+        price: 150,
+        oldPrice: 225,
+        mcu: "ATmega328P U-TH",
+        clock: "16MHz",
+        io: "14 Digital I/O (6 PWM), 8 Analog",
+        notes: "بدون USB مدمج — يحتاج USB-to-Serial للبرمجة",
+        chips: ["5V", "32KB Flash", "2KB SRAM", "1KB EEPROM"]
+      },
+      {
+        id: "promicro",
+        name: "Arduino Pro Micro 5V/16MHz (ATmega32U4, Type‑C)",
+        url: "https://makerselectronics.com/product/arduino-pro-micro-atmega32u4-mu-t-c/",
+        image: "https://i0.wp.com/makerselectronics.com/wp-content/uploads/2025/03/61Am7EjTlaL._AC_SX679_.png?fit=510%2C511&ssl=1",
+        price: 350,
+        oldPrice: 450,
+        mcu: "ATmega32U4-MU",
+        clock: "16MHz",
+        io: "12 Digital I/O (5 PWM), 9 Analog",
+        notes: "USB مدمج (Type‑C)، يدعم أجهزة USB المخصصة (HID)",
+        chips: ["5V", "32KB Flash", "2.5KB SRAM", "1KB EEPROM"]
+      }
     ];
 
-    // حفظ النسخة الافتراضية إن لم تكن محفوظة
-    if(!localStorage.getItem(DEFAULTS_KEY)) localStorage.setItem(DEFAULTS_KEY, JSON.stringify(defaultItems));
-
-    // تحميل المعرض من localStorage أو تهيئته بالقيم الافتراضية
-    function loadGallery(){
-      try{
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if(!raw){
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultItems));
-          return defaultItems.slice();
-        }
-        return JSON.parse(raw);
-      }catch(e){
-        console.error('loadGallery error', e);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultItems));
-        return defaultItems.slice();
-      }
-    }
-
-    function saveGallery(items){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    }
-
-    let items = loadGallery();
+    // حالة عامة
+    const state = {
+      dark: true,
+      images: JSON.parse(localStorage.getItem("gallery") || "[]"), // صور مضافة
+      assigned: JSON.parse(localStorage.getItem("assigned") || "{}"), // { productId: [imageDataURL,...] }
+      selectedCard: null
+    };
 
     // عناصر DOM
-    const galleryEl = document.getElementById('gallery');
-    const searchEl = document.getElementById('search');
-    const filterLevelEl = document.getElementById('filterLevel');
-    const fileInput = document.getElementById('fileInput');
-    const chooseBtn = document.getElementById('chooseBtn');
-    const urlInput = document.getElementById('urlInput');
-    const titleInput = document.getElementById('titleInput');
-    const levelInput = document.getElementById('levelInput');
-    const addBtn = document.getElementById('addBtn');
-    const uploader = document.getElementById('uploader');
-    const resetDefaultsBtn = document.getElementById('resetDefaults');
-    const clearLocalBtn = document.getElementById('clearLocal');
+    const grid = document.getElementById("grid");
+    const q = document.getElementById("q");
+    const sortSel = document.getElementById("sort");
+    const filterSel = document.getElementById("filter");
+    const drop = document.getElementById("drop");
+    const file = document.getElementById("file");
+    const gallery = document.getElementById("gallery");
+    const exportBtn = document.getElementById("exportBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const darkBtn = document.getElementById("darkBtn");
+    const assignBtn = document.getElementById("assignBtn");
+    const toast = document.getElementById("toast");
 
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightboxImg');
-    const lightboxTitle = document.getElementById('lightboxTitle');
-    const closeLightbox = document.getElementById('closeLightbox');
-    const downloadBtn = document.getElementById('downloadBtn');
+    // أدوات مساعدة
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(()=> toast.classList.remove("show"), 2000);
+    }
 
-    // مساعدة: معرف فريد
-    function uid(){ return 'id_' + Math.random().toString(36).slice(2,9); }
-    function escapeHtml(s){ return String(s || '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch])); }
+    function save(){
+      localStorage.setItem("gallery", JSON.stringify(state.images));
+      localStorage.setItem("assigned", JSON.stringify(state.assigned));
+    }
 
-    // عرض المعرض
+    function currency(n){ return `${n.toFixed(0)} EGP`; }
+
+    // بناء بطاقة
+    function cardTemplate(p){
+      const assignedImgs = (state.assigned[p.id] || []);
+      const assignedHTML = assignedImgs.length ? `
+        <div class="gallery" style="margin-top:8px">
+          ${assignedImgs.map((src, i)=> `
+            <div class="thumb">
+              <img src="${src}" alt="صورة مرتبطة">
+              <button class="remove" data-p="${p.id}" data-i="${i}">حذف</button>
+            </div>
+          `).join("")}
+        </div>
+      ` : "";
+
+      return `
+        <article class="card fade-enter" data-id="${p.id}">
+          <div class="media">
+            <img src="${p.image}" alt="${p.name}">
+            <div class="badge">${p.mcu} • ${p.clock}</div>
+          </div>
+          <div class="content">
+            <h3 class="name">${p.name}</h3>
+            <div class="meta">${p.io}</div>
+            <div class="price">
+              <div class="current">${currency(p.price)}</div>
+              ${p.oldPrice ? `<div class="old">${currency(p.oldPrice)}</div>` : ""}
+            </div>
+            <div class="specs">
+              ${p.chips.map(c=> `<span class="chip">${c}</span>`).join("")}
+            </div>
+            <div style="color:var(--muted); font-size:.9rem; margin-bottom:12px">${p.notes}</div>
+            <div class="actions">
+              <button class="btn link" data-url="${p.url}">فتح صفحة المنتج</button>
+              <button class="btn add" data-select="${p.id}">تحديد للربط</button>
+            </div>
+            ${assignedHTML}
+          </div>
+        </article>
+      `;
+    }
+
+    // رسم الشبكة
     function render(){
-      galleryEl.innerHTML = '';
-      const q = (searchEl.value || '').trim().toLowerCase();
-      const level = filterLevelEl.value;
-      const filtered = items.filter(it => {
-        const text = (it.title + ' ' + (it.tags||[]).join(' ')).toLowerCase();
-        const matchesQ = !q || text.includes(q);
-        const matchesLevel = !level || it.level === level;
-        return matchesQ && matchesLevel;
-      });
+      let list = [...products];
 
-      if(filtered.length === 0){
-        galleryEl.innerHTML = `<div style="grid-column:1/-1;padding:28px;text-align:center;color:var(--muted);border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.01),transparent)">لا توجد صور مطابقة</div>`;
-        return;
+      // فلترة بالاسم/المعالج
+      const qv = q.value.trim().toLowerCase();
+      if(qv){
+        list = list.filter(p =>
+          p.name.toLowerCase().includes(qv) ||
+          p.mcu.toLowerCase().includes(qv)
+        );
       }
 
-      filtered.forEach(it => {
-        const card = document.createElement('article');
-        card.className = 'card';
+      // فلترة نوع اللوحة
+      switch(filterSel.value){
+        case "mega": list = list.filter(p=> p.id==="mega"); break;
+        case "nano": list = list.filter(p=> p.id==="nano"); break;
+        case "promini": list = list.filter(p=> p.id==="promini"); break;
+        case "promicro": list = list.filter(p=> p.id==="promicro"); break;
+        default: break;
+      }
 
-        const thumb = document.createElement('div');
-        thumb.className = 'thumb';
-        thumb.setAttribute('data-id', it.id);
-        thumb.setAttribute('role','button');
-        thumb.setAttribute('tabindex','0');
+      // ترتيب
+      if(sortSel.value==="price-asc"){
+        list.sort((a,b)=> a.price - b.price);
+      } else if(sortSel.value==="price-desc"){
+        list.sort((a,b)=> b.price - a.price);
+      }
 
-        const img = document.createElement('img');
-        img.loading = 'lazy';
-        img.alt = it.title || '';
-        img.src = it.src;
-        img.addEventListener('error', ()=> {
-          img.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="600" height="360"><rect width="100%" height="100%" fill="#071428"/><text x="50%" y="50%" fill="#93c5fd" font-size="18" font-family="Arial" dominant-baseline="middle" text-anchor="middle">فشل تحميل الصورة</text></svg>`);
+      grid.innerHTML = list.map(cardTemplate).join("");
+
+      // ربط أحداث داخل البطاقات
+      grid.querySelectorAll(".btn.link").forEach(btn=>{
+        btn.addEventListener("click", ()=> {
+          window.open(btn.dataset.url, "_blank");
         });
-
-        thumb.appendChild(img);
-
-        const meta = document.createElement('div');
-        meta.className = 'meta';
-        const h3 = document.createElement('h3'); h3.textContent = it.title || 'صورة';
-        const p = document.createElement('p'); p.className = 'small'; p.textContent = (it.level || '') + (it.tags && it.tags.length ? ' • ' + it.tags.join(', ') : '');
-        const tagsWrap = document.createElement('div'); tagsWrap.className = 'tags';
-        (it.tags || []).slice(0,4).forEach(t => {
-          const span = document.createElement('span'); span.className = 'tag'; span.textContent = t;
-          tagsWrap.appendChild(span);
+      });
+      grid.querySelectorAll(".btn.add").forEach(btn=>{
+        btn.addEventListener("click", ()=> {
+          state.selectedCard = btn.dataset.select;
+          showToast("تم تحديد البطاقة للربط. الآن اختر صورًا ثم اضغط \"ربط الصورة\"");
         });
-        meta.appendChild(h3); meta.appendChild(p); meta.appendChild(tagsWrap);
-
-        const actions = document.createElement('div'); actions.className = 'actions';
-        const viewBtn = document.createElement('button'); viewBtn.className = 'btn ghost'; viewBtn.textContent = 'عرض'; viewBtn.dataset.id = it.id;
-        const copyBtn = document.createElement('button'); copyBtn.className = 'btn ghost'; copyBtn.textContent = 'نسخ الرابط'; copyBtn.dataset.id = it.id;
-        const delBtn = document.createElement('button'); delBtn.className = 'btn ghost'; delBtn.textContent = 'حذف'; delBtn.dataset.id = it.id;
-        actions.appendChild(viewBtn); actions.appendChild(copyBtn); actions.appendChild(delBtn);
-
-        card.appendChild(thumb); card.appendChild(meta); card.appendChild(actions);
-        galleryEl.appendChild(card);
+      });
+      grid.querySelectorAll(".remove").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const pid = btn.dataset.p;
+          const idx = +btn.dataset.i;
+          const arr = state.assigned[pid] || [];
+          arr.splice(idx,1);
+          state.assigned[pid] = arr;
+          save(); render();
+          showToast("تم حذف الصورة المرتبطة.");
+        });
       });
     }
 
-    // فتح lightbox
-    function openLightbox(item){
-      lightboxImg.src = item.src;
-      lightboxTitle.textContent = item.title || '';
-      downloadBtn.onclick = ()=> {
-        const a = document.createElement('a');
-        a.href = item.src;
-        a.download = (item.title || 'image') + '.jpg';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-      };
-      lightbox.classList.add('open');
-      lightbox.setAttribute('aria-hidden','false');
+    // إدارة المعرض العام
+    function renderGallery(){
+      gallery.innerHTML = state.images.map((src, i)=> `
+        <div class="thumb">
+          <img src="${src}" alt="صورة محلية">
+          <button class="remove" data-i="${i}">حذف</button>
+        </div>
+      `).join("");
+      gallery.querySelectorAll(".remove").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const idx = +btn.dataset.i;
+          state.images.splice(idx,1);
+          save(); renderGallery();
+          showToast("تم حذف الصورة من المعرض.");
+        });
+      });
     }
 
-    // تعامل مع أزرار داخل المعرض
-    galleryEl.addEventListener('click', (e)=>{
-      const btn = e.target.closest('button');
-      if(btn){
-        const id = btn.dataset.id;
-        const item = items.find(x=>x.id === id);
-        if(!item) return;
-        if(btn.textContent.includes('عرض')) openLightbox(item);
-        else if(btn.textContent.includes('نسخ')) {
-          navigator.clipboard.writeText(item.src).then(()=> {
-            const old = btn.textContent; btn.textContent = 'تم النسخ ✅';
-            setTimeout(()=> btn.textContent = old, 1200);
-          }).catch(()=> alert('فشل النسخ'));
-        } else if(btn.textContent.includes('حذف')) {
-          if(!confirm('حذف هذه الصورة من المعرض؟')) return;
-          items = items.filter(x=>x.id !== id);
-          saveGallery(items);
-          render();
-        }
-      } else {
-        // click on thumb
-        const thumb = e.target.closest('.thumb');
-        if(thumb){
-          const id = thumb.dataset.id;
-          const item = items.find(x=>x.id === id);
-          if(item) openLightbox(item);
-        }
+    // قراءة ملفات الصور
+    function readFiles(files){
+      const promises = [];
+      for(const f of files){
+        if(!f.type.startsWith("image/")) continue;
+        const reader = new FileReader();
+        promises.push(new Promise(res=>{
+          reader.onload = ()=> res(reader.result);
+          reader.readAsDataURL(f);
+        }));
       }
-    });
-
-    // دعم فتح بالكيبورد
-    galleryEl.addEventListener('keydown', (e)=>{
-      if(e.key === 'Enter'){
-        const thumb = e.target.closest('.thumb');
-        if(thumb){
-          const id = thumb.dataset.id;
-          const item = items.find(x=>x.id === id);
-          if(item) openLightbox(item);
+      Promise.all(promises).then(urls=>{
+        if(!urls.length){
+          showToast("لم يتم اختيار صور.");
+          return;
         }
-      }
-    });
-
-    // إغلاق lightbox
-    closeLightbox.addEventListener('click', ()=> {
-      lightbox.classList.remove('open');
-      lightbox.setAttribute('aria-hidden','true');
-      lightboxImg.src = '';
-    });
-    lightbox.addEventListener('click', (e)=> { if(e.target === lightbox) closeLightbox.click(); });
-
-    // بحث وفلتر
-    searchEl.addEventListener('input', render);
-    filterLevelEl.addEventListener('change', render);
-
-    // اختيار ملف
-    chooseBtn.addEventListener('click', ()=> fileInput.click());
-    fileInput.addEventListener('change', ()=> {
-      const f = fileInput.files[0];
-      if(!f) return;
-      previewAndAddFile(f);
-    });
+        state.images.push(...urls);
+        save(); renderGallery();
+        showToast("تمت إضافة الصور إلى المعرض.");
+      });
+    }
 
     // سحب وإفلات
-    ['dragenter','dragover'].forEach(ev => uploader.addEventListener(ev, (e)=> { e.preventDefault(); uploader.classList.add('dragover'); }));
-    ['dragleave','drop'].forEach(ev => uploader.addEventListener(ev, (e)=> { e.preventDefault(); uploader.classList.remove('dragover'); }));
-    uploader.addEventListener('drop', (e)=> {
-      const f = e.dataTransfer.files && e.dataTransfer.files[0];
-      if(f) previewAndAddFile(f);
+    drop.addEventListener("dragover", (e)=>{
+      e.preventDefault();
+      drop.classList.add("dragover");
+    });
+    drop.addEventListener("dragleave", ()=>{
+      drop.classList.remove("dragover");
+    });
+    drop.addEventListener("drop", (e)=>{
+      e.preventDefault();
+      drop.classList.remove("dragover");
+      readFiles(e.dataTransfer.files);
+    });
+    file.addEventListener("change", (e)=>{
+      readFiles(e.target.files);
+      file.value = "";
     });
 
-    // إضافة عبر رابط أو ملف
-    addBtn.addEventListener('click', ()=> {
-      const url = urlInput.value.trim();
-      const title = titleInput.value.trim() || 'صورة مضافة';
-      const level = levelInput.value || '';
-      if(url){
-        const id = uid();
-        items.unshift({ id, title, src: url, level, tags: extractTags(title) });
-        saveGallery(items);
-        urlInput.value = ''; titleInput.value = ''; levelInput.value = '';
-        render();
+    // ربط صورة مختارة بالبطاقة المحددة
+    assignBtn.addEventListener("click", ()=>{
+      if(!state.selectedCard){
+        showToast("اختر بطاقة أولًا بالضغط على \"تحديد للربط\".");
         return;
       }
-      const f = fileInput.files[0];
-      if(f){
-        previewAndAddFile(f);
+      if(!state.images.length){
+        showToast("أضف صورًا إلى المعرض أولًا.");
         return;
       }
-      alert('اختر ملفًا أو ألصق رابط صورة ثم اضغط أضف');
+      // نربط آخر صورة مضافة (يمكن تعديل المنطق)
+      const last = state.images[state.images.length-1];
+      const arr = state.assigned[state.selectedCard] || [];
+      arr.push(last);
+      state.assigned[state.selectedCard] = arr;
+      save(); render();
+      showToast("تم ربط الصورة بالبطاقة المحددة.");
     });
 
-    // قراءة ملف وتحويله إلى DataURL ثم الإضافة
-    function previewAndAddFile(file){
-      if(!file.type.startsWith('image/')){ alert('الملف ليس صورة'); return; }
-      const reader = new FileReader();
-      reader.onload = function(e){
-        const src = e.target.result;
-        const title = titleInput.value.trim() || file.name || 'صورة مضافة';
-        const level = levelInput.value || '';
-        const id = uid();
-        items.unshift({ id, title, src, level, tags: extractTags(title), user:true });
-        saveGallery(items);
-        fileInput.value = ''; urlInput.value = ''; titleInput.value = ''; levelInput.value = '';
-        render();
+    // بحث/ترتيب/فلترة
+    q.addEventListener("input", render);
+    sortSel.addEventListener("change", render);
+    filterSel.addEventListener("change", render);
+
+    // تصدير الصور (JSON)
+    exportBtn.addEventListener("click", ()=>{
+      const data = {
+        gallery: state.images,
+        assigned: state.assigned
       };
-      reader.readAsDataURL(file);
-    }
-
-    // استخراج وسوم بسيطة من العنوان
-    function extractTags(title){
-      return title.split(/[\s,._-]+/).slice(0,6).map(s=>s.toLowerCase()).filter(Boolean);
-    }
-
-    // إعادة الافتراضيات
-    resetDefaultsBtn.addEventListener('click', ()=> {
-      if(!confirm('إعادة الصور إلى المجموعة الافتراضية (سيُحذف كل الصور المضافة)؟')) return;
-      const defaults = JSON.parse(localStorage.getItem(DEFAULTS_KEY) || '[]');
-      items = defaults.slice();
-      saveGallery(items);
-      render();
+      const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "arduino-images-export.json";
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast("تم تصدير الصور والروابط.");
     });
 
-    // مسح الصور المضافة (الاحتفاظ بالافتراضيات)
-    clearLocalBtn.addEventListener('click', ()=> {
-      if(!confirm('حذف كل الصور المضافة من جهازك؟')) return;
-      const defaults = JSON.parse(localStorage.getItem(DEFAULTS_KEY) || '[]');
-      const defaultSrcs = new Set(defaults.map(d=>d.src));
-      items = items.filter(it => defaultSrcs.has(it.src));
-      saveGallery(items);
-      render();
+    // تفريغ الصور
+    clearBtn.addEventListener("click", ()=>{
+      if(!confirm("تأكيد تفريغ جميع الصور والمعينات؟")) return;
+      state.images = [];
+      state.assigned = {};
+      save(); renderGallery(); render();
+      showToast("تم التفريغ.");
     });
 
-    // بدء العرض
+    // تبديل النمط (يمكن توسيع لاحقًا)
+    darkBtn.addEventListener("click", ()=>{
+      state.dark = !state.dark;
+      document.documentElement.style.setProperty('--bg', state.dark ? '#0f1216' : '#f6f8fb');
+      document.documentElement.style.setProperty('--card', state.dark ? '#171b22' : '#ffffff');
+      document.documentElement.style.setProperty('--text', state.dark ? '#e7ecf3' : '#14202e');
+      document.documentElement.style.setProperty('--muted', state.dark ? '#6c7b8e' : '#5b6a7c');
+      document.documentElement.style.setProperty('--border', state.dark ? '#28303a' : '#dfe6ee');
+      showToast(state.dark ? "تم تفعيل النمط الداكن." : "تم تفعيل النمط الفاتح.");
+    });
+
+    // بدء
     render();
-
-    // اختصار لوحة مفاتيح: Ctrl+K للبحث
-    document.addEventListener('keydown', (e)=> { if(e.ctrlKey && e.key.toLowerCase() === 'k'){ e.preventDefault(); searchEl.focus(); } });
-
-    // حفظ المعرض
-    function saveGallery(items){ localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); }
-
-    // expose for debugging
-    window.__arduinoGallery = { render, items, saveGallery };
+    renderGallery();
   </script>
 </body>
 </html>
