@@ -1,34 +1,284 @@
-<!DOCTYPE html>
-<html lang="ar">
+<!doctype html>
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>تعلم برمجة الأردوينو - الدرس 4</title>
-  <meta name="description" content="شرح الحلقات في الأردوينو.">
-  <meta name="keywords" content="Arduino, تعلم الأردوينو, الحلقات, loops">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>معرض فيديوهات أردوينو</title>
+  <meta name="description" content="صفحة HTML واحدة تعرض فيديوهات أردوينو مدمجة، مع إمكانية إضافة روابط يوتيوب، بحث، وفلاتر." />
+  <style>
+    :root{
+      --bg:#0b1224; --panel:#071428; --card:#0f172a; --accent:#1d4ed8; --accent2:#06b6d4;
+      --text:#e6eef8; --muted:#93c5fd; --radius:12px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:system-ui, "Noto Naskh Arabic", Tahoma, Arial, sans-serif;
+      background:linear-gradient(180deg,#07102a,#071428); color:var(--text); -webkit-font-smoothing:antialiased;
+      padding:18px;
+    }
+    header{max-width:1100px;margin:0 auto 18px;display:flex;align-items:center;gap:12px}
+    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 8px 30px rgba(13,71,161,.12)}
+    h1{margin:0;font-size:20px}
+    p.lead{margin:4px 0 0;color:var(--muted);font-size:13px}
+
+    .wrap{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:14px}
+    .panel{background:linear-gradient(180deg,#071428,#07102a);border:1px solid rgba(255,255,255,.04);border-radius:12px;padding:12px}
+
+    .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+    .input, .select, .btn{padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.04);background:#071428;color:var(--text)}
+    .btn{cursor:pointer;background:linear-gradient(90deg,var(--accent),var(--accent2));border:none;color:#022;font-weight:800}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.04);color:var(--text);font-weight:600}
+
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    @media (max-width:980px){ .grid{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:640px){ .grid{grid-template-columns:1fr} }
+
+    .card{background:var(--card);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.03);display:flex;flex-direction:column}
+    .card .meta{padding:10px;border-bottom:1px solid rgba(255,255,255,.02);display:flex;justify-content:space-between;align-items:center}
+    .card h3{margin:0;font-size:15px;color:#a5b4fc}
+    .card p{margin:6px 0 0;color:var(--muted);font-size:13px}
+    .player{position:relative;padding-top:56.25%;background:#000}
+    .player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+    .card .actions{display:flex;gap:8px;padding:10px;border-top:1px solid rgba(255,255,255,.02);align-items:center}
+    .small{font-size:13px;color:var(--muted)}
+
+    .add-form{display:flex;gap:8px;align-items:center}
+    .add-form input{flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,.04);background:#071428;color:var(--text)}
+
+    .empty{padding:18px;text-align:center;color:var(--muted);border:1px dashed rgba(255,255,255,.03);border-radius:10px}
+
+    footer{max-width:1100px;margin:18px auto;color:var(--muted);font-size:13px;text-align:center}
+    a.link{color:var(--accent2);text-decoration:none}
+  </style>
 </head>
 <body>
-  <div class="yasser-logo">
-  🛠️ <strong>ياسر أحمد حمدي</strong>
-</div>
-  <h1>📘 الدرس 4: الحلقات (Loops)</h1>
-  <p>هنتعلم إزاي نكرر الأوامر باستخدام الحلقات.</p>
+  <header>
+    <div class="logo" aria-hidden="true"></div>
+    <div>
+      <h1>معرض فيديوهات أردوينو</h1>
+      <p class="lead">صفحة واحدة تعرض فيديوهات تعليمية — أضف روابط يوتيوب، ابحث، وفرّز حسب المستوى أو الوسوم.</p>
+    </div>
+  </header>
 
-  <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+  <main class="wrap">
+    <section class="panel" aria-labelledby="controlsTitle">
+      <div id="controlsTitle" class="small" style="margin-bottom:8px">أدوات</div>
+      <div class="controls" role="region" aria-label="أدوات التحكم">
+        <input id="search" class="input" placeholder="ابحث بعنوان أو وسم (مثال: NeoPixel, ESP32)" />
+        <select id="filterLevel" class="select">
+          <option value="">كل المستويات</option>
+          <option value="beginner">مبتدئ</option>
+          <option value="intermediate">متوسط</option>
+          <option value="advanced">متقدم</option>
+        </select>
+        <div style="flex:1"></div>
+        <button id="clearFilters" class="btn ghost">مسح الفلاتر</button>
+      </div>
 
-  <div class="nav-buttons">
-    <button onclick="navigateWithEffect('lesson3.html')">⬅️ السابق</button>
-    <button onclick="navigateWithEffect('lesson5.html')">➡️ التالي</button>
-    <button onclick="navigateWithEffect('index.html')">🏠 الرئيسية</button>
-  </div>
+      <div style="margin-bottom:12px;display:flex;gap:8px;align-items:center">
+        <form id="addForm" class="add-form" onsubmit="return false;">
+          <input id="videoUrl" placeholder="ألصق رابط يوتيوب هنا (مثال: https://www.youtube.com/watch?v=VIDEO_ID)" aria-label="رابط فيديو" />
+          <input id="videoTitle" placeholder="عنوان اختياري" style="width:260px" />
+          <button id="addBtn" class="btn">أضف فيديو</button>
+        </form>
+      </div>
 
-  <button onclick="navigateWithEffect('simulator.html')">⚙️ المحاكي</button>
+      <div id="videosGrid" class="grid" aria-live="polite"></div>
+      <div id="empty" class="empty" style="display:none">لا توجد فيديوهات مطابقة — أضف فيديو جديد أو أزل الفلاتر.</div>
+    </section>
+  </main>
+
+  <footer>
+    صفحة قابلة للتعديل محليًا — احفظ الملف وشاركه. لإضافة فيديوهات مسبقًا، عدّل مصفوفة `initialVideos` داخل السكربت.
+  </footer>
 
   <script>
-    const lessonNumber = 4, totalLessons = 10;
-    document.getElementById("progressBar").style.width = (lessonNumber/totalLessons*100)+"%";
-    function navigateWithEffect(url){ window.location.href = url; }
+    // صفحة فيديوهات أردوينو (HTML واحد)
+    // - يدعم إضافة روابط يوتيوب، بحث، فلترة، وحفظ محلي (localStorage)
+    // - لتحميل فيديوهات مبدئية، عدّل initialVideos أدناه
+
+    const STORAGE_KEY = 'arduino_videos_gallery_v1';
+
+    // أمثلة فيديوهات مبدئية (ضع روابط يوتيوب كاملة أو اترك مصفوفة فارغة)
+    const initialVideos = [
+      {
+        id: 'v1',
+        title: 'Arduino Tutorial for Beginners (Full Course) - freeCodeCamp',
+        url: 'https://www.youtube.com/watch?v=G6u10b2V0s8',
+        level: 'beginner',
+        tags: ['basics','setup','beginner']
+      },
+      {
+        id: 'v2',
+        title: 'Paul McWhorter - Arduino Tutorial Series (Playlist)',
+        url: 'https://www.youtube.com/watch?v=09b2b3V0s8', // مثال: استبدل برابط فعلي إن رغبت
+        level: 'beginner',
+        tags: ['series','tutorial','beginner']
+      },
+      {
+        id: 'v3',
+        title: 'NeoPixel Basics and Examples',
+        url: 'https://www.youtube.com/watch?v=VIDEO_ID_NEOPIXEL', // استبدل بالـ ID الفعلي
+        level: 'intermediate',
+        tags: ['neopixel','led','projects']
+      }
+    ];
+
+    // Helpers
+    function save(videos){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(videos));
+    }
+    function load(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(raw) return JSON.parse(raw);
+      }catch(e){}
+      // clone initialVideos to storage on first load
+      save(initialVideos);
+      return initialVideos.slice();
+    }
+
+    function extractYouTubeId(url){
+      // يدعم صيغ متعددة: youtu.be/ID, watch?v=ID, embed/ID
+      try{
+        const u = new URL(url);
+        if(u.hostname.includes('youtu.be')) return u.pathname.slice(1);
+        if(u.hostname.includes('youtube.com')){
+          if(u.searchParams.get('v')) return u.searchParams.get('v');
+          const parts = u.pathname.split('/');
+          return parts[parts.length-1];
+        }
+      }catch(e){}
+      // fallback: regex
+      const m = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})/);
+      return m ? m[1] : null;
+    }
+
+    // Render
+    const grid = document.getElementById('videosGrid');
+    const emptyEl = document.getElementById('empty');
+    const searchInput = document.getElementById('search');
+    const filterLevel = document.getElementById('filterLevel');
+    const clearFilters = document.getElementById('clearFilters');
+    const addForm = document.getElementById('addForm');
+    const videoUrlInput = document.getElementById('videoUrl');
+    const videoTitleInput = document.getElementById('videoTitle');
+    const addBtn = document.getElementById('addBtn');
+
+    let videos = load();
+
+    function render(){
+      grid.innerHTML = '';
+      const q = searchInput.value.trim().toLowerCase();
+      const level = filterLevel.value;
+      const filtered = videos.filter(v=>{
+        const text = (v.title + ' ' + (v.tags||[]).join(' ')).toLowerCase();
+        const matchesQ = !q || text.includes(q);
+        const matchesLevel = !level || v.level === level;
+        return matchesQ && matchesLevel;
+      });
+
+      if(filtered.length === 0){
+        emptyEl.style.display = 'block';
+      } else {
+        emptyEl.style.display = 'none';
+        filtered.forEach(v => grid.appendChild(makeCard(v)));
+      }
+    }
+
+    function makeCard(v){
+      const card = document.createElement('article');
+      card.className = 'card';
+      const meta = document.createElement('div'); meta.className = 'meta';
+      meta.innerHTML = `<div><h3>${escapeHtml(v.title)}</h3><div class="small">${escapeHtml((v.level||'') + (v.tags ? ' • ' + v.tags.join(', ') : ''))}</div></div>
+                        <div><button class="btn ghost" data-id="${v.id}" aria-label="نسخ رابط">نسخ</button></div>`;
+      const player = document.createElement('div'); player.className = 'player';
+      const ytId = extractYouTubeId(v.url) || '';
+      const iframe = document.createElement('iframe');
+      iframe.setAttribute('loading','lazy');
+      iframe.setAttribute('title', v.title);
+      iframe.setAttribute('allow','accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+      iframe.setAttribute('allowfullscreen','');
+      iframe.src = ytId ? `https://www.youtube.com/embed/${ytId}` : '';
+      player.appendChild(iframe);
+
+      const actions = document.createElement('div'); actions.className = 'actions';
+      const openBtn = document.createElement('button'); openBtn.className='btn'; openBtn.textContent='فتح في يوتيوب';
+      const removeBtn = document.createElement('button'); removeBtn.className='btn ghost'; removeBtn.textContent='حذف';
+      actions.appendChild(openBtn); actions.appendChild(removeBtn);
+
+      card.appendChild(meta);
+      card.appendChild(player);
+      if(v.description) {
+        const p = document.createElement('p'); p.textContent = v.description; card.appendChild(p);
+      }
+      card.appendChild(actions);
+
+      // events
+      meta.querySelector('button[data-id]').addEventListener('click', async ()=>{
+        try{
+          await navigator.clipboard.writeText(v.url);
+          meta.querySelector('button[data-id]').textContent = 'تم النسخ ✅';
+          setTimeout(()=> meta.querySelector('button[data-id]').textContent = 'نسخ', 1200);
+        }catch(e){ alert('فشل النسخ'); }
+      });
+      openBtn.addEventListener('click', ()=> window.open(v.url, '_blank'));
+      removeBtn.addEventListener('click', ()=>{
+        if(!confirm('حذف الفيديو من المعرض؟')) return;
+        videos = videos.filter(x=>x.id !== v.id);
+        save(videos); render();
+      });
+
+      return card;
+    }
+
+    // Add video
+    addForm.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const url = videoUrlInput.value.trim();
+      if(!url){ alert('أدخل رابط يوتيوب'); return; }
+      const yt = extractYouTubeId(url);
+      if(!yt){ alert('الرابط غير صالح أو لا يحتوي على معرف يوتيوب'); return; }
+      const title = videoTitleInput.value.trim() || `فيديو أردوينو (${yt})`;
+      const id = 'v' + Date.now();
+      const newV = { id, title, url, level: '', tags: [] };
+      videos.unshift(newV);
+      save(videos);
+      videoUrlInput.value = ''; videoTitleInput.value = '';
+      render();
+    });
+
+    // Filters & search
+    searchInput.addEventListener('input', render);
+    filterLevel.addEventListener('change', render);
+    clearFilters.addEventListener('click', ()=>{
+      searchInput.value = ''; filterLevel.value = ''; render();
+    });
+
+    // Export / Import (simple)
+    function exportJSON(){
+      const data = JSON.stringify(videos, null, 2);
+      const w = window.open('', '_blank');
+      w.document.body.style.background = '#071428';
+      w.document.body.style.color = '#d7e3ff';
+      const pre = w.document.createElement('pre'); pre.textContent = data; pre.style.whiteSpace='pre-wrap'; pre.style.padding='12px';
+      w.document.body.appendChild(pre);
+    }
+
+    // small helpers
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch])); }
+
+    // init
+    render();
+
+    // Expose export/import via keyboard shortcuts (optional)
+    document.addEventListener('keydown', (e)=>{
+      if(e.ctrlKey && e.key.toLowerCase() === 'e'){ exportJSON(); }
+    });
+
+    // If you want to pre-populate with real, verified video IDs, replace initialVideos above with real YouTube links.
   </script>
 </body>
 </html>
