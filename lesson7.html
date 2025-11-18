@@ -1,34 +1,441 @@
-<!DOCTYPE html>
-<html lang="ar">
+<!doctype html>
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>تعلم برمجة الأردوينو - الدرس 7</title>
-  <meta name="description" content="شرح المحركات في الأردوينو.">
-  <meta name="keywords" content="Arduino, تعلم الأردوينو, المحركات, motors">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>متجر أردوينو — بيع لوحات وملحقات</title>
+  <meta name="description" content="متجر بسيط لبيع لوحات أردوينو وملحقاتها مع حساب سعر التوصيل 20 جنيه مصري" />
+  <style>
+    :root{
+      --bg:#071026; --panel:#0b1624; --card:#0f1b2a; --muted:#9fb7d6; --text:#e6eef8;
+      --accent:#1d4ed8; --accent2:#06b6d4; --ok:#22c55e; --danger:#ef4444;
+      --radius:12px; --shadow:0 14px 40px rgba(2,6,23,.6);
+      --shipping:20; /* عرض فقط في CSS، القيمة الحقيقية في JS */
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: system-ui, "Noto Naskh Arabic", "Segoe UI", Tahoma, Arial, sans-serif;
+      background: radial-gradient(900px 480px at 70% -10%, #0b2540 0%, var(--bg) 60%), var(--bg);
+      color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      padding:20px;
+    }
+
+    /* Header */
+    header{max-width:1200px;margin:0 auto 18px;display:flex;align-items:center;gap:12px}
+    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 10px 30px rgba(29,78,216,.12)}
+    h1{margin:0;font-size:20px}
+    p.lead{margin:6px 0 0;color:var(--muted);font-size:13px}
+
+    /* Layout */
+    .wrap{max-width:1200px;margin:18px auto;display:grid;grid-template-columns:1fr 360px;gap:18px;padding:0 12px}
+    @media (max-width:980px){ .wrap{grid-template-columns:1fr} }
+
+    .panel{background:linear-gradient(180deg,#071428,#061026);border-radius:14px;padding:14px;border:1px solid rgba(255,255,255,.04);box-shadow:var(--shadow)}
+    .controls{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+    .search{flex:1;display:flex;gap:8px}
+    .input{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.04);background:#071428;color:var(--text);width:100%}
+    .select{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.04);background:#071428;color:var(--text)}
+    .btn{padding:10px 12px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#022;font-weight:800;cursor:pointer}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.04);color:var(--text)}
+    .small{font-size:13px;color:var(--muted)}
+
+    /* Products grid */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+    .product{background:linear-gradient(180deg,#0f1b2a,#0b1624);border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.03);transition:transform .25s, box-shadow .25s}
+    .product:hover{transform:translateY(-6px);box-shadow:0 20px 40px rgba(2,6,23,.6)}
+    .media{height:160px;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .media img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+    .product:hover .media img{transform:scale(1.06)}
+    .meta{padding:12px}
+    .meta h3{margin:0;font-size:15px;color:#a5b4fc}
+    .meta p{margin:6px 0 0;color:var(--muted);font-size:13px}
+    .price-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+    .price{font-weight:800;color:var(--ok)}
+    .old-price{color:#7b8794;text-decoration:line-through;font-size:13px}
+
+    /* Cart sidebar */
+    .cart{position:sticky;top:20px}
+    .cart .box{background:linear-gradient(180deg,#071428,#061026);border-radius:12px;padding:12px;border:1px solid rgba(255,255,255,.04)}
+    .cart h3{margin:0 0 8px}
+    .cart-list{display:flex;flex-direction:column;gap:10px;max-height:360px;overflow:auto;padding-right:6px}
+    .cart-item{display:flex;gap:8px;align-items:center;border-radius:10px;padding:8px;background:rgba(255,255,255,.01)}
+    .cart-item img{width:56px;height:44px;object-fit:cover;border-radius:8px}
+    .qty{display:flex;gap:6px;align-items:center}
+    .qty button{padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.04);background:transparent;color:var(--text);cursor:pointer}
+
+    .summary{margin-top:12px;border-top:1px dashed rgba(255,255,255,.04);padding-top:12px}
+    .summary-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .checkout{display:flex;gap:8px;margin-top:12px}
+
+    /* Checkout modal */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);z-index:120}
+    .modal.open{display:flex}
+    .modal .dialog{width:92%;max-width:720px;background:linear-gradient(180deg,#071428,#061026);border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,.04)}
+    .form-row{display:flex;gap:8px;flex-wrap:wrap}
+    .form-row input, .form-row textarea{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,.04);background:#071428;color:var(--text)}
+
+    /* small animations */
+    @keyframes pop { from{transform:scale(.98);opacity:0} to{transform:none;opacity:1} }
+    .product, .cart-item{animation:pop .28s ease both}
+
+    /* footer */
+    footer{max-width:1200px;margin:18px auto;color:var(--muted);font-size:13px;text-align:center}
+  </style>
 </head>
 <body>
-  <div class="yasser-logo">
-  🛠️ <strong>ياسر أحمد حمدي</strong>
-</div>
-  <h1>📘 الدرس 7: المحركات (Motors)</h1>
-  <p>هنتعلم إزاي نتحكم في محرك باستخدام الأردوينو.</p>
+  <header>
+    <div class="logo" aria-hidden="true"></div>
+    <div>
+      <h1>متجر أردوينو وملحقاته</h1>
+      <p class="lead">تسوّق لوحات أردوينو وملحقاتها بسهولة. **سعر التوصيل ثابت: 20 جنيه مصري** يُضاف تلقائيًا عند الدفع.</p>
+    </div>
+  </header>
 
-  <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+  <main class="wrap">
+    <!-- Products -->
+    <section class="panel">
+      <div class="controls">
+        <div class="search">
+          <input id="search" class="input" placeholder="ابحث عن منتج (مثال: Nano, Mega, Pro Mini)" />
+        </div>
+        <select id="category" class="select">
+          <option value="">كل الفئات</option>
+          <option value="board">لوحات</option>
+          <option value="accessory">ملحقات</option>
+        </select>
+        <button id="clearFilters" class="btn ghost">مسح الفلاتر</button>
+      </div>
 
-  <div class="nav-buttons">
-    <button onclick="navigateWithEffect('lesson6.html')">⬅️ السابق</button>
-    <button onclick="navigateWithEffect('lesson8.html')">➡️ التالي</button>
-    <button onclick="navigateWithEffect('index.html')">🏠 الرئيسية</button>
+      <div id="productsGrid" class="grid" aria-live="polite"></div>
+    </section>
+
+    <!-- Cart -->
+    <aside class="cart">
+      <div class="box">
+        <h3>عربة التسوق</h3>
+        <div id="cartList" class="cart-list" aria-live="polite"></div>
+
+        <div class="summary">
+          <div class="summary-row"><div>المجموع الفرعي</div><div id="subtotal">0 EGP</div></div>
+          <div class="summary-row"><div>تكلفة التوصيل</div><div id="shipping">20 EGP</div></div>
+          <div class="summary-row" style="font-weight:900;font-size:1.05rem"><div>الإجمالي</div><div id="total">0 EGP</div></div>
+
+          <div class="checkout">
+            <button id="checkoutBtn" class="btn">الدفع</button>
+            <button id="clearCartBtn" class="btn ghost">تفريغ العربة</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Checkout Modal -->
+  <div id="modal" class="modal" role="dialog" aria-hidden="true">
+    <div class="dialog">
+      <h3>إتمام الطلب</h3>
+      <div style="color:var(--muted);margin-bottom:10px">املأ بيانات التوصيل. سيتم احتساب **20 جنيه** توصيل تلقائيًا.</div>
+      <div class="form-row">
+        <input id="custName" placeholder="الاسم الكامل" />
+        <input id="custPhone" placeholder="رقم الهاتف" />
+      </div>
+      <div style="margin-top:8px">
+        <textarea id="custAddress" placeholder="عنوان التوصيل (العنوان الكامل)"></textarea>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
+        <button id="placeOrderBtn" class="btn">تأكيد الطلب</button>
+        <button id="closeModalBtn" class="btn ghost">إلغاء</button>
+      </div>
+      <div id="orderMsg" style="margin-top:10px;color:var(--muted)"></div>
+    </div>
   </div>
 
-  <button onclick="navigateWithEffect('simulator.html')">⚙️ المحاكي</button>
+  <footer>جميع الأسعار بالعملة المحلية (EGP). التوصيل: <strong>20 جنيه مصري</strong>.</footer>
 
   <script>
-    const lessonNumber = 7, totalLessons = 10;
-    document.getElementById("progressBar").style.width = (lessonNumber/totalLessons*100)+"%";
-    function navigateWithEffect(url){ window.location.href = url; }
+    /************************************************************************
+     * متجر أردوينو بسيط (ملف واحد)
+     * - يعرض منتجات (لوحات + ملحقات)
+     * - عربة تسوق مع حفظ محلي (localStorage)
+     * - حساب تكلفة التوصيل الثابتة: 20 EGP
+     * - صفحة دفع محاكاة (لا يوجد دفع حقيقي)
+     ************************************************************************/
+
+    const SHIPPING_COST = 20; // جنيه مصري ثابت
+
+    // منتجات: استخدم روابط الصور من Makers Electronics التي زودتني بها
+    const PRODUCTS = [
+      {
+        id: 'mega2560',
+        title: 'Arduino MEGA 2560 (CH340)',
+        category: 'board',
+        price: 900,
+        oldPrice: 1250,
+        image: 'https://i0.wp.com/makerselectronics.com/wp-content/uploads/2016/02/transparent-Photoroom1.jpg?fit=500%2C500&ssl=1',
+        desc: 'لوحة Arduino Mega 2560 بعدد مداخل ومخارج كبير للمشاريع المعقدة.'
+      },
+      {
+        id: 'nano328pb',
+        title: 'Arduino Nano ATmega328PB-U',
+        category: 'board',
+        price: 240,
+        oldPrice: null,
+        image: 'https://i0.wp.com/makerselectronics.com/wp-content/uploads/2023/08/6b04ebd2-5e99-466c-a130-32bf5b20667c_800x800-800x800.jpeg?fit=510%2C510&ssl=1',
+        desc: 'لوحة Nano صغيرة مناسبة للمشاريع المدمجة.'
+      },
+      {
+        id: 'promini',
+        title: 'Arduino Pro Mini 5V/16MHz (ATmega328P)',
+        category: 'board',
+        price: 150,
+        oldPrice: 225,
+        image: 'https://i0.wp.com/makerselectronics.com/wp-content/uploads/2016/02/arduino-pro-mini-2-1-1000x1000.jpg?fit=510%2C510&ssl=1',
+        desc: 'Pro Mini خفيفة وصغيرة — تحتاج USB-to-Serial للبرمجة.'
+      },
+      {
+        id: 'promicro',
+        title: 'Arduino Pro Micro 5V/16MHz (ATmega32U4 Type‑C)',
+        category: 'board',
+        price: 350,
+        oldPrice: 450,
+        image: 'https://i0.wp.com/makerselectronics.com/wp-content/uploads/2025/03/61Am7EjTlaL._AC_SX679_.png?fit=510%2C511&ssl=1',
+        desc: 'Pro Micro مع USB مدمج ودعم HID.'
+      },
+      // ملحقات (صور مدمجة بسيطة كـ SVG data URI لتجنب روابط خارجية غير موثوقة)
+      {
+        id: 'usb_cable',
+        title: 'كابل USB A to B',
+        category: 'accessory',
+        price: 40,
+        image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><rect width="100%" height="100%" fill="%230b1624"/><text x="50%" y="50%" fill="%2393c5fd" font-size="28" font-family="Arial" text-anchor="middle" dominant-baseline="middle">USB Cable</text></svg>',
+        desc: 'كابل USB للبرمجة والتغذية.'
+      },
+      {
+        id: 'jumper_wires',
+        title: 'أسلاك توصيل Jumper (40 قطعة)',
+        category: 'accessory',
+        price: 35,
+        image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><rect width="100%" height="100%" fill="%230b1624"/><text x="50%" y="50%" fill="%2393c5fd" font-size="28" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Jumper Wires</text></svg>',
+        desc: 'مجموعة أسلاك توصيل للمشاريع على breadboard.'
+      },
+      {
+        id: 'breadboard',
+        title: 'لوح تجارب Breadboard صغير',
+        category: 'accessory',
+        price: 55,
+        image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><rect width="100%" height="100%" fill="%230b1624"/><text x="50%" y="50%" fill="%2393c5fd" font-size="28" font-family="Arial" text-anchor="middle" dominant-baseline="middle">Breadboard</text></svg>',
+        desc: 'لوح تجارب صغير لتجميع الدوائر بسرعة.'
+      }
+    ];
+
+    // cart state (load from localStorage)
+    const CART_KEY = 'arduino_shop_cart_v1';
+    let cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+
+    // DOM refs
+    const productsGrid = document.getElementById('productsGrid');
+    const searchInput = document.getElementById('search');
+    const categorySelect = document.getElementById('category');
+    const clearFiltersBtn = document.getElementById('clearFilters');
+    const cartListEl = document.getElementById('cartList');
+    const subtotalEl = document.getElementById('subtotal');
+    const shippingEl = document.getElementById('shipping');
+    const totalEl = document.getElementById('total');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    const clearCartBtn = document.getElementById('clearCartBtn');
+
+    const modal = document.getElementById('modal');
+    const custName = document.getElementById('custName');
+    const custPhone = document.getElementById('custPhone');
+    const custAddress = document.getElementById('custAddress');
+    const placeOrderBtn = document.getElementById('placeOrderBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const orderMsg = document.getElementById('orderMsg');
+
+    // render products
+    function renderProducts(){
+      const q = (searchInput.value || '').trim().toLowerCase();
+      const cat = categorySelect.value;
+      const filtered = PRODUCTS.filter(p => {
+        if(cat && p.category !== cat) return false;
+        if(!q) return true;
+        return (p.title + ' ' + (p.desc || '')).toLowerCase().includes(q);
+      });
+      productsGrid.innerHTML = filtered.map(p => `
+        <div class="product" data-id="${p.id}">
+          <div class="media">
+            <img src="${p.image}" alt="${escapeHtml(p.title)}" onerror="this.style.opacity=.6;this.style.objectFit='contain'" />
+          </div>
+          <div class="meta">
+            <h3>${escapeHtml(p.title)}</h3>
+            <p>${escapeHtml(p.desc || '')}</p>
+            <div class="price-row">
+              <div>
+                <div class="price">${p.price} EGP</div>
+                ${p.oldPrice ? `<div class="old-price">${p.oldPrice} EGP</div>` : ''}
+              </div>
+              <div>
+                <button class="btn" data-action="add" data-id="${p.id}">أضف للعربة</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      // bind add buttons
+      productsGrid.querySelectorAll('button[data-action="add"]').forEach(btn=>{
+        btn.addEventListener('click', ()=> addToCart(btn.dataset.id));
+      });
+    }
+
+    // cart functions
+    function addToCart(productId){
+      const prod = PRODUCTS.find(p=>p.id===productId);
+      if(!prod) return;
+      const existing = cart.find(i=>i.id===productId);
+      if(existing) existing.qty += 1;
+      else cart.push({ id: productId, qty: 1, title: prod.title, price: prod.price, image: prod.image });
+      saveCart(); renderCart();
+      showToast('تمت الإضافة إلى العربة');
+    }
+
+    function updateQty(productId, delta){
+      const item = cart.find(i=>i.id===productId);
+      if(!item) return;
+      item.qty += delta;
+      if(item.qty <= 0) cart = cart.filter(i=>i.id!==productId);
+      saveCart(); renderCart();
+    }
+
+    function removeItem(productId){
+      cart = cart.filter(i=>i.id!==productId);
+      saveCart(); renderCart();
+    }
+
+    function clearCart(){
+      if(!confirm('هل تريد تفريغ العربة؟')) return;
+      cart = []; saveCart(); renderCart();
+    }
+
+    function saveCart(){
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    }
+
+    function calcTotals(){
+      const subtotal = cart.reduce((s,i)=> s + i.price * i.qty, 0);
+      const shipping = cart.length ? SHIPPING_COST : 0;
+      const total = subtotal + shipping;
+      return { subtotal, shipping, total };
+    }
+
+    function renderCart(){
+      if(cart.length === 0){
+        cartListEl.innerHTML = `<div style="color:var(--muted);padding:12px">العربة فارغة</div>`;
+      } else {
+        cartListEl.innerHTML = cart.map(item => `
+          <div class="cart-item" data-id="${item.id}">
+            <img src="${item.image}" alt="${escapeHtml(item.title)}" onerror="this.style.objectFit='contain';this.style.opacity=.7" />
+            <div style="flex:1">
+              <div style="font-weight:800">${escapeHtml(item.title)}</div>
+              <div style="color:var(--muted);font-size:13px">${item.price} EGP</div>
+            </div>
+            <div class="qty">
+              <button data-action="dec" data-id="${item.id}">−</button>
+              <div style="min-width:28px;text-align:center">${item.qty}</div>
+              <button data-action="inc" data-id="${item.id}">+</button>
+            </div>
+            <div style="width:10px"></div>
+            <button data-action="del" data-id="${item.id}" class="btn ghost">حذف</button>
+          </div>
+        `).join('');
+        // bind cart buttons
+        cartListEl.querySelectorAll('button[data-action]').forEach(btn=>{
+          const act = btn.dataset.action;
+          const id = btn.dataset.id;
+          btn.addEventListener('click', ()=>{
+            if(act === 'inc') updateQty(id, 1);
+            else if(act === 'dec') updateQty(id, -1);
+            else if(act === 'del') removeItem(id);
+          });
+        });
+      }
+      const totals = calcTotals();
+      subtotalEl.textContent = totals.subtotal + ' EGP';
+      shippingEl.textContent = (totals.shipping) + ' EGP';
+      totalEl.textContent = totals.total + ' EGP';
+    }
+
+    // checkout
+    checkoutBtn.addEventListener('click', ()=>{
+      if(cart.length === 0){ alert('العربة فارغة'); return; }
+      modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
+    });
+    closeModalBtn.addEventListener('click', ()=> {
+      modal.classList.remove('open'); modal.setAttribute('aria-hidden','true');
+      orderMsg.textContent = '';
+    });
+
+    placeOrderBtn.addEventListener('click', ()=>{
+      const name = custName.value.trim();
+      const phone = custPhone.value.trim();
+      const address = custAddress.value.trim();
+      if(!name || !phone || !address){ orderMsg.textContent = 'يرجى ملء جميع الحقول.'; return; }
+      // محاكاة إنشاء طلب
+      const totals = calcTotals();
+      const order = {
+        id: 'ORD' + Date.now(),
+        name, phone, address,
+        items: cart,
+        subtotal: totals.subtotal,
+        shipping: totals.shipping,
+        total: totals.total,
+        date: new Date().toLocaleString('ar-EG')
+      };
+      // هنا يمكن إرسال الطلب إلى خادم؛ حالياً نحفظه محليًا كمثال
+      const orders = JSON.parse(localStorage.getItem('arduino_orders_v1') || '[]');
+      orders.push(order);
+      localStorage.setItem('arduino_orders_v1', JSON.stringify(orders));
+      // تفريغ العربة
+      cart = []; saveCart(); renderCart();
+      orderMsg.style.color = 'var(--ok)';
+      orderMsg.textContent = 'تم إنشاء الطلب بنجاح. رقم الطلب: ' + order.id;
+      setTimeout(()=> {
+        modal.classList.remove('open'); modal.setAttribute('aria-hidden','true');
+        orderMsg.textContent = '';
+        custName.value=''; custPhone.value=''; custAddress.value='';
+      }, 1800);
+    });
+
+    // helpers
+    function escapeHtml(s){ return String(s || '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch])); }
+
+    function showToast(msg){
+      // small visual feedback using alert fallback
+      try{
+        const t = document.createElement('div');
+        t.textContent = msg;
+        t.style.position='fixed'; t.style.bottom='18px'; t.style.left='18px';
+        t.style.background='linear-gradient(90deg,var(--accent),var(--accent2))'; t.style.color='#022';
+        t.style.padding='10px 12px'; t.style.borderRadius='10px'; t.style.boxShadow='0 8px 20px rgba(0,0,0,.4)';
+        document.body.appendChild(t);
+        setTimeout(()=> t.remove(), 1400);
+      }catch(e){ alert(msg); }
+    }
+
+    // filters
+    clearFiltersBtn.addEventListener('click', ()=>{
+      searchInput.value=''; categorySelect.value=''; renderProducts();
+    });
+    searchInput.addEventListener('input', renderProducts);
+    categorySelect.addEventListener('change', renderProducts);
+
+    clearCartBtn.addEventListener('click', clearCart);
+
+    // initial render
+    renderProducts();
+    renderCart();
+
+    // persist cart on unload
+    window.addEventListener('beforeunload', saveCart);
   </script>
 </body>
 </html>
