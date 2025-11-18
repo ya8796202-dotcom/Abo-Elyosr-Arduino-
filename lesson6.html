@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>معرض صور أردوينو — مصحح وتفاعلي</title>
-  <meta name="description" content="معرض صور فوتوغرافية لأنواع أردوينو مع إمكانية إضافة صور من الجهاز أو عبر رابط، حفظ محلي، بحث، فلتر، وعرض كامل (lightbox)." />
+  <title>معرض صور أردوينو — صور من  + رفع المستخدم</title>
+  <meta name="description" content="صفحة HTML واحدة تعرض صور فوتوغرافية لأنواع أردوينو مأخوذة من Wikimedia Commons، مع إمكانية إضافة صور من جهازك أو عبر رابط، حفظ محلي، بحث، فلتر، وعرض كامل (lightbox)." />
   <style>
     :root{
       --bg:#07102a; --panel:#071428; --card:#0b1224; --accent:#1d4ed8; --accent2:#06b6d4;
       --text:#e6eef8; --muted:#93c5fd; --glass:rgba(255,255,255,0.03);
-      --radius:12px; --shadow:0 12px 30px rgba(2,6,23,.6);
+      --radius:12px; --shadow:0 14px 40px rgba(2,6,23,.6);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -75,8 +75,8 @@
   <header>
     <div class="logo" aria-hidden="true"></div>
     <div>
-      <h1>معرض صور أردوينو — مصحح</h1>
-      <p class="lead">كل الصور تظهر الآن. أضف صورًا من جهازك أو عبر رابط، احفظ محليًا، وابحث بسهولة.</p>
+      <h1>معرض صور أردوينو — من Wikimedia</h1>
+      <p class="lead">صور فوتوغرافية لأنواع أردوينو مأخوذة من Wikimedia Commons. أضف صورًا من جهازك أو عبر رابط، واحفظها محليًا.</p>
     </div>
   </header>
 
@@ -86,7 +86,7 @@
 
       <div class="controls" role="region" aria-label="أدوات">
         <div class="search">
-          <input id="search" class="input" placeholder="ابحث بعنوان أو وسم (مثال: Uno, ESP32, NeoPixel)..." />
+          <input id="search" class="input" placeholder="ابحث بعنوان أو وسم (مثال: Uno, ESP32, Nano)..." />
           <select id="filterLevel" class="select" aria-label="فلتر المستوى">
             <option value="">كل المستويات</option>
             <option value="beginner">مبتدئ</option>
@@ -105,7 +105,7 @@
         <div style="flex:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
           <input id="fileInput" type="file" accept="image/*" style="display:none" />
           <button id="chooseBtn" class="btn ghost">اختر صورة</button>
-          <input id="urlInput" class="input" placeholder="أو ألصق رابط صورة (URL)" />
+          <input id="urlInput" class="input" placeholder="أو ألصق رابط صورة (URL من Wikimedia أو أي مصدر)" />
           <input id="titleInput" class="input" placeholder="عنوان الصورة (اختياري)" style="width:220px" />
           <select id="levelInput" class="select" style="width:140px">
             <option value="">مستوى</option><option value="beginner">مبتدئ</option><option value="intermediate">متوسط</option><option value="advanced">متقدم</option>
@@ -137,23 +137,21 @@
 
   <script>
     // مفاتيح التخزين
-    const STORAGE_KEY = 'arduino_gallery_v4';
-    const DEFAULTS_KEY = 'arduino_gallery_defaults_v4';
+    const STORAGE_KEY = 'arduino_wikimedia_gallery_v1';
+    const DEFAULTS_KEY = 'arduino_wikimedia_defaults_v1';
 
-    // صور افتراضية (روابط موثوقة)
+    // صور افتراضية من Wikimedia Commons (روابط مباشرة)
     const defaultItems = [
       { id:'uno', title:'Arduino Uno R3', src:'https://upload.wikimedia.org/wikipedia/commons/3/38/Arduino_Uno_-_R3.jpg', level:'beginner', tags:['uno','arduino'] },
-      { id:'nano', title:'Arduino Nano', src:'https://upload.wikimedia.org/wikipedia/commons/6/6e/Arduino_Nano_v3.0.jpg', level:'beginner', tags:['nano','arduino'] },
+      { id:'nano', title:'Arduino Nano v3.0', src:'https://upload.wikimedia.org/wikipedia/commons/6/6e/Arduino_Nano_v3.0.jpg', level:'beginner', tags:['nano','arduino'] },
       { id:'mega', title:'Arduino Mega 2560', src:'https://upload.wikimedia.org/wikipedia/commons/3/3f/Arduino_Mega_2560.jpg', level:'advanced', tags:['mega','arduino'] },
       { id:'leonardo', title:'Arduino Leonardo', src:'https://upload.wikimedia.org/wikipedia/commons/4/4d/Arduino_Leonardo.jpg', level:'intermediate', tags:['leonardo','arduino'] },
       { id:'due', title:'Arduino Due', src:'https://upload.wikimedia.org/wikipedia/commons/2/28/Arduino_Due.jpg', level:'advanced', tags:['due','arduino'] },
       { id:'promini', title:'Arduino Pro Mini', src:'https://upload.wikimedia.org/wikipedia/commons/0/0c/Arduino_Pro_Mini.jpg', level:'intermediate', tags:['promini','arduino'] },
-      { id:'mkrzero', title:'Arduino MKR Zero', src:'https://store.arduino.cc/cdn/shop/products/ABX00012_01.front_1024x1024.jpg', level:'intermediate', tags:['mkr','iot'] },
-      { id:'nanoevery', title:'Arduino Nano Every', src:'https://store.arduino.cc/cdn/shop/products/ABX00033_01.front_1024x1024.jpg', level:'intermediate', tags:['nanoevery'] },
+      { id:'micro', title:'Arduino Micro', src:'https://upload.wikimedia.org/wikipedia/commons/1/1b/Arduino_Micro.jpg', level:'intermediate', tags:['micro','arduino'] },
       { id:'esp8266', title:'ESP8266 NodeMCU', src:'https://upload.wikimedia.org/wikipedia/commons/3/3d/NodeMCU_DEVKIT_v1.0.jpg', level:'intermediate', tags:['esp8266','wifi'] },
       { id:'esp32', title:'ESP32 DevKitC', src:'https://upload.wikimedia.org/wikipedia/commons/9/92/ESP32-DevKitC.jpg', level:'intermediate', tags:['esp32','wifi','ble'] },
-      { id:'rp2040', title:'Arduino Nano RP2040', src:'https://upload.wikimedia.org/wikipedia/commons/6/6b/Arduino_Nano_RP2040_Connect.jpg', level:'advanced', tags:['rp2040','nano'] },
-      { id:'micro', title:'Arduino Micro', src:'https://upload.wikimedia.org/wikipedia/commons/1/1b/Arduino_Micro.jpg', level:'intermediate', tags:['micro','hid'] }
+      { id:'rp2040', title:'Arduino Nano RP2040 Connect', src:'https://upload.wikimedia.org/wikipedia/commons/6/6b/Arduino_Nano_RP2040_Connect.jpg', level:'advanced', tags:['rp2040','nano'] }
     ];
 
     // حفظ النسخة الافتراضية إن لم تكن محفوظة
@@ -236,7 +234,6 @@
         img.loading = 'lazy';
         img.alt = it.title || '';
         img.src = it.src;
-        // fallback placeholder on error
         img.addEventListener('error', ()=> {
           img.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="600" height="360"><rect width="100%" height="100%" fill="#071428"/><text x="50%" y="50%" fill="#93c5fd" font-size="18" font-family="Arial" dominant-baseline="middle" text-anchor="middle">فشل تحميل الصورة</text></svg>`);
         });
@@ -419,22 +416,11 @@
     // اختصار لوحة مفاتيح: Ctrl+K للبحث
     document.addEventListener('keydown', (e)=> { if(e.ctrlKey && e.key.toLowerCase() === 'k'){ e.preventDefault(); searchEl.focus(); } });
 
-    // كشف أخطاء التحميل في الكونسول (اختياري)
-    window.addEventListener('error', (ev)=> {
-      // لا نعرض للمستخدم، لكن يمكن تتبع الأخطاء هنا إن لزم
-      // console.log('Error event', ev);
-    });
-
-    // كشف التغييرات في localStorage من تبويبات أخرى
-    window.addEventListener('storage', (e)=> {
-      if(e.key === STORAGE_KEY) {
-        items = loadGallery();
-        render();
-      }
-    });
-
-    // كشف وتحميل الصورة الافتراضية في حال لم تُحفظ مسبقًا
+    // حفظ المعرض
     function saveGallery(items){ localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); }
+
+    // expose for debugging
+    window.__arduinoGallery = { render, items, saveGallery };
   </script>
 </body>
 </html>
