@@ -1,33 +1,432 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>تعلم برمجة الأردوينو - الدرس 10</title>
-  <meta name="description" content="مشروع صغير باستخدام الأردوينو.">
-  <meta name="keywords" content="Arduino, تعلم الأردوينو, مشروع, تطبيق عملي">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>معرض المشاريع — أردوينو (ملف واحد)</title>
+  <meta name="description" content="ملف HTML واحد لعرض مشاريع أردوينو جاهزة: كود، وصف، قطع مطلوبة، مستويات، وسوم، تشغيل في محاكي Wokwi." />
+  <style>
+    :root{
+      --bg:#0f172a; --panel:#0b1224; --card:#071428; --accent:#1d4ed8; --accent2:#06b6d4;
+      --text:#e5e7eb; --muted:#93c5fd; --ok:#22c55e; --warn:#f59e0b;
+      --radius:12px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:system-ui,"Segoe UI",Tahoma,Arial; line-height:1.7;
+      background: radial-gradient(900px 480px at 70% -10%, #142045 0%, var(--bg) 60%), var(--bg);
+      color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      padding-bottom:72px;
+    }
+    header{
+      position:sticky; top:0; z-index:50; background:rgba(6,10,20,.78); backdrop-filter:blur(8px);
+      border-bottom:1px solid rgba(255,255,255,.06); padding:12px 16px;
+    }
+    .brand{display:flex; gap:12px; align-items:center; max-width:1200px; margin:0 auto}
+    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 8px 30px rgba(29,78,216,.18)}
+    .title{margin:0}
+    .subtitle{margin:2px 0 0; font-size:13px; opacity:.85}
+
+    .container{max-width:1200px;margin:18px auto;padding:0 16px}
+    .filters{display:grid; grid-template-columns: 1fr 220px 220px; gap:10px; align-items:end; margin-bottom:16px}
+    .filters input, .filters select{
+      padding:10px 12px; border-radius:10px; border:1px solid #0f1b38; background:#071428; color:var(--text); outline:none
+    }
+    .filters .actions{display:flex; gap:8px; align-items:center}
+    .btn{border:none; padding:10px 12px; border-radius:10px; background:var(--accent); color:#fff; font-weight:700; cursor:pointer}
+    .btn.ghost{background:transparent; border:1px solid rgba(255,255,255,.06)}
+    .btn.secondary{background:var(--accent2); color:#022}
+
+    .grid{display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:14px}
+    @media (max-width:980px){ .grid{grid-template-columns: repeat(2, minmax(0,1fr))} }
+    @media (max-width:640px){ .grid{grid-template-columns: 1fr} }
+
+    .card{
+      background:linear-gradient(180deg,#071428,#07102a); border:1px solid #0f1b38; border-radius:12px; overflow:hidden; display:flex; flex-direction:column
+    }
+    .card head, .card header{padding:10px 12px; display:flex; justify-content:space-between; align-items:center; background:#071428; border-bottom:1px solid #0f1b38}
+    .card .title{font-weight:800; color:#a5b4fc}
+    .meta{display:flex; gap:8px; align-items:center; color:#93c5fd; font-size:13px}
+    .badge{background:#18264a;color:#9ec1ff;padding:6px 10px;border-radius:999px;font-size:12px}
+    .tags{display:flex; gap:6px; flex-wrap:wrap; padding:10px 12px}
+    .tag{background:rgba(255,255,255,.06); color:#cbd5e1; font-size:12px; padding:4px 8px; border-radius:999px}
+    .body{padding:12px; display:grid; gap:10px}
+    .info{font-size:14px}
+    .list{display:grid; gap:6px}
+    .list .item{background:rgba(255,255,255,.03); padding:8px 10px; border-radius:8px}
+    .code-box{border:1px solid #0f1b38; border-radius:10px; overflow:hidden}
+    .code-head{display:flex; justify-content:space-between; align-items:center; padding:8px 10px; background:linear-gradient(180deg,#071a3a,#071428); border-bottom:1px solid #0f1b38}
+    .code-head .meta{font-size:13px; color:#93c5fd}
+    .code-body{padding:10px; max-height:320px; overflow:auto}
+    pre{margin:0; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace; font-size:13px; color:#d7e3ff; white-space:pre; line-height:1.45}
+    .lined code{display:block}
+    .lined code span{display:block; white-space:pre}
+    .lined code span::before{counter-increment:line; content:counter(line); display:inline-block; width:3ch; margin-inline-end:10px; color:#7ea2ff; opacity:.8}
+    .actions{display:flex; gap:8px; padding:10px 12px; border-top:1px solid #0f1b38}
+    .tip{font-size:13px; color:#c7d2fe}
+
+    /* Modal Wokwi */
+    .iframe-modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.6); z-index:60}
+    .iframe-modal .panel{width:92%; max-width:980px; height:82%; background:#000; border-radius:10px; overflow:hidden; border:1px solid #0f1b38}
+    .iframe-modal .panel header{display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:#071428; color:var(--text)}
+    .iframe-modal iframe{width:100%; height:calc(100% - 44px); border:0}
+
+    .empty{padding:18px; text-align:center; color:#93c5fd; border:1px dashed #0f1b38; border-radius:12px}
+  </style>
 </head>
 <body>
-  <div class="yasser-logo">
-  🛠️ <strong>ياسر أحمد حمدي</strong>
-</div>
-  <h1>📘 الدرس 10: مشروع صغير</h1>
-  <p>في هذا الدرس هنطبق اللي اتعلمناه في مشروع بسيط يجمع الحساسات والمحركات.</p>
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div style="flex:1">
+        <h1 class="title">معرض المشاريع — أردوينو</h1>
+        <p class="subtitle">مشاريع عملية جاهزة مع كود وقطع مطلوبة — فلترة حسب المستوى والوسوم وتشغيل مباشر في Wokwi</p>
+      </div>
+    </div>
+  </header>
 
-  <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="container">
+    <section class="filters">
+      <input id="searchInput" placeholder="ابحث بالعنوان أو الكود أو الوسوم (LED, Motor, I2C, ESP8266)..." />
+      <select id="levelFilter">
+        <option value="">كل المستويات</option>
+        <option value="beginner">مبتدئ (1–3)</option>
+        <option value="intermediate">متوسط (4–6)</option>
+        <option value="advanced">متقدم (7–9)</option>
+        <option value="pro">محترف (10+)</option>
+      </select>
+      <div class="actions">
+        <button class="btn ghost" id="clearFilters">مسح</button>
+        <button class="btn secondary" id="exportJSON">تصدير JSON</button>
+      </div>
+    </section>
 
-  <div class="nav-buttons">
-    <button onclick="navigateWithEffect('lesson9.html')">⬅️ السابق</button>
-    <button onclick="navigateWithEffect('index.html')">🏠 الرئيسية</button>
+    <section class="grid" id="projectsGrid"></section>
+    <div class="empty" id="emptyMsg" style="display:none">لا توجد نتائج مطابقة — جرّب كلمات أخرى أو أزل الفلاتر</div>
   </div>
 
-  <button onclick="navigateWithEffect('simulator.html')">⚙️ المحاكي</button>
+  <!-- Modal for embedded Wokwi simulator -->
+  <div class="iframe-modal" id="iframeModal" role="dialog" aria-hidden="true">
+    <div class="panel" role="document">
+      <header>
+        <div id="iframeTitle">محاكي Wokwi</div>
+        <div>
+          <button class="btn ghost" id="closeIframe">إغلاق</button>
+        </div>
+      </header>
+      <iframe id="simFrame" title="Wokwi Simulator"></iframe>
+    </div>
+  </div>
 
   <script>
-    const lessonNumber = 10, totalLessons = 10;
-    document.getElementById("progressBar").style.width = (lessonNumber/totalLessons*100)+"%";
-    function navigateWithEffect(url){ window.location.href = url; }
+    // بيانات المشاريع — 16 مشروع متدرّج
+    const projects = [
+      {
+        id:'P1', level:1, levelGroup:'beginner',
+        title:'وميض LED كل ثانية',
+        tags:['LED','Basics','delay'],
+        parts:['Arduino Uno','LED مدمج (Pin 13)'],
+        code:`void setup(){ pinMode(13, OUTPUT); }
+void loop(){ digitalWrite(13, HIGH); delay(1000); digitalWrite(13, LOW); delay(1000); }`,
+        tip:'مخرج 13 يحتوي LED مدمج على أغلب لوحات Uno.'
+      },
+      {
+        id:'P2', level:2, levelGroup:'beginner',
+        title:'زر يتحكم في LED (INPUT_PULLUP)',
+        tags:['Button','LED','Input'],
+        parts:['Arduino Uno','زر','أسلاك'],
+        code:`const int BTN=2, LED=13;
+void setup(){ pinMode(BTN, INPUT_PULLUP); pinMode(LED, OUTPUT); }
+void loop(){ digitalWrite(LED, digitalRead(BTN)==LOW ? HIGH : LOW); }`,
+        tip:'INPUT_PULLUP يجعل الضغط = LOW (الزر للأرضي).'
+      },
+      {
+        id:'P3', level:3, levelGroup:'beginner',
+        title:'قراءة حرارة LM35 وطباعة بالسيريال',
+        tags:['Sensors','Analog','Serial'],
+        parts:['Arduino Uno','LM35','أسلاك'],
+        code:`const int AIN=A0;
+void setup(){ Serial.begin(9600); }
+void loop(){ int raw=analogRead(AIN); float v=(raw*5.0)/1023.0; float t=v*100.0; Serial.println(t,1); delay(500); }`,
+        tip:'تحقق من مرجع 5V واستقرار التغذية.'
+      },
+      {
+        id:'P4', level:4, levelGroup:'intermediate',
+        title:'تحكم موتور DC عبر L298N (PWM)',
+        tags:['Motor','PWM','Driver'],
+        parts:['Arduino Uno','L298N','موتور DC','مزود طاقة منفصل'],
+        code:`const int IN1=8, IN2=9, ENA=10;
+void setup(){ pinMode(IN1,OUTPUT); pinMode(IN2,OUTPUT); pinMode(ENA,OUTPUT); }
+void loop(){ digitalWrite(IN1,HIGH); digitalWrite(IN2,LOW); analogWrite(ENA,180); delay(1500); analogWrite(ENA,0); delay(600); }`,
+        tip:'شارك الأرضي مع المزود المنفصل ولا تسحب تيار الموتور من الـ 5V.'
+      },
+      {
+        id:'P5', level:5, levelGroup:'intermediate',
+        title:'عرض على شاشة LCD 16x2',
+        tags:['Display','LCD','Text'],
+        parts:['Arduino Uno','LCD 16x2','مقاومة 10k للكونتراست'],
+        code:`#include <LiquidCrystal.h>
+LiquidCrystal lcd(12,11,5,4,3,2);
+void setup(){ lcd.begin(16,2); lcd.print("Hello!"); }
+void loop(){ lcd.setCursor(0,1); lcd.print(millis()/1000); delay(250); }`,
+        tip:'اضبط V0 بمقاومة لتوضيح الشاشة.'
+      },
+      {
+        id:'P6', level:6, levelGroup:'intermediate',
+        title:'تحريك سيرفو تدريجيًا',
+        tags:['Servo','PWM','Motion'],
+        parts:['Arduino Uno','Servo SG90','مزود 5V مستقر'],
+        code:`#include <Servo.h>
+Servo s; void setup(){ s.attach(9); }
+void loop(){ for(int a=0;a<=180;a+=4){ s.write(a); delay(12);} for(int a=180;a>=0;a-=4){ s.write(a); delay(12);} }`,
+        tip:'غذّي السيرفو من مزود منفصل إن لزم.'
+      },
+      {
+        id:'P7', level:7, levelGroup:'advanced',
+        title:'أوامر Serial للتحكم في LED',
+        tags:['Serial','Command','Parser'],
+        parts:['Arduino Uno','USB'],
+        code:`void setup(){ Serial.begin(9600); pinMode(13,OUTPUT); }
+void loop(){ if(Serial.available()){ String c=Serial.readString(); c.trim(); digitalWrite(13, c=="ON"?HIGH:LOW); } }`,
+        tip:'جرّب عبر Serial Monitor في IDE.'
+      },
+      {
+        id:'P8', level:8, levelGroup:'advanced',
+        title:'I2C قراءة BH1750 (شدة الإضاءة)',
+        tags:['I2C','Sensors','Lux'],
+        parts:['Arduino Uno','BH1750','أسلاك I2C'],
+        code:`#include <Wire.h>
+#include <BH1750.h>
+BH1750 lightMeter;
+void setup(){ Serial.begin(9600); Wire.begin(); lightMeter.begin(); }
+void loop(){ uint16_t lux=lightMeter.readLightLevel(); Serial.println(lux); delay(800); }`,
+        tip:'افحص العنوان (0x23) وتأكد من SDA/SCL.'
+      },
+      {
+        id:'P9', level:9, levelGroup:'advanced',
+        title:'SPI مثال نقل بايت (CS=10)',
+        tags:['SPI','Bus','Transfer'],
+        parts:['Arduino Uno','جهاز SPI خارجي','أسلاك'],
+        code:`#include <SPI.h>
+const int CS=10;
+void setup(){ Serial.begin(9600); pinMode(CS,OUTPUT); digitalWrite(CS,HIGH); SPI.begin(); }
+void loop(){ digitalWrite(CS,LOW); byte r=SPI.transfer(0xA5); digitalWrite(CS,HIGH); Serial.println(r,HEX); delay(500); }`,
+        tip:'وصل MOSI/MISO/SCK/CS حسب الجهاز.'
+      },
+      {
+        id:'P10', level:10, levelGroup:'pro',
+        title:'عربة صغيرة بتحكم اتجاه وسرعة عبر Serial',
+        tags:['Motor','Robot','PWM','Serial'],
+        parts:['Arduino Uno','L298N×2 أو جسر H','موتورين','مزود طاقة منفصل'],
+        code:`const int IN1L=8, IN2L=9, ENAL=10;
+const int IN1R=6, IN2R=7, ENAR=5;
+void setup(){ Serial.begin(9600); pinMode(IN1L,OUTPUT); pinMode(IN2L,OUTPUT); pinMode(ENAL,OUTPUT); pinMode(IN1R,OUTPUT); pinMode(IN2R,OUTPUT); pinMode(ENAR,OUTPUT); }
+void drive(int l,int r){ analogWrite(ENAL,abs(l)); analogWrite(ENAR,abs(r)); digitalWrite(IN1L, l>=0?HIGH:LOW); digitalWrite(IN2L, l>=0?LOW:HIGH); digitalWrite(IN1R, r>=0?HIGH:LOW); digitalWrite(IN2R, r>=0?LOW:HIGH); }
+void loop(){ if(Serial.available()){ String cmd=Serial.readString(); cmd.trim(); int s=160; if(cmd.startsWith("SPD")) s=constrain(cmd.substring(3).toInt(),0,255);
+  if(cmd=="F") drive(s,s); else if(cmd=="B") drive(-s,-s); else if(cmd=="L") drive(-s,s); else if(cmd=="R") drive(s,-s); else if(cmd=="S") drive(0,0); } }`,
+        tip:'اختبر الأوامر: F/B/L/R/S وSPD200 لضبط السرعة.'
+      },
+      {
+        id:'P11', level:11, levelGroup:'pro',
+        title:'ESP8266 اتصال WiFi وعرض IP',
+        tags:['ESP8266','WiFi','Network'],
+        parts:['ESP8266 NodeMCU','WiFi'],
+        code:`#include <ESP8266WiFi.h>
+void setup(){ Serial.begin(115200); WiFi.begin("SSID","PASS"); while(WiFi.status()!=WL_CONNECTED){ delay(300); } Serial.println(WiFi.localIP()); }
+void loop(){}`,
+        tip:'غيّر SSID/PASS واستخدم لوحة ESP8266 في IDE.'
+      },
+      {
+        id:'P12', level:12, levelGroup:'pro',
+        title:'MQTT نشر واشتراك (ESP8266)',
+        tags:['MQTT','ESP8266','Network'],
+        parts:['ESP8266','Broker MQTT'],
+        code:`#include <ESP8266WiFi.h>
+#include <PubSubClient.h>
+WiFiClient esp; PubSubClient client(esp);
+void setup(){ Serial.begin(115200); WiFi.begin("SSID","PASS"); while(WiFi.status()!=WL_CONNECTED) delay(200); client.setServer("test.mosquitto.org",1883); }
+void loop(){ if(!client.connected()){ client.connect("esp"); client.subscribe("yasser/test"); } client.loop(); client.publish("yasser/test","hello"); delay(2000); }`,
+        tip:'جرّب test.mosquitto.org كبروكر عام.'
+      },
+      {
+        id:'P13', level:13, levelGroup:'pro',
+        title:'NRF24L01 إرسال نص',
+        tags:['RF','NRF24L01','Wireless'],
+        parts:['Arduino','NRF24L01','أسلاك'],
+        code:`#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+RF24 radio(9,10); const byte addr[6]="00001";
+void setup(){ Serial.begin(9600); radio.begin(); radio.openWritingPipe(addr); radio.setPALevel(RF24_PA_LOW); }
+void loop(){ const char txt[]="Hello"; radio.write(&txt,sizeof(txt)); Serial.println("Sent"); delay(1000); }`,
+        tip:'ثبّت التغذية وشارك الأرضي بين الوحدات.'
+      },
+      {
+        id:'P14', level:14, levelGroup:'pro',
+        title:'OLED SSD1306 عرض نص',
+        tags:['Display','OLED','I2C'],
+        parts:['Arduino','SSD1306 128x64','أسلاك I2C'],
+        code:`#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+Adafruit_SSD1306 display(128,64,&Wire);
+void setup(){ display.begin(SSD1306_SWITCHCAPVCC,0x3C); display.clearDisplay(); display.setTextSize(1); display.setTextColor(SSD1306_WHITE); display.setCursor(0,0); display.println("Hello OLED"); display.display(); }
+void loop(){}`,
+        tip:'افحص عنوان I2C: غالبًا 0x3C.'
+      },
+      {
+        id:'P15', level:15, levelGroup:'pro',
+        title:'HC-SR04 قياس المسافة',
+        tags:['Ultrasonic','Sensors','Distance'],
+        parts:['Arduino','HC-SR04','أسلاك'],
+        code:`const int trig=9, echo=10;
+void setup(){ Serial.begin(9600); pinMode(trig,OUTPUT); pinMode(echo,INPUT); }
+void loop(){ digitalWrite(trig,LOW); delayMicroseconds(2); digitalWrite(trig,HIGH); delayMicroseconds(10); digitalWrite(trig,LOW);
+  long d=pulseIn(echo,HIGH); float cm=d*0.034/2; Serial.println(cm); delay(300); }`,
+        tip:'تجنب الأسطح الماصة للصوت أثناء القياس.'
+      },
+      {
+        id:'P16', level:16, levelGroup:'pro',
+        title:'NeoPixel شريط 8 LEDs تأثير بسيط',
+        tags:['NeoPixel','LED','Effects'],
+        parts:['Arduino','WS2812 (8)','مزود 5V مستقر'],
+        code:`#include <Adafruit_NeoPixel.h>
+#define PIN 6
+#define NUM 8
+Adafruit_NeoPixel strip(NUM,PIN,NEO_GRB+NEO_KHZ800);
+void setup(){ strip.begin(); strip.show(); }
+void loop(){ for(int i=0;i<NUM;i++){ strip.setPixelColor(i, strip.Color(255,0,0)); strip.show(); delay(150); } for(int i=0;i<NUM;i++){ strip.setPixelColor(i,0); } strip.show(); delay(300); }`,
+        tip:'مزود طاقة منفصل عند عدد كبير من LEDs.'
+      }
+    ];
+
+    // عناصر DOM
+    const grid = document.getElementById('projectsGrid');
+    const searchInput = document.getElementById('searchInput');
+    const levelFilter = document.getElementById('levelFilter');
+    const clearFilters = document.getElementById('clearFilters');
+    const exportJSON = document.getElementById('exportJSON');
+    const emptyMsg = document.getElementById('emptyMsg');
+
+    // Modal Wokwi
+    const iframeModal = document.getElementById('iframeModal');
+    const simFrame = document.getElementById('simFrame');
+    const iframeTitle = document.getElementById('iframeTitle');
+    const closeIframe = document.getElementById('closeIframe');
+
+    function openSimulator(title, code){
+      iframeTitle.textContent = `${title} — المحاكي`;
+      const url = 'https://wokwi.com/arduino/new?sketch=' + encodeURIComponent(code);
+      simFrame.src = url;
+      iframeModal.style.display = 'flex';
+      iframeModal.setAttribute('aria-hidden','false');
+    }
+    closeIframe.addEventListener('click', ()=>{
+      simFrame.src = 'about:blank';
+      iframeModal.style.display = 'none';
+      iframeModal.setAttribute('aria-hidden','true');
+    });
+    iframeModal.addEventListener('click', (e)=>{ if(e.target === iframeModal) closeIframe.click(); });
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && iframeModal.style.display==='flex') closeIframe.click(); });
+
+    // بناء بطاقة مشروع
+    function escapeHtml(str){ return str.replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch])); }
+    function makeCard(p){
+      const card = document.createElement('article');
+      card.className = 'card';
+
+      const head = document.createElement('header');
+      head.innerHTML = `
+        <div class="title">${p.title}</div>
+        <div class="meta"><span class="badge">المستوى ${p.level}</span><span>${p.tags.join(' • ')}</span></div>
+      `;
+
+      const tags = document.createElement('div'); tags.className = 'tags';
+      p.tags.forEach(t=>{ const el=document.createElement('span'); el.className='tag'; el.textContent=t; tags.appendChild(el); });
+
+      const body = document.createElement('div'); body.className = 'body';
+      const info = document.createElement('div'); info.className='info'; info.textContent = 'القطع المطلوبة:';
+      const list = document.createElement('div'); list.className='list';
+      p.parts.forEach(it=>{ const li=document.createElement('div'); li.className='item'; li.textContent=it; list.appendChild(li); });
+
+      const codeBox = document.createElement('div'); codeBox.className = 'code-box lined';
+      const codeHead = document.createElement('div'); codeHead.className = 'code-head';
+      codeHead.innerHTML = `<div class="meta">كود المشروع</div><div class="meta">نسخ | محاكاة</div>`;
+      const codeBody = document.createElement('div'); codeBody.className = 'code-body';
+      const pre = document.createElement('pre'); const codeEl = document.createElement('code');
+      const numbered = p.code.split('\n').map(l=>`<span>${escapeHtml(l)}</span>`).join('\n');
+      codeEl.innerHTML = numbered; pre.appendChild(codeEl); codeBody.appendChild(pre);
+      codeBox.appendChild(codeHead); codeBox.appendChild(codeBody);
+
+      const tip = document.createElement('div'); tip.className = 'tip'; tip.textContent = 'نصيحة: ' + (p.tip || 'اختبر الاتصالات والباورات قبل التشغيل.');
+
+      const actions = document.createElement('div'); actions.className = 'actions';
+      const copyBtn = document.createElement('button'); copyBtn.className='btn'; copyBtn.textContent='نسخ الكود';
+      const runBtn = document.createElement('button'); runBtn.className='btn secondary'; runBtn.textContent='تشغيل في المحاكي';
+      actions.appendChild(copyBtn); actions.appendChild(runBtn);
+
+      copyBtn.addEventListener('click', async ()=>{
+        try{
+          await navigator.clipboard.writeText(p.code);
+          const old = copyBtn.textContent; copyBtn.textContent = 'تم النسخ ✅';
+          setTimeout(()=> copyBtn.textContent = old, 1200);
+        }catch(e){ alert('فشل النسخ — انسخ يدويًا من الكود.'); }
+      });
+      runBtn.addEventListener('click', ()=> openSimulator(p.title, p.code));
+
+      // تركيب البطاقة
+      card.appendChild(head);
+      card.appendChild(tags);
+      body.appendChild(info);
+      body.appendChild(list);
+      body.appendChild(codeBox);
+      body.appendChild(tip);
+      card.appendChild(body);
+      card.appendChild(actions);
+
+      return card;
+    }
+
+    function applyFilters(){
+      const q = searchInput.value.trim().toLowerCase();
+      const level = levelFilter.value;
+      const filtered = projects.filter(p=>{
+        const text = (p.title + ' ' + p.tags.join(' ') + ' ' + p.code).toLowerCase();
+        const matchesText = !q || text.includes(q);
+        const matchesLevel = !level || p.levelGroup === level;
+        return matchesText && matchesLevel;
+      });
+      grid.innerHTML = '';
+      if(filtered.length === 0){
+        emptyMsg.style.display = 'block';
+      }else{
+        emptyMsg.style.display = 'none';
+        filtered.forEach(p=> grid.appendChild(makeCard(p)));
+      }
+    }
+
+    // أحداث الفلاتر
+    searchInput.addEventListener('input', applyFilters);
+    levelFilter.addEventListener('change', applyFilters);
+    document.getElementById('clearFilters').addEventListener('click', ()=>{
+      searchInput.value = '';
+      levelFilter.value = '';
+      applyFilters();
+    });
+
+    // تصدير JSON للمشاريع
+    document.getElementById('exportJSON').addEventListener('click', ()=>{
+      const data = JSON.stringify(projects, null, 2);
+      const w = window.open('', '_blank');
+      w.document.body.style.background = '#071428';
+      w.document.body.style.color = '#d7e3ff';
+      const pre = w.document.createElement('pre'); pre.textContent = data; pre.style.whiteSpace='pre-wrap'; pre.style.padding='12px';
+      w.document.body.appendChild(pre);
+    });
+
+    // بدء العرض
+    projects.forEach(p=> grid.appendChild(makeCard(p)));
   </script>
 </body>
 </html>
