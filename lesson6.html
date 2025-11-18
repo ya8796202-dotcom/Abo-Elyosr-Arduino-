@@ -89,3 +89,96 @@
   </main>
 </body>
 </html>
+
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>معرض صور أردوينو</title>
+  <style>
+    body{margin:0;font-family:system-ui,"Noto Naskh Arabic",sans-serif;background:#0b1224;color:#e6eef8;padding:20px}
+    header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,#1d4ed8,#06b6d4)}
+    h1{margin:0;font-size:22px}
+    p{margin:4px 0 0;color:#93c5fd;font-size:14px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+    .card{background:#071428;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+    .card img{width:100%;height:auto;display:block}
+    .card h3{margin:10px;font-size:16px;color:#a5b4fc}
+    .card p{margin:0 10px 10px;font-size:13px;color:#cbd5e1}
+    .controls{margin-bottom:20px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    input,button{padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.08)}
+    input{background:#071428;color:#e6eef8}
+    button{cursor:pointer;background:linear-gradient(90deg,#1d4ed8,#06b6d4);color:#022;font-weight:700;border:none}
+    button.ghost{background:transparent;color:#e6eef8;border:1px solid rgba(255,255,255,.08)}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"></div>
+    <div>
+      <h1>معرض صور أردوينو</h1>
+      <p>صور فوتوغرافية من مصادر موثوقة + إمكانية إضافة صور من جهازك</p>
+    </div>
+  </header>
+
+  <div class="controls">
+    <input type="file" id="fileInput" accept="image/*" />
+    <input type="text" id="titleInput" placeholder="عنوان الصورة" />
+    <button id="addBtn">أضف الصورة</button>
+  </div>
+
+  <main class="grid" id="gallery">
+    <!-- صور افتراضية -->
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/3/38/Arduino_Uno_-_R3.jpg" alt="Arduino Uno R3" />
+      <h3>Arduino Uno R3</h3>
+      <p>اللوحة الأكثر شيوعًا للمبتدئين.</p>
+    </div>
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Arduino_Nano_v3.0.jpg" alt="Arduino Nano" />
+      <h3>Arduino Nano</h3>
+      <p>لوحة صغيرة مناسبة للمشاريع المدمجة.</p>
+    </div>
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Arduino_Mega_2560.jpg" alt="Arduino Mega 2560" />
+      <h3>Arduino Mega 2560</h3>
+      <p>لوحة بعدد كبير من المداخل والمخارج.</p>
+    </div>
+  </main>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const titleInput = document.getElementById('titleInput');
+    const addBtn = document.getElementById('addBtn');
+    const gallery = document.getElementById('gallery');
+
+    addBtn.addEventListener('click', ()=>{
+      const file = fileInput.files[0];
+      if(!file){ alert('اختر صورة أولاً'); return; }
+      const reader = new FileReader();
+      reader.onload = function(e){
+        const card = document.createElement('div');
+        card.className = 'card';
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.alt = titleInput.value || 'صورة مضافة';
+        const h3 = document.createElement('h3');
+        h3.textContent = titleInput.value || 'صورة مضافة';
+        const p = document.createElement('p');
+        p.textContent = 'صورة من المستخدم';
+        card.appendChild(img);
+        card.appendChild(h3);
+        card.appendChild(p);
+        gallery.prepend(card);
+        // reset
+        fileInput.value = '';
+        titleInput.value = '';
+      };
+      reader.readAsDataURL(file);
+    });
+  </script>
+</body>
+</html>
