@@ -1,63 +1,461 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>تعلم برمجة الأردوينو - الدرس 1</title>
-  <meta name="description" content="شرح الدرس الأول في برمجة الأردوينو خطوة بخطوة.">
-  <meta name="keywords" content="Arduino, تعلم الأردوينو, برمجة الأردوينو, مشاريع إلكترونية">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>منصة تفاعلية لتعلم أردوينو — 10 مستويات</title>
+  <meta name="description" content="ملف واحد: دروس أردوينو تفاعلية، محرر كود، امتحانات، نقاط وشارات. جاهز للرفع على GitHub." />
+  <!--
+    تعليمات سريعة للرفع على GitHub:
+    1. احفظ هذا الملف باسم index.html.
+    2. أنشئ مستودع جديد على GitHub وادفع الملف.
+    3. فعّل GitHub Pages من إعدادات المستودع لعرض الصفحة.
+  -->
+  <style>
+    :root{
+      --bg:#0f172a; --panel:#0b1224; --panel2:#111827; --me:#1d4ed8; --them:#374151;
+      --text:#e5e7eb; --accent:#60a5fa; --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444; --radius:12px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:system-ui,"Segoe UI",Tahoma,Arial; background:
+      radial-gradient(900px 480px at 70% -10%, #142045 0%, var(--bg) 60%), var(--bg);
+      color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    }
+    header{position:sticky; top:0; z-index:20; background:rgba(8,12,24,.75); backdrop-filter:blur(8px); border-bottom:1px solid #1f2937; padding:12px 16px}
+    .brand{display:flex; gap:12px; align-items:center}
+    .logo{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--me),#1e40af);box-shadow:0 8px 30px rgba(29,78,216,.25)}
+    .title{margin:0;font-weight:800}
+    .subtitle{margin:2px 0 0;font-size:13px;opacity:.85}
+    .controls{margin-top:10px;display:flex;gap:8px;align-items:center}
+    .btn{border:none;padding:8px 12px;border-radius:10px;background:var(--me);color:#fff;font-weight:700;cursor:pointer}
+    .btn.ghost{background:transparent;border:1px solid #1f2937}
+    .btn.warn{background:var(--warn)}
+    .hud{display:flex;gap:10px;margin-top:10px;align-items:center}
+    .stat{background:#0b152e;padding:6px 10px;border-radius:10px;border:1px solid #1f2937;font-size:13px}
+    .progress{height:8px;background:#0f172a;border-radius:999px;margin-top:8px;overflow:hidden;border:1px solid #1f2937}
+    .progress > span{display:block;height:100%;background:linear-gradient(90deg,#3b82f6,#06b6d4);width:0%}
+
+    main.chat{max-width:980px;margin:12px auto;padding:18px 16px 120px;display:grid;gap:14px}
+    .msg{width:fit-content;max-width:min(92%,760px);padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.04);box-shadow:0 12px 30px rgba(0,0,0,.35);background:var(--panel);opacity:0;transform:translateY(14px) scale(.985);filter:blur(4px);transition:opacity .42s ease,transform .42s cubic-bezier(.2,.7,.2,1),filter .42s ease;will-change:opacity,transform,filter}
+    .msg.in-view{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
+    .from-me{margin-inline-start:auto;background:linear-gradient(180deg,var(--me),#1e40af);color:#fff;border-top-left-radius:10px;border-top-right-radius:4px}
+    .from-them{margin-inline-end:auto;background:linear-gradient(180deg,var(--them),#1f2937);color:var(--text);border-top-left-radius:4px;border-top-right-radius:10px}
+
+    .lesson{border-radius:12px;overflow:hidden;border:1px solid #1f2b48;background:linear-gradient(180deg,#07102a,#071428)}
+    .lesson-head{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:linear-gradient(180deg,#071428,#07102a);border-bottom:1px solid #0f1b38}
+    .lesson-title{font-weight:800;color:#a5b4fc}
+    .badge{background:#18264a;color:#9ec1ff;padding:6px 10px;border-radius:999px;font-size:13px}
+    .lesson-body{padding:12px}
+    .goal{font-size:13px;opacity:.95;margin:6px 0}
+    .code-box{background:#071428;border-radius:10px;border:1px solid #0f1b38;margin-top:10px}
+    .code-head{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#071a3a;border-bottom:1px solid #0f1b38}
+    .code-head .meta{font-size:13px;color:#93c5fd}
+    pre{margin:0;padding:12px 14px;overflow:auto;color:#d7e3ff;background:transparent}
+    .lined pre{counter-reset:line}
+    .lined code{display:block}
+    .lined code span{display:block;white-space:pre}
+    .lined code span::before{counter-increment:line;content:counter(line);display:inline-block;width:3ch;margin-inline-end:10px;color:#7ea2ff;opacity:.7}
+
+    .editor{margin-top:12px}
+    textarea.editor-area{width:100%;height:160px;background:#071428;color:#d7e3ff;border-radius:10px;border:1px solid #0f1b38;padding:10px;font-family:ui-monospace,monospace;font-size:13px}
+    .editor .row{display:flex;gap:8px;align-items:center;margin-top:8px}
+    .result{margin-top:8px;font-size:13px}
+    .result.ok{color:var(--ok)}
+    .result.warn{color:var(--warn)}
+    .result.bad{color:var(--bad)}
+
+    .locked{opacity:.35;filter:grayscale(.2);position:relative}
+    .locked::after{content:"مقفول";position:absolute;inset:10px;border-radius:10px;background:linear-gradient(90deg,rgba(2,6,23,.6),rgba(2,6,23,.6));display:flex;align-items:center;justify-content:center;color:#93c5fd;font-weight:800;font-size:14px}
+
+    .quiz{padding:12px;border-radius:12px;background:#071428;border:1px solid #0f1b38}
+    .q-item{margin:10px 0}
+    .q-item .q{margin-bottom:8px}
+    .q-item button{margin-inline-end:8px;margin-top:6px;background:#1d4ed8;color:#fff;border:none;padding:8px 10px;border-radius:8px;cursor:pointer}
+    .composer{position:fixed;inset-inline:0;bottom:0;display:flex;gap:8px;padding:10px 12px;background:rgba(8,12,24,.9);backdrop-filter:blur(8px);border-top:1px solid #0f2937}
+    .composer input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid #1f2937;background:var(--panel2);color:var(--text);outline:none}
+    .composer button{padding:10px 14px;border-radius:10px;border:none;background:var(--me);color:#fff;font-weight:700;cursor:pointer}
+
+    .toast{position:fixed;bottom:84px;inset-inline:12px;z-index:40;display:none;padding:10px;border-radius:10px;background:#071428;border:1px solid #0f1b38}
+    .levelup{position:fixed;top:12px;left:12px;z-index:40;display:none;padding:10px 14px;border-radius:12px;background:linear-gradient(90deg,#3b82f6,#06b6d4);color:#fff;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+    @media (max-width:720px){
+      .lesson-body{padding:10px}
+      pre{font-size:12px}
+      textarea.editor-area{height:140px}
+    }
+  </style>
 </head>
 <body>
-<div class="yasser-logo">
-  🛠️ <strong>ياسر أحمد حمدي</strong>
-</div>
-  <h1>**الأردوينو هو منصة إلكترونية مفتوحة المصدر تجمع بين العتاد (Hardware) والبرمجيات (Software) لتسهيل بناء المشاريع التفاعلية والإلكترونية.** يتميز بسهولة الاستخدام، وانتشاره بين الهواة والطلاب والمحترفين، لأنه يتيح برمجة المتحكمات الدقيقة مباشرة عبر الحاسوب باستخدام منفذ USB دون الحاجة إلى أدوات معقدة.  
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div style="flex:1">
+        <h1 class="title">منصة شات تفاعلية — تعلم أردوينو (10 مستويات)</h1>
+        <p class="subtitle">دروس عملية، محرر كود، امتحانات، نقاط وشارات — كل شيء في ملف واحد</p>
 
----
+        <div class="controls">
+          <button class="btn" id="resetBtn">إعادة تعيين التقدّم</button>
+          <button class="btn ghost" id="exportBtn">حفظ نسخة محلية</button>
+          <div style="flex:1"></div>
+          <div class="hud">
+            <div class="stat">نقاط: <strong id="score">0</strong></div>
+            <div class="stat">المستوى: <strong id="level">1</strong> / 10</div>
+            <div class="stat">شارات: <strong id="badges">—</strong></div>
+          </div>
+        </div>
 
-### 🔧 ما هو الأردوينو؟
-- **لوحة تطوير إلكترونية** تحتوي على متحكم دقيق (Microcontroller) يمكن برمجته للتحكم في أجهزة مختلفة.  
-- **بيئة تطوير برمجية (IDE)** تسمح بكتابة الأكواد بلغة تشبه C/C++ وتحميلها مباشرة على اللوحة.  
-- **مفتوح المصدر**: أي أن تصميم اللوحات والبرمجيات متاح للجميع، مما شجع على انتشار مكتبات وأمثلة جاهزة.  
+        <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+      </div>
+    </div>
+  </header>
 
-### 📌 تاريخ الأردوينو
-- بدأ المشروع عام **2005** في معهد تصميم التفاعل بمدينة إيفريا في إيطاليا.  
-- الهدف كان توفير أداة منخفضة التكلفة وسهلة الاستخدام للطلاب والمبتكرين.  
-- منذ ذلك الوقت أصبح الأردوينو حجر أساس في تعليم الإلكترونيات والبرمجة حول العالم.  
+  <div class="levelup" id="levelup"></div>
+  <div class="toast" id="toast"></div>
 
-### ⚡ مميزات الأردوينو
-- **سهولة الاستخدام**: لا يحتاج إلى خبرة كبيرة في الإلكترونيات أو البرمجة.  
-- **مجتمع ضخم**: آلاف المشاريع والمكتبات متاحة مجانًا.  
-- **مرونة عالية**: يمكن توصيله بحساسات، محركات، شاشات، وحدات اتصال لاسلكي، وغيرها.  
-- **تكلفة منخفضة**: مقارنة بالأنظمة الأخرى، الأردوينو يوفر إمكانيات كبيرة بسعر مناسب.  
+  <main class="chat" id="chat" role="main" aria-live="polite"></main>
 
-### 🎯 استخدامات الأردوينو
-- بناء **مشاريع تعليمية** لتعلم أساسيات البرمجة والإلكترونيات.  
-- تطوير **روبوتات بسيطة** باستخدام المحركات والحساسات.  
-- تصميم **أنظمة تحكم بيئية** مثل قياس الحرارة والرطوبة والضغط.  
-- إنشاء **ألعاب وأجهزة تفاعلية** تعتمد على الحركة أو الإضاءة.  
-
----
-
-✨ الخلاصة: الأردوينو ليس مجرد لوحة إلكترونية، بل هو **مدخل عملي لعالم البرمجة والإلكترونيات التفاعلية**، يجمع بين البساطة والقوة، ويتيح للهواة والمحترفين تحويل أفكارهم إلى مشاريع واقعية بسهولة.  
-
-تحب أكتبلك مقدمة قصيرة بأسلوب تسويقي (Landing Page Intro) علشان تستخدمها مباشرة في منصتك التعليمية؟📘 الدرس 1: مقدمة في الأردوينو</h1>
-  <p>.</p>
-
-  <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
-
-  <div class="nav-buttons">
-    <button onclick="navigateWithEffect('index.html')">🏠 الرئيسية</button>
-    <button onclick="navigateWithEffect('lesson2.html')">➡️ التالي</button>
-  </div>
-
-  <button onclick="navigateWithEffect('simulator.html')">⚙️ المحاكي</button>
+  <footer class="composer" role="contentinfo">
+    <input id="input" placeholder="اكتب سؤالك أو تعليقك..." />
+    <button id="send">إرسال</button>
+  </footer>
 
   <script>
-    const lessonNumber = 1, totalLessons = 10;
-    document.getElementById("progressBar").style.width = (lessonNumber/totalLessons*100)+"%";
-    function navigateWithEffect(url){ window.location.href = url; }
+    /*************************************************************************
+     * منصة أردوينو تفاعلية — ملف واحد
+     * ميزات إضافية:
+     * - حفظ تلقائي لمحتوى المحرر لكل درس
+     * - قفل/فتح الدروس حسب التقدم
+     * - فتح الكود في محاكي Wokwi عبر رابط مشفر
+     * - امتحانات مقفلة حتى إكمال الدروس
+     * - نقاط وشارات وتخزين محلي
+     *************************************************************************/
+
+    // تخزين محلي منظم
+    const STORAGE_KEY = 'arduino_platform_v3';
+    function loadState(){
+      try{
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {score:0,level:1,unlockedLevel:1,badges:[],completedLessons:{},editorContent:{}};
+      }catch(e){
+        return {score:0,level:1,unlockedLevel:1,badges:[],completedLessons:{},editorContent:{}};
+      }
+    }
+    function saveState(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    const state = loadState();
+
+    // عناصر DOM
+    const chat = document.getElementById('chat');
+    const input = document.getElementById('input');
+    const sendBtn = document.getElementById('send');
+    const scoreEl = document.getElementById('score');
+    const levelEl = document.getElementById('level');
+    const badgesEl = document.getElementById('badges');
+    const progressBar = document.getElementById('progressBar');
+    const resetBtn = document.getElementById('resetBtn');
+    const exportBtn = document.getElementById('exportBtn');
+    const levelupEl = document.getElementById('levelup');
+    const toastEl = document.getElementById('toast');
+
+    function updateHUD(){
+      scoreEl.textContent = state.score;
+      levelEl.textContent = state.level;
+      badgesEl.textContent = state.badges.length ? state.badges.join('، ') : '—';
+      progressBar.style.width = Math.min(((state.unlockedLevel-1)/9)*100,100) + '%';
+      saveState();
+    }
+
+    function toast(msg){
+      toastEl.textContent = msg;
+      toastEl.style.display = 'block';
+      setTimeout(()=> toastEl.style.display='none', 1600);
+    }
+
+    function levelUp(newLevel){
+      levelupEl.textContent = `تهانينا! وصلت للمستوى ${newLevel} 🎉`;
+      levelupEl.style.display = 'block';
+      setTimeout(()=> levelupEl.style.display='none', 1600);
+    }
+
+    // حركة دخول ناعمة
+    const observer = new IntersectionObserver((entries)=>{
+      for(const e of entries){
+        if(e.isIntersecting){ e.target.classList.add('in-view'); observer.unobserve(e.target); }
+      }
+    }, {threshold:.12, rootMargin:'0px 0px -8% 0px'});
+
+    // دروس ومحتوى (10 مستويات)
+    const lessons = [
+      { id:'L1', level:1, title:'تشغيل LED — أساسيات', goals:['pinMode و digitalWrite','delay للتأخير','مخرج 13 والـ LED المدمج'], tokens:['pinMode','digitalWrite','delay','13'], code:`void setup(){ pinMode(13, OUTPUT); }\nvoid loop(){ digitalWrite(13, HIGH); delay(1000); digitalWrite(13, LOW); delay(1000); }`, tips:'الـ LED المدمج غالبًا على المخرج 13.' },
+      { id:'L2', level:2, title:'زر + LED — INPUT_PULLUP', goals:['INPUT_PULLUP','digitalRead','تشغيل LED حسب الحالة'], tokens:['INPUT_PULLUP','digitalRead','pinMode','const int'], code:`const int BTN=2; const int LED=13;\nvoid setup(){ pinMode(BTN, INPUT_PULLUP); pinMode(LED, OUTPUT); }\nvoid loop(){ int pressed = (digitalRead(BTN)==LOW); digitalWrite(LED, pressed ? HIGH : LOW); }`, tips:'الزر للأرضي يجعل الضغط = LOW.' },
+      { id:'L3', level:3, title:'حساس LM35 — قراءة analog', goals:['analogRead','تحويل إلى فولت ودرجة','Serial.print'], tokens:['analogRead','Serial.begin','Serial.println','A0'], code:`const int AIN=A0;\nvoid setup(){ Serial.begin(9600); }\nvoid loop(){ int raw=analogRead(AIN); float v=(raw*5.0)/1023.0; float t=v*100.0; Serial.print("Temp C: "); Serial.println(t,1); delay(500); }`, tips:'تأكد من مرجع 5V مستقر.' },
+      { id:'L4', level:4, title:'PWM للموتور — L298N', goals:['analogWrite','دوال حركة','مزود طاقة منفصل'], tokens:['analogWrite','HIGH','LOW','int'], code:`const int IN1=8, IN2=9, ENA=10;\nvoid setup(){ pinMode(IN1,OUTPUT); pinMode(IN2,OUTPUT); pinMode(ENA,OUTPUT); }\nvoid forward(int spd){ digitalWrite(IN1,HIGH); digitalWrite(IN2,LOW); analogWrite(ENA, spd); }\nvoid backward(int spd){ digitalWrite(IN1,LOW); digitalWrite(IN2,HIGH); analogWrite(ENA, spd); }\nvoid stopMotor(){ analogWrite(ENA,0); digitalWrite(IN1,LOW); digitalWrite(IN2,LOW); }\nvoid loop(){ forward(180); delay(1200); stopMotor(); delay(500); backward(160); delay(1200); stopMotor(); delay(700); }`, tips:'استخدم مزود طاقة منفصل للموتور.' },
+      { id:'L5', level:5, title:'LCD 16x2 — LiquidCrystal', goals:['lcd.begin','lcd.print','lcd.setCursor'], tokens:['#include <LiquidCrystal.h>','lcd.begin','lcd.print','lcd.setCursor'], code:`#include <LiquidCrystal.h>\nLiquidCrystal lcd(12,11,5,4,3,2);\nvoid setup(){ lcd.begin(16,2); lcd.print("Hello, Yasser!"); }\nvoid loop(){ lcd.setCursor(0,1); lcd.print(millis()/1000); delay(250); }`, tips:'اضبط مقاومة الكونتراست.' },
+      { id:'L6', level:6, title:'Servo SG90 — زاوية تدريجية', goals:['مكتبة Servo','write للحركة','حلقة مسح'], tokens:['#include <Servo.h>','Servo','attach','write'], code:`#include <Servo.h>\nServo s;\nvoid setup(){ s.attach(9); }\nvoid sweep(int a,int b,int step){ if(a<b){ for(int x=a;x<=b;x+=step){ s.write(x); delay(12);} } else{ for(int x=a;x>=b;x-=step){ s.write(x); delay(12);} } }\nvoid loop(){ sweep(0,180,3); delay(300); sweep(180,0,3); delay(300); }`, tips:'لا تسحب تيار السيرفو من الأردوينو إذا الحمل كبير.' },
+      { id:'L7', level:7, title:'Serial ثنائي الاتجاه — أوامر', goals:['Serial.available','قراءة أوامر','ردود عبر Serial'], tokens:['Serial.available','Serial.readString','Serial.parseInt','switch'], code:`void setup(){ Serial.begin(9600); pinMode(13,OUTPUT); }\nvoid loop(){ if(Serial.available()){ String cmd = Serial.readString(); cmd.trim(); if(cmd=="LEDON"){ digitalWrite(13, HIGH); Serial.println("LED ON"); } else if(cmd=="LEDOFF"){ digitalWrite(13, LOW); Serial.println("LED OFF"); } else{ Serial.println("Unknown"); } } delay(10); }`, tips:'استخدم Serial Monitor لإرسال أوامر.' },
+      { id:'L8', level:8, title:'I2C — قراءة مثال عام', goals:['Wire.begin','requestFrom','Wire.read'], tokens:['#include <Wire.h>','Wire.begin','Wire.requestFrom','Wire.read'], code:`#include <Wire.h>\nconst byte DEV=0x48;\nvoid setup(){ Wire.begin(); Serial.begin(9600); }\nvoid loop(){ Wire.beginTransmission(DEV); Wire.write(0x00); Wire.endTransmission(); Wire.requestFrom(DEV, 1); if(Wire.available()){ byte val = Wire.read(); Serial.print("Raw: "); Serial.println(val); } delay(500); }`, tips:'غيّر عنوان الجهاز حسب المستشعر.' },
+      { id:'L9', level:9, title:'SPI — إرسال واستقبال', goals:['SPI.begin','SPI.transfer','CS control'], tokens:['#include <SPI.h>','SPI.begin','SPI.transfer','pinMode'], code:`#include <SPI.h>\nconst int CS=10;\nvoid setup(){ Serial.begin(9600); pinMode(CS,OUTPUT); digitalWrite(CS,HIGH); SPI.begin(); }\nbyte sendRecv(byte data){ digitalWrite(CS,LOW); byte r = SPI.transfer(data); digitalWrite(CS,HIGH); return r; }\nvoid loop(){ byte r = sendRecv(0xA5); Serial.print("Recv: "); Serial.println(r, HEX); delay(500); }`, tips:'وصل MOSI/MISO/SCK/CS حسب الديفايس.' },
+      { id:'L10', level:10, title:'مشروع تجميعي — سيارة بالتحكم عبر Serial', goals:['دمج PWM مع أوامر Serial','أوامر F/B/L/R/S','قابلية توسعة المشروع'], tokens:['analogWrite','Serial','if','else if'], code:`const int IN1L=8, IN2L=9, ENAL=10;\nconst int IN1R=6, IN2R=7, ENAR=5;\nvoid setup(){ Serial.begin(9600); pinMode(IN1L,OUTPUT); pinMode(IN2L,OUTPUT); pinMode(ENAL,OUTPUT); pinMode(IN1R,OUTPUT); pinMode(IN2R,OUTPUT); pinMode(ENAR,OUTPUT); }\nvoid drive(int lspd,int rspd){ analogWrite(ENAL, abs(lspd)); analogWrite(ENAR, abs(rspd)); digitalWrite(IN1L, lspd>=0 ? HIGH:LOW); digitalWrite(IN2L, lspd>=0 ? LOW:HIGH); digitalWrite(IN1R, rspd>=0 ? HIGH:LOW); digitalWrite(IN2R, rspd>=0 ? LOW:HIGH); }\nvoid stopAll(){ analogWrite(ENAL,0); analogWrite(ENAR,0); digitalWrite(IN1L,LOW); digitalWrite(IN2L,LOW); digitalWrite(IN1R,LOW); digitalWrite(IN2R,LOW); }\nvoid loop(){ if(Serial.available()){ String cmd = Serial.readString(); cmd.trim(); int spd = 160; if(cmd.startsWith("SPD")){ spd = cmd.substring(3).toInt(); spd = constrain(spd, 0, 255); Serial.print("SPD="); Serial.println(spd); } else if(cmd=="F"){ drive(spd, spd); Serial.println("Forward"); } else if(cmd=="B"){ drive(-spd,-spd); Serial.println("Backward"); } else if(cmd=="L"){ drive(-spd, spd); Serial.println("Left"); } else if(cmd=="R"){ drive(spd,-spd); Serial.println("Right"); } else if(cmd=="S"){ stopAll(); Serial.println("Stop"); } else { Serial.println("Unknown"); } } delay(5); }`, tips:'اختبر الأوامر عبر Serial Monitor.' }
+    ];
+
+    // امتحانات
+    const quizzes = [
+      { title:'امتحان المستوى 3', cover:[1,2,3], questions:[
+        {q:'ما هو المخرج الافتراضي للـ LED المدمج؟', opts:['13','A0','2','10'], ans:0},
+        {q:'ما وظيفة INPUT_PULLUP؟', opts:['تشغيل PWM','مقاومة سحب داخلية','طباعة نص','قراءة SPI'], ans:1},
+        {q:'دقة analogRead في أونو؟', opts:['8-بت','10-بت','12-بت','16-بت'], ans:1}
+      ]},
+      { title:'امتحان المستوى 6', cover:[4,5,6], questions:[
+        {q:'أي دالة تولد PWM؟', opts:['digitalWrite','analogRead','analogWrite','Serial.print'], ans:2},
+        {q:'مكتبة شاشة LCD؟', opts:['Servo','LiquidCrystal','Wire','SPI'], ans:1},
+        {q:'دالة تحريك السيرفو؟', opts:['write','print','transfer','setCursor'], ans:0}
+      ]},
+      { title:'امتحان المستوى 9', cover:[7,8,9], questions:[
+        {q:'قراءة نص من Serial؟', opts:['Serial.readString','Wire.read','SPI.transfer','analogRead'], ans:0},
+        {q:'مكتبة I2C؟', opts:['SPI','Wire','Servo','EEPROM'], ans:1},
+        {q:'مكتبة SPI؟', opts:['LiquidCrystal','Servo','SPI','Wire'], ans:2}
+      ]},
+      { title:'الامتحان النهائي', cover:[10], questions:[
+        {q:'أمر إيقاف السيارة؟', opts:['F','B','S','R'], ans:2},
+        {q:'كيف تحدد السرعة؟', opts:['أمر SPDxxx','أمر LEDON','أمر LCD','أمر I2C'], ans:0},
+        {q:'قيم PWM المسموح بها؟', opts:['0–255','0–1023','0–10','0–1'], ans:0}
+      ]}
+    ];
+
+    // أدوات مساعدة
+    function escapeHTML(str){ return str.replace(/[&<>"']/g, ch=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[ch])); }
+
+    // فتح الكود في Wokwi (يفتح نافذة جديدة)
+    function openInWokwi(code){
+      try{
+        const base = 'https://wokwi.com/arduino/new?sketch=';
+        const url = base + encodeURIComponent(code);
+        window.open(url, '_blank');
+      }catch(e){
+        toast('تعذر فتح المحاكي');
+      }
+    }
+
+    // عرض درس واحد
+    function renderLesson(lesson){
+      const locked = lesson.level > state.unlockedLevel;
+      const wrap = document.createElement('div'); wrap.className = 'lesson msg from-them' + (locked ? ' locked' : '');
+      const head = document.createElement('div'); head.className = 'lesson-head';
+      head.innerHTML = `<div style="display:flex;gap:10px;align-items:center"><span class="badge">المستوى ${lesson.level}</span><div class="lesson-title">${lesson.title}</div></div>
+                        <div style="display:flex;gap:8px;align-items:center">
+                          <button class="btn ghost" data-id="${lesson.id}">إنهاء الدرس</button>
+                          <button class="btn ghost" data-run="${lesson.id}">فتح في المحاكي</button>
+                        </div>`;
+      const body = document.createElement('div'); body.className = 'lesson-body';
+      // أهداف
+      lesson.goals.forEach(g=>{
+        const p = document.createElement('div'); p.className='goal'; p.textContent = '• ' + g; body.appendChild(p);
+      });
+      // كود جاهز
+      const codeBox = document.createElement('div'); codeBox.className='code-box lined';
+      const codeHead = document.createElement('div'); codeHead.className='code-head';
+      codeHead.innerHTML = `<div class="meta">كود تجريبي</div><div class="meta"></div>`;
+      const pre = document.createElement('pre');
+      const numbered = lesson.code.split('\n').map(l=>`<span>${escapeHTML(l)}</span>`).join('\n');
+      pre.innerHTML = `<code>${numbered}</code>`;
+      codeBox.appendChild(codeHead); codeBox.appendChild(pre);
+      body.appendChild(codeBox);
+
+      // محرر الطالب
+      const editor = document.createElement('div'); editor.className='editor';
+      const ta = document.createElement('textarea'); ta.className='editor-area'; ta.placeholder='اكتب كودك هنا...';
+      // استعادة محتوى محفوظ
+      const saved = state.editorContent[lesson.id];
+      if(saved) ta.value = saved;
+      // حفظ تلقائي
+      ta.addEventListener('input', ()=>{ state.editorContent[lesson.id] = ta.value; saveState(); });
+
+      const row = document.createElement('div'); row.className='row';
+      const checkBtn = document.createElement('button'); checkBtn.className='btn'; checkBtn.textContent='تحقق من الكود';
+      const hintBtn = document.createElement('button'); hintBtn.className='btn ghost'; hintBtn.textContent='تلميحات';
+      const openBtn = document.createElement('button'); openBtn.className='btn secondary'; openBtn.textContent='فتح في المحاكي';
+      openBtn.style.background = '#06b6d4'; openBtn.style.color = '#022';
+      row.appendChild(checkBtn); row.appendChild(hintBtn); row.appendChild(openBtn);
+
+      const result = document.createElement('div'); result.className='result';
+
+      hintBtn.onclick = ()=>{ result.className='result warn'; result.textContent = 'تلميح: تأكد من وجود الكلمات: ' + lesson.tokens.join(', '); };
+
+      checkBtn.onclick = ()=>{
+        const txt = ta.value || '';
+        if(!txt.trim()){ result.className='result.bad'; result.textContent='اكتب الكود أولًا في المحرر.'; return; }
+        const missing = lesson.tokens.filter(t=>{
+          const re = new RegExp('\\b' + t.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\$&') + '\\b', 'i');
+          return !re.test(txt);
+        });
+        if(missing.length===0){
+          result.className='result ok'; result.textContent='ممتاز! الكود يحتوي العناصر المطلوبة ✅';
+          // منح نقاط للمرة الأولى
+          if(!state.completedLessons[lesson.id]){
+            state.completedLessons[lesson.id] = true;
+            state.score += 12; // نقاط تحقق
+            // فتح المستوى التالي إذا كان هذا آخر درس مفتوح
+            if(state.unlockedLevel <= lesson.level && lesson.level < 10){
+              state.unlockedLevel = lesson.level + 1;
+              levelUp(state.unlockedLevel);
+            }
+            // رفع مستوى عام إن كان مناسب
+            if(state.level < lesson.level) state.level = lesson.level;
+            saveState(); updateHUD();
+            toast('+12 نقاط — درس مكتمل');
+          } else {
+            toast('تم التحقق مسبقًا');
+          }
+        } else {
+          result.className='result.warn'; result.textContent = 'نواقص: ' + missing.join(', ');
+        }
+      };
+
+      openBtn.onclick = ()=> openInWokwi(ta.value || lesson.code);
+      // زر في الهيدر لفتح المحاكي بالكود التجريبي
+      head.querySelector('[data-run]')?.addEventListener('click', ()=> openInWokwi(lesson.code));
+
+      editor.appendChild(ta); editor.appendChild(row); editor.appendChild(result);
+      body.appendChild(editor);
+
+      wrap.appendChild(head); wrap.appendChild(body);
+      chat.appendChild(wrap);
+      observer.observe(wrap);
+
+      // زر إنهاء الدرس في الهيدر
+      head.querySelector('[data-id]')?.addEventListener('click', ()=>{
+        if(!state.completedLessons[lesson.id]){
+          state.completedLessons[lesson.id] = true;
+          state.score += 6;
+          if(state.unlockedLevel <= lesson.level && lesson.level < 10) state.unlockedLevel = lesson.level + 1;
+          if(state.level < lesson.level) state.level = lesson.level;
+          saveState(); updateHUD();
+          toast('تم إنهاء الدرس +6 نقاط');
+        } else {
+          toast('الدرس مكتمل بالفعل');
+        }
+      });
+    }
+
+    // عرض امتحان مع قفل حتى إكمال الدروس المغطاة
+    function renderQuiz(quiz){
+      const requiredLevels = quiz.cover;
+      const allDone = requiredLevels.every(lv => lessons.some(ls => ls.level===lv && state.completedLessons[ls.id]));
+      const box = document.createElement('div'); box.className='quiz msg from-them' + (allDone ? '' : ' locked');
+      const h = document.createElement('h3'); h.textContent = quiz.title; box.appendChild(h);
+      const info = document.createElement('div'); info.style.marginBottom='8px'; info.textContent = allDone ? 'الامتحان جاهز' : 'أكمل الدروس المطلوبة لفتح الامتحان'; box.appendChild(info);
+
+      const answers = [];
+      quiz.questions.forEach((q, idx)=>{
+        const item = document.createElement('div'); item.className='q-item';
+        const qdiv = document.createElement('div'); qdiv.className='q'; qdiv.textContent = `س${idx+1}: ${q.q}`; item.appendChild(qdiv);
+        q.opts.forEach((opt, j)=>{
+          const btn = document.createElement('button'); btn.textContent = opt;
+          btn.onclick = ()=>{
+            if(!allDone){ toast('الامتحان مقفول حتى تكمل الدروس'); return; }
+            if(btn.disabled) return;
+            const siblings = item.querySelectorAll('button'); siblings.forEach(b=> b.disabled=true);
+            answers[idx] = j;
+            if(j === q.ans) btn.style.background = '#22c55e'; else btn.style.background = '#ef4444';
+          };
+          item.appendChild(btn);
+        });
+        box.appendChild(item);
+      });
+
+      const submit = document.createElement('button'); submit.className='btn'; submit.textContent='تقييم الامتحان';
+      submit.onclick = ()=>{
+        if(!allDone){ toast('الامتحان مقفول'); return; }
+        const correct = quiz.questions.reduce((acc,q,i)=> acc + ((answers[i] === q.ans) ? 1 : 0), 0);
+        const gain = correct * 10;
+        state.score += gain;
+        // شرط النجاح: 60% أو أكثر
+        const pass = correct >= Math.ceil(quiz.questions.length * 0.6);
+        if(pass){
+          const badge = `شارة ${quiz.title}`;
+          if(!state.badges.includes(badge)) state.badges.push(badge);
+          // فتح المستوى التالي بعد الامتحان (أعلى مستوى مغطى + 1)
+          const maxLevel = Math.max(...quiz.cover);
+          if(state.unlockedLevel <= maxLevel) state.unlockedLevel = maxLevel + 1;
+          toast(`اجتزت الامتحان! +${gain} نقاط — ${badge}`);
+        } else {
+          toast(`حاول مرة أخرى. نقاط +${gain}`);
+        }
+        saveState(); updateHUD();
+      };
+      box.appendChild(submit);
+      chat.appendChild(box);
+      observer.observe(box);
+    }
+
+    // عرض كل المحتوى مع قفل/فتح
+    function renderAll(){
+      addMsg('أهلاً بك في منصة تعلم الأردوينو — ابدأ من المستوى 1 وتدرج حتى المستوى 10','them');
+      lessons.forEach((ls, idx)=>{
+        renderLesson(ls);
+        // بعد الدرس 3،6،9 أضف الامتحانات
+        if(ls.level === 3) renderQuiz(quizzes[0]);
+        if(ls.level === 6) renderQuiz(quizzes[1]);
+        if(ls.level === 9) renderQuiz(quizzes[2]);
+        if(ls.level === 10) renderQuiz(quizzes[3]);
+      });
+      addMsg('اكتب سؤالك في الأسفل وسنرد عليك تلقائيًا','them');
+    }
+
+    // رسالة عامة
+    function addMsg(text, from='them'){
+      const el = document.createElement('div'); el.className = `msg from-${from}`; el.textContent = text;
+      chat.appendChild(el); observer.observe(el);
+      return el;
+    }
+
+    // شات المستخدم
+    function addUserMessage(text){
+      const el = document.createElement('div'); el.className='msg from-me'; el.textContent = text;
+      chat.appendChild(el); observer.observe(el); el.scrollIntoView({behavior:'smooth', block:'end'});
+      setTimeout(()=> addMsg('سؤال جيد! جرّب تنفيذ الكود في المحرر أو اذكر رقم الدرس الذي تريد مساعدة فيه','them'), 700);
+    }
+
+    // زر إعادة التعيين
+    resetBtn.addEventListener('click', ()=>{
+      if(confirm('هل تريد إعادة تعيين كل التقدّم؟')) {
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload();
+      }
+    });
+
+    // زر تصدير نسخة محلية (يحفظ JSON في نافذة جديدة للنسخ)
+    exportBtn.addEventListener('click', ()=>{
+      const data = JSON.stringify(state, null, 2);
+      const w = window.open('', '_blank');
+      w.document.body.style.background = '#071428';
+      w.document.body.style.color = '#d7e3ff';
+      const pre = w.document.createElement('pre'); pre.textContent = data; pre.style.whiteSpace='pre-wrap'; pre.style.padding='12px';
+      w.document.body.appendChild(pre);
+    });
+
+    // إرسال من composer
+    sendBtn.addEventListener('click', ()=>{
+      const t = input.value.trim(); if(!t) return; addUserMessage(t); input.value='';
+    });
+    input.addEventListener('keydown', e=>{ if(e.key==='Enter') sendBtn.click(); });
+
+    // مراقبة لإسقاط العرض لآخر عنصر
+    const mo = new MutationObserver(()=> {
+      const last = chat.lastElementChild; if(last) last.scrollIntoView({behavior:'smooth', block:'end'});
+    });
+    mo.observe(chat, {childList:true});
+
+    // بدء العرض
+    updateHUD();
+    renderAll();
+
+    // تأخير موجي للرسائل الأولى
+    const styleDelay = document.createElement('style');
+    styleDelay.textContent = `.msg:nth-child(1){transition-delay:40ms}.msg:nth-child(2){transition-delay:80ms}.msg:nth-child(3){transition-delay:120ms}.msg:nth-child(4){transition-delay:160ms}.msg:nth-child(5){transition-delay:200ms}`;
+    document.head.appendChild(styleDelay);
   </script>
 </body>
 </html>
