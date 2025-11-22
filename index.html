@@ -14,38 +14,42 @@
       <a href="index.html">الدروس الااساسيه </a>
       <a href="simulator.html">⚙️ التجارب والمحاكاة</a>
     </nav>
-    <!-- زر التثبيت -->
-<button id="installBtn">📲 تثبيت التطبيق</button>
 
-<style>
-  #installBtn {
-    display: none; /* مخفي لحد ما يتفعل الحدث */
-    padding: 14px 28px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #fff;
-    background: linear-gradient(135deg, #00c6ff, #0072ff);
-    border: none;
-    border-radius: 40px;
-    cursor: pointer;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-    animation: pulse 2s infinite;
-    transition: transform 0.2s ease-in-out, background 0.3s;
-  }
+  <!-- زر التثبيت -->
+  <button id="installBtn">📲 تثبيت التطبيق</button>
 
-  #installBtn:hover {
-    transform: scale(1.08);
-    background: linear-gradient(135deg, #0072ff, #00c6ff);
-  }
+  <!-- تنسيق الزر -->
+  <style>
+    #installBtn {
+      display: none;
+      padding: 14px 28px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      border: none;
+      border-radius: 40px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      animation: pulse 2s infinite;
+      transition: transform 0.2s ease-in-out, background 0.3s;
+    }
+    #installBtn:hover {
+      transform: scale(1.08);
+      background: linear-gradient(135deg, #0072ff, #00c6ff);
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(0, 114, 255, 0.7); }
+      70% { box-shadow: 0 0 0 25px rgba(0, 114, 255, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 114, 255, 0); }
+    }
+  </style>
 
-  @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(0, 114, 255, 0.7); }
-    70% { box-shadow: 0 0 0 25px rgba(0, 114, 255, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(0, 114, 255, 0); }
-  }
-</style>
+  <!-- ربط ملف الجافاسكريبت اللي فيه كود الحدث -->
+  <script src="app.js"></script>
+</body>
+</html>
 
-  
 <head>
   <title>تعلم برمجة الأردوينو - منصة تعليمية مجانية</title>
   <meta name="description" content="منصة تعليمية مجانية لتعلم برمجة الأردوينو خطوة بخطوة مع المرمج ياسر احمد أمثلة عملية ومشاريع جاهزة.">
