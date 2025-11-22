@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+  <link rel="manifest" href="manifest.json">
   <meta charset="UTF-8">
   <title>📘 الدروس النظرية</title>
   <link rel="stylesheet" href="style.css">
@@ -77,3 +78,9 @@
 
 
 
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/service-worker.js")
+      .then(() => console.log("Service Worker Registered"));
+  }
+</script>
