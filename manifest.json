@@ -1,14 +1,20 @@
 {
-  "name": "Abo-Elyosr-Arduino-",
-  "short_name": "Abo-Elyosr-Arduino-",
+  "name": "Abo Elyosr Arduino",
+  "short_name": "Arduino",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "theme_color": "#0072ff",
   "icons": [
     {
-      "src": "https://raw.githubusercontent.com/ya8796202-dotcom/Abo-Elyosr-Arduino-/main/Copilot_20251122_083502.png",
+      "src": "./icons/https://raw.githubusercontent.com/ya8796202-dotcom/Abo-Elyosr-Arduino-/main/Copilot_20251122_083502.png",
       "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ]
