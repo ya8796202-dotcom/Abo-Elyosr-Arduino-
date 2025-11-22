@@ -14,12 +14,37 @@
       <a href="index.html">الدروس الااساسيه </a>
       <a href="simulator.html">⚙️ التجارب والمحاكاة</a>
     </nav>
-    
-  </header>
-  <header class="platform-header">
-  <img src="logo-animated.gif" alt="شعار المنصة المتحرك" class="platform-logo">
-  <h1 class="platform-title">Arduino-Platform learing</h1>
-</header>
+    <!-- زر التثبيت -->
+<button id="installBtn">📲 تثبيت التطبيق</button>
+
+<style>
+  #installBtn {
+    display: none; /* مخفي لحد ما يتفعل الحدث */
+    padding: 14px 28px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    animation: pulse 2s infinite;
+    transition: transform 0.2s ease-in-out, background 0.3s;
+  }
+
+  #installBtn:hover {
+    transform: scale(1.08);
+    background: linear-gradient(135deg, #0072ff, #00c6ff);
+  }
+
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 114, 255, 0.7); }
+    70% { box-shadow: 0 0 0 25px rgba(0, 114, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 114, 255, 0); }
+  }
+</style>
+
   
 <head>
   <title>تعلم برمجة الأردوينو - منصة تعليمية مجانية</title>
@@ -30,7 +55,6 @@
   <main>
     <h2>📚 قائمة الدروس</h2>
     <div class="lessons">
-          <button id="installBtn" style="display:none;">📲 تثبيت التطبيق</button>
       <button onclick="navigateWithEffect('lesson1.html')">الدرس 1: مقدمة عن الأردوينو</button>
       <button onclick="navigateWithEffect('lesson2.html')">الدرس 2: تشغيل LED</button>
       <button onclick="navigateWithEffect('lesson3.html')">الدرس 3: المقاومة والمكثف</button>
